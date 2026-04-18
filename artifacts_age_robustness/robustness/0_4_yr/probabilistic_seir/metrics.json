@@ -23,11 +23,13 @@
   },
   "model_name": "probabilistic_seir",
   "probabilistic_metrics": {
-    "average_interval_width_80": 0.8779154640682663,
-    "average_interval_width_95": 1.4787812557266617,
-    "coverage_80": 1.0,
+    "average_interval_width_80": 0.5100086286138119,
+    "average_interval_width_95": 0.750792403542659,
+    "coverage_80": 0.9090909090909091,
     "coverage_95": 1.0,
-    "negative_log_likelihood": -0.3985810166261604
+    "negative_log_likelihood": -0.3985810166261604,
+    "uncertainty_draws": 30,
+    "uncertainty_method": "bootstrap"
   },
   "rolling_origin_metrics": {
     "1": {
