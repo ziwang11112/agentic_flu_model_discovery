@@ -6,6 +6,29 @@ This repository implements a proof-of-concept forecasting benchmark that compare
 
 Can a reproducible propose-fit-verify-refine search over a small epidemic-model grammar discover useful structure for short-horizon weekly hospitalization-rate forecasting?
 
+## Abstract
+
+This repository studies weekly influenza hospitalization-rate forecasting with interpretable epidemic models under a fully reproducible benchmarking pipeline. Using a FluSurv-NET CSV export, the project compares four model families: a manual deterministic SEIR baseline, a manual probabilistic SEIR with Student-t observations, a manual fractional SEIR, and a constrained structure-discovery procedure over a small epidemic-model grammar. The discovery procedure is programmatic rather than language-model-driven: candidate structures are proposed, checked against biological validity rules, fit to data, ranked on rolling-origin validation behavior, and refined iteratively. On the current proof-of-concept season, the overall series is still best served by strong manual baselines, but constrained discovery is clearly useful for selected age groups. The main practical conclusion is that age-aware model selection and stability-aware discovery are more promising than pursuing a single globally best model family.
+
+## Key Findings
+
+- On the overall series, the strongest held-out test MAE is currently achieved by `fractional_seir` (`0.03511`), with `deterministic_seir` very close behind (`0.03523`).
+- On the same overall series, `deterministic_seir` remains the most stable recommendation when rolling-origin behavior is considered.
+- In the age-group robustness benchmark, `constrained_structure_discovery` is the consensus winner for `0-4 yr` and `50-64 yr`.
+- For `5-17 yr`, discovery wins on the final test split but `probabilistic_seir` is preferred under stability-aware recommendation logic.
+- For `Overall` and `18-49 yr`, the best current recommendation is still `deterministic_seir`.
+- The central empirical takeaway is not that one model wins everywhere, but that model choice should depend on age group and stability criteria.
+
+## Result Preview
+
+Overall-series model comparison:
+
+![Overall model comparison](artifacts/overall/model_comparison.png)
+
+Age-group rolling-origin MAE heatmap:
+
+![Age-group rolling mean MAE heatmap](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+
 ## Why This Repository Exists
 
 Epidemic forecasting projects often face a tradeoff between simple, interpretable compartmental models and highly flexible models that are difficult to audit or reproduce. This project is designed to sit in between those extremes.
