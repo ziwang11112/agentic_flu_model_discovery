@@ -29,6 +29,72 @@ Age-group rolling-origin MAE heatmap:
 
 ![Age-group rolling mean MAE heatmap](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
 
+## Quick Start
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the main benchmark:
+
+```bash
+python run_experiment.py --config configs/default.yaml
+```
+
+Run the age-group robustness benchmark:
+
+```bash
+python run_experiment.py --config configs/age_robustness.yaml --log-level INFO
+```
+
+Run the test suite:
+
+```bash
+pytest tests -q
+```
+
+If you only want the most important outputs after a run, start here:
+
+- overall leaderboard: [`artifacts/benchmark_leaderboard.csv`](artifacts/benchmark_leaderboard.csv)
+- age-group winners: [`artifacts_age_robustness/benchmark_series_winners.csv`](artifacts_age_robustness/benchmark_series_winners.csv)
+- age-aware recommendation table: [`artifacts_age_robustness/age_group_recommendation.csv`](artifacts_age_robustness/age_group_recommendation.csv)
+- rolling-origin heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+
+## Key Files
+
+The repository contains many artifacts, but these files are the fastest path to understanding the current benchmark.
+
+### Code Entry Points
+
+- main CLI: [`run_experiment.py`](run_experiment.py)
+- default config: [`configs/default.yaml`](configs/default.yaml)
+- age-robustness config: [`configs/age_robustness.yaml`](configs/age_robustness.yaml)
+- discovery search logic: [`src/discovery/search.py`](src/discovery/search.py)
+- evaluation pipeline: [`src/evaluation/pipeline.py`](src/evaluation/pipeline.py)
+- reporting utilities: [`src/evaluation/reporting.py`](src/evaluation/reporting.py)
+
+### Primary Result Tables
+
+- overall benchmark ranking: [`artifacts/benchmark_leaderboard.csv`](artifacts/benchmark_leaderboard.csv)
+- age-group model summary: [`artifacts_age_robustness/benchmark_model_summary.csv`](artifacts_age_robustness/benchmark_model_summary.csv)
+- age-group winners: [`artifacts_age_robustness/benchmark_series_winners.csv`](artifacts_age_robustness/benchmark_series_winners.csv)
+- recommended model by age group: [`artifacts_age_robustness/age_group_recommendation.csv`](artifacts_age_robustness/age_group_recommendation.csv)
+
+### Discovery Outputs
+
+- overall best discovered structure: [`artifacts/overall/constrained_structure_discovery/best_model_spec.json`](artifacts/overall/constrained_structure_discovery/best_model_spec.json)
+- overall discovery leaderboard: [`artifacts/overall/constrained_structure_discovery/leaderboard.csv`](artifacts/overall/constrained_structure_discovery/leaderboard.csv)
+- age-group discovery winner example: [`artifacts_age_robustness/robustness/0_4_yr/constrained_structure_discovery/best_model_spec.json`](artifacts_age_robustness/robustness/0_4_yr/constrained_structure_discovery/best_model_spec.json)
+
+### Plots Worth Opening First
+
+- overall model comparison: [`artifacts/overall/model_comparison.png`](artifacts/overall/model_comparison.png)
+- age-group test MAE heatmap: [`artifacts_age_robustness/benchmark_test_mae_heatmap.png`](artifacts_age_robustness/benchmark_test_mae_heatmap.png)
+- age-group rolling MAE heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+- per-series example forecast plot: [`artifacts_age_robustness/robustness/50_64_yr/model_comparison.png`](artifacts_age_robustness/robustness/50_64_yr/model_comparison.png)
+
 ## Why This Repository Exists
 
 Epidemic forecasting projects often face a tradeoff between simple, interpretable compartmental models and highly flexible models that are difficult to audit or reproduce. This project is designed to sit in between those extremes.
