@@ -1,0 +1,56 @@
+seed: 42
+
+data:
+  raw_csv: FluSurveillance_Custom_Download_Data.csv
+  processed_dir: data/processed
+  include_age_robustness: false
+  age_groups:
+    - 0-4 yr
+    - 5-17 yr
+    - 18-49 yr
+    - 50-64 yr
+    - ">= 65 yr"
+
+artifacts:
+  root_dir: artifacts
+
+fitting:
+  n_restarts: 6
+  rolling_n_restarts: 1
+  maxiter: 250
+  negative_penalty: 10000.0
+  mass_penalty: 10000.0
+  prior_weight: 0.001
+  laplace_draws: 150
+  uncertainty_method: bootstrap
+  bootstrap_draws: 30
+  bootstrap_n_restarts: 0
+
+evaluation:
+  horizons:
+    - 1
+    - 2
+    - 4
+
+discovery:
+  beam_width: 5
+  max_rounds: 20
+  patience: 5
+  rolling_horizons:
+    - 1
+    - 2
+    - 4
+  score_param_weight: 0.01
+  score_compartment_weight: 0.02
+  score_fractional_weight: 0.015
+  score_observation_weight: 0.005
+  score_recurrence_weight: 0.01
+  score_stability_weight: 0.2
+  raw_l2_weight: 0.0005
+  seasonality_l2_weight: 0.005
+  rho_l2_weight: 0.002
+  init_l2_weight: 0.002
+  fractional_alpha_weight: 0.002
+  age_prior_simple_bonus: 0.01
+  age_prior_recurrence_bonus: 0.01
+  age_prior_fractional_bonus: 0.005

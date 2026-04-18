@@ -1,0 +1,12 @@
+.codex
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Keep the canonical raw copy under data/raw/
+/FluSurveillance_Custom_Download_Data.csv
+
+# Local scratch artifacts
+.DS_Store

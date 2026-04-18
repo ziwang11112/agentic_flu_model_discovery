@@ -1,0 +1,2 @@
+series_name,best_test_model,best_test_mae,best_rolling_model,best_rolling_mean_mae
+Overall,fractional_seir,0.03510566619104635,deterministic_seir,0.0814783472732478

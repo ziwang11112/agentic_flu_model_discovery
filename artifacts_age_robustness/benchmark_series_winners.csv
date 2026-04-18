@@ -1,0 +1,7 @@
+series_name,best_test_model,best_test_mae,best_rolling_model,best_rolling_mean_mae
+0-4 yr,constrained_structure_discovery,0.09111808814412954,constrained_structure_discovery,0.11373622810458282
+18-49 yr,deterministic_seir,0.04486156881062346,deterministic_seir,0.07322172664793558
+5-17 yr,constrained_structure_discovery,0.01101208378136745,probabilistic_seir,0.03849213034637234
+50-64 yr,constrained_structure_discovery,0.03716071058150409,constrained_structure_discovery,0.05404237234888972
+>= 65 yr,deterministic_seir,0.11966450052386962,constrained_structure_discovery,0.18235383836109198
+Overall,deterministic_seir,0.0356399056262292,deterministic_seir,0.08164100357970888

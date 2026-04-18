@@ -1,0 +1,12 @@
+{
+  "leaderboard_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/benchmark_leaderboard.csv",
+  "seed": 42,
+  "series_evaluated": [
+    "Overall",
+    "0-4 yr",
+    "5-17 yr",
+    "18-49 yr",
+    "50-64 yr",
+    ">= 65 yr"
+  ]
+}

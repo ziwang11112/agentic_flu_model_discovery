@@ -1,0 +1,5 @@
+series_name,model_name,test_mae,test_rmse,test_smape,rolling_mean_mae,rolling_mean_rmse,num_free_params,num_compartments,artifact_dir,discovery_structure_name,discovery_fractional,discovery_observation_map
+Overall,fractional_seir,0.03510566619104635,0.041061580019051074,0.4725234024679932,0.13397563094313816,0.16260166607406928,9,4,/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/overall/fractional_seir,,,
+Overall,deterministic_seir,0.035228222569860385,0.041276569786699434,0.4721974705766659,0.0814783472732478,0.11492621967985121,8,4,/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/overall/deterministic_seir,,,
+Overall,probabilistic_seir,0.0368206024446545,0.044425354156013265,0.4678606458029046,0.09558756843467621,0.13709015649222286,9,4,/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/overall/probabilistic_seir,,,
+Overall,constrained_structure_discovery,0.03696728355969558,0.04465873959478575,0.4675491801931949,0.08887304780343967,0.12447654649751151,6,3,/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/overall/constrained_structure_discovery,SIR,False,I

@@ -1,0 +1,10 @@
+{
+  "leaderboard_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/benchmark_leaderboard.csv",
+  "recommendation_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/age_group_recommendation.csv",
+  "seed": 42,
+  "series_evaluated": [
+    "Overall"
+  ],
+  "summary_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/benchmark_model_summary.csv",
+  "winners_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts/benchmark_series_winners.csv"
+}

@@ -1,0 +1,43 @@
+round: 1
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+num_free_params: 6
+num_compartments: 3
+train_objective: 0.2692546503362017
+train_mae: 0.31814775035835263
+train_rmse: 0.43801364320620134
+val_mae: 0.19533825552472472
+val_rmse: 0.21896572195910946
+val_smape: 0.5301351927552401
+rolling_val_mean_mae: 0.15379942128237856
+rolling_val_mean_rmse: 0.1799824826595586
+rolling_val_error_std: 0.0934680882022021
+rolling_val_metrics:
+  '1':
+    mae: 0.17319898652540816
+    rmse: 0.2026067378691215
+    smape: 0.47011065231699256
+  '2':
+    mae: 0.16018533976987312
+    rmse: 0.188765013319054
+    smape: 0.46585406687147857
+  '4':
+    mae: 0.12801393755185445
+    rmse: 0.14857569679050028
+    smape: 0.42876279856505245
+stability_penalty: 0.01869361764044042
+complexity_penalty: 0.12
+age_prior_penalty: -0.01
+score: 0.28249303892281896
+params:
+  b0: 0.41854791631016897
+  b1: 1.3814387698645758
+  b2: -2.02329297653395
+  gamma: 0.11617651753309648
+  rho: 10.013242687754138
+  S0: 0.9673511940314302
+  I0: 0.032648805968569665
+  R0: 0.0
+  fractional: 0.0

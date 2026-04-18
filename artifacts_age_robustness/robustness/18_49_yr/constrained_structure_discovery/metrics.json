@@ -1,0 +1,119 @@
+{
+  "best_full_params": {
+    "I0": 0.034422159491217914,
+    "R0": 0.0,
+    "S0": 0.9655778405087821,
+    "b0": -0.005905734853011066,
+    "b1": 1.269002382799902,
+    "b2": -1.3059821271296197,
+    "fractional": 0.0,
+    "gamma": 0.1190564853702976,
+    "rho": 4.960696832771846
+  },
+  "best_spec": {
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SIR"
+  },
+  "complexity": {
+    "num_compartments": 3,
+    "num_free_params": 6
+  },
+  "fit_objectives": {
+    "full_series": 0.09800023951514322,
+    "train": 0.11823561485461544,
+    "train_plus_validation": 0.10868657764630581
+  },
+  "model_name": "constrained_structure_discovery",
+  "probabilistic_metrics": {
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.08751698037298916,
+      "rmse": 0.11055407377445109,
+      "smape": 1.4251413276751639
+    },
+    "2": {
+      "mae": 0.07998311898559023,
+      "rmse": 0.09850412422644388,
+      "smape": 1.4435935184746902
+    },
+    "4": {
+      "mae": 0.06872571370666714,
+      "rmse": 0.08160108531212368,
+      "smape": 1.5008075571773927
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.07874193768841552,
+    "mean_rmse": 0.09688642777100621
+  },
+  "search_best_record": {
+    "complexity_penalty": 0.12,
+    "fractional": false,
+    "num_compartments": 3,
+    "num_free_params": 6,
+    "observation_map": "I",
+    "params": {
+      "I0": 0.032021672140095575,
+      "R0": 0.0,
+      "S0": 0.9679783278599043,
+      "b0": 0.060096659845431416,
+      "b1": 1.32772656987528,
+      "b2": -1.4158236335192822,
+      "fractional": 0.0,
+      "gamma": 0.11225648528175321,
+      "rho": 4.779054469764451
+    },
+    "rolling_val_mean_mae": 0.11752610609418342,
+    "rolling_val_mean_rmse": 0.13285253291258872,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.13147739230369831,
+        "rmse": 0.15057468744425495,
+        "smape": 0.9731821920091448
+      },
+      "2": {
+        "mae": 0.11952473915039047,
+        "rmse": 0.13496469346266396,
+        "smape": 0.9646095332655558
+      },
+      "4": {
+        "mae": 0.10157618682846145,
+        "rmse": 0.11301821783084728,
+        "smape": 0.9761279548558377
+      }
+    },
+    "round": 1,
+    "score": 0.2375261060941834,
+    "spec_key": "SIR|fractional=0|obs=I",
+    "structure_name": "SIR",
+    "train_mae": 0.170887566397614,
+    "train_objective": 0.11823561485539667,
+    "train_rmse": 0.24508282998330808,
+    "val_mae": 0.14963508781808504,
+    "val_rmse": 0.16427485442519335,
+    "val_smape": 1.0375454233048218
+  },
+  "series_name": "18-49 yr",
+  "test_metrics": {
+    "mae": 0.04801708364886145,
+    "rmse": 0.05258540184310673,
+    "smape": 1.8354925160166358
+  },
+  "train_metrics": {
+    "mae": 0.17088663849043623,
+    "rmse": 0.24508272096268413,
+    "smape": 0.20121466868753965
+  },
+  "validation_metrics": {
+    "mae": 0.14963601088112075,
+    "rmse": 0.16427576951916104,
+    "smape": 1.0375481266433182
+  }
+}
