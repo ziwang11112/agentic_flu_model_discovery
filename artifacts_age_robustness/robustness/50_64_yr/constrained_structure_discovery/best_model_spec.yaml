@@ -13,6 +13,11 @@ val_rmse: 0.14970256094130155
 val_smape: 0.298583461917784
 rolling_val_mean_mae: 0.07405167026321292
 rolling_val_mean_rmse: 0.1069506805467541
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.06977516410326393
+multi_split_val_std_mae: 0.05444673160900594
+multi_split_penalty: 0.02722336580450297
+rolling_val_error_std: 0.07605338810549603
 rolling_val_metrics:
   '1':
     mae: 0.09801193407010998
@@ -26,8 +31,10 @@ rolling_val_metrics:
     mae: 0.04789175042690424
     rmse: 0.0555702775762625
     smape: 0.189488956337606
+stability_penalty: 0.015210677621099206
 complexity_penalty: 0.12
-score: 0.1940516702632129
+age_prior_penalty: -0.01
+score: 0.22220920752886608
 params:
   b0: 0.6474288210398415
   b1: 1.3149048854723258

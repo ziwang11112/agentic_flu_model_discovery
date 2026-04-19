@@ -14,6 +14,7 @@ from src.discovery.model import DiscoveryCompartmentModel, DiscoveryRegularizati
 from src.discovery.rules import StructureSpec, generate_neighbors, validate_structure
 from src.evaluation.metrics import point_metrics
 from src.evaluation.rolling import (
+    rolling_blocked_metric_summary,
     mean_rolling_metric,
     rolling_error_stability,
     rolling_metrics_by_horizon,
@@ -31,12 +32,14 @@ class SearchConfig:
     max_rounds: int = 20
     patience: int = 5
     rolling_horizons: tuple[int, ...] = (1, 2, 4)
+    multi_split_blocks: int = 3
     score_param_weight: float = 0.01
     score_compartment_weight: float = 0.02
     score_fractional_weight: float = 0.015
     score_observation_weight: float = 0.005
     score_recurrence_weight: float = 0.01
     score_stability_weight: float = 0.2
+    score_multi_split_std_weight: float = 0.5
     raw_l2_weight: float = 5.0e-4
     seasonality_l2_weight: float = 5.0e-3
     rho_l2_weight: float = 2.0e-3
@@ -220,7 +223,15 @@ def run_structure_search(
             rolling_metrics = rolling_metrics_by_horizon(rolling_frame)
             rolling_mean_mae = mean_rolling_metric(rolling_frame, "mae")
             rolling_mean_rmse = mean_rolling_metric(rolling_frame, "rmse")
+            blocked_summary = rolling_blocked_metric_summary(
+                rolling_frame,
+                metric_name="mae",
+                num_blocks=search_config.multi_split_blocks,
+            )
+            multi_split_mean_mae = blocked_summary["mean"]
+            multi_split_std_mae = blocked_summary["std"]
             rolling_error_std = rolling_error_stability(rolling_frame)
+            multi_split_penalty = search_config.score_multi_split_std_weight * multi_split_std_mae
             stability_penalty = search_config.score_stability_weight * rolling_error_std
             complexity_penalty = discovery_complexity_penalty(
                 spec=spec,
@@ -229,7 +240,7 @@ def run_structure_search(
                 search_config=search_config,
             )
             age_prior_penalty = age_structure_prior_penalty(series_name, spec, search_config)
-            score = rolling_mean_mae + stability_penalty + complexity_penalty + age_prior_penalty
+            score = multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty
 
             record = {
                 "round": round_idx,
@@ -247,6 +258,10 @@ def run_structure_search(
                 "val_smape": val_metrics["smape"],
                 "rolling_val_mean_mae": rolling_mean_mae,
                 "rolling_val_mean_rmse": rolling_mean_rmse,
+                "multi_split_blocks": search_config.multi_split_blocks,
+                "multi_split_val_mean_mae": multi_split_mean_mae,
+                "multi_split_val_std_mae": multi_split_std_mae,
+                "multi_split_penalty": multi_split_penalty,
                 "rolling_val_error_std": rolling_error_std,
                 "rolling_val_metrics": rolling_metrics,
                 "stability_penalty": stability_penalty,
@@ -257,10 +272,12 @@ def run_structure_search(
             }
             evaluated_records[spec.spec_key] = record
             logger.info(
-                "Search candidate done round=%d spec=%s score=%.6f rolling_mae=%.6f stability=%.6f val_mae=%.6f age_prior=%.4f elapsed=%.1fs",
+                "Search candidate done round=%d spec=%s score=%.6f multi_split_mae=%.6f multi_split_std=%.6f rolling_mae=%.6f stability=%.6f val_mae=%.6f age_prior=%.4f elapsed=%.1fs",
                 round_idx,
                 spec.spec_key,
                 score,
+                multi_split_mean_mae,
+                multi_split_std_mae,
                 rolling_mean_mae,
                 rolling_error_std,
                 val_metrics["mae"],

@@ -29,10 +29,13 @@
   },
   "model_name": "constrained_structure_discovery",
   "probabilistic_metrics": {
+    "average_interval_width_50": null,
     "average_interval_width_80": null,
     "average_interval_width_95": null,
+    "coverage_50": null,
     "coverage_80": null,
     "coverage_95": null,
+    "interval_summary": {},
     "negative_log_likelihood": null
   },
   "rolling_origin_metrics": {
@@ -57,8 +60,13 @@
     "mean_rmse": 0.14725080976668314
   },
   "search_best_record": {
+    "age_prior_penalty": -0.01,
     "complexity_penalty": 0.18,
     "fractional": false,
+    "multi_split_blocks": 3,
+    "multi_split_penalty": 0.020536047233724614,
+    "multi_split_val_mean_mae": 0.15461225135567636,
+    "multi_split_val_std_mae": 0.04107209446744923,
     "num_compartments": 4,
     "num_free_params": 9,
     "observation_map": "I",
@@ -76,6 +84,7 @@
       "rho": 16.2673914711861,
       "sigma": 0.9489266599895492
     },
+    "rolling_val_error_std": 0.11316739248266862,
     "rolling_val_mean_mae": 0.15524510393967883,
     "rolling_val_mean_rmse": 0.19247173331599055,
     "rolling_val_metrics": {
@@ -96,8 +105,9 @@
       }
     },
     "round": 1,
-    "score": 0.3352451039396788,
+    "score": 0.3677817770859347,
     "spec_key": "SEIRS|fractional=0|obs=I",
+    "stability_penalty": 0.022633478496533726,
     "structure_name": "SEIRS",
     "train_mae": 0.3261637365999824,
     "train_objective": 0.3592658609050335,

@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.evaluation.metrics import interval_level_summary_from_frame
 from src.plotting.robustness_plots import plot_metric_bars, plot_metric_heatmap
 
 
@@ -124,7 +125,234 @@ def collect_age_group_recommendations(summary: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(recommendations).sort_values("series_name").reset_index(drop=True)
 
 
-def write_benchmark_reports(artifact_root: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def collect_probabilistic_calibration_summary(artifact_root: Path) -> pd.DataFrame:
+    """Collect interval calibration summaries for probabilistic models."""
+    columns = [
+        "series_name",
+        "model_name",
+        "split",
+        "calibration_kind",
+        "interval_level",
+        "nominal_coverage",
+        "empirical_coverage",
+        "coverage_gap",
+        "average_interval_width",
+        "uncertainty_method",
+        "uncertainty_draws",
+        "interval_calibration_method",
+        "interval_calibration_scale",
+        "artifact_dir",
+    ]
+    records: list[dict[str, object]] = []
+
+    calibration_paths = sorted(artifact_root.glob("**/calibration_report.json"))
+    if calibration_paths:
+        for calibration_path in calibration_paths:
+            report = json.loads(calibration_path.read_text(encoding="utf-8"))
+            scale_map = report.get("interval_calibration_scales", {})
+            shared_scale = report.get("interval_calibration_scale")
+            for split_name, summary_key in (
+                ("validation", "validation_raw_interval_summary"),
+                ("validation", "validation_calibrated_interval_summary"),
+                ("test", "test_raw_interval_summary"),
+                ("test", "test_calibrated_interval_summary"),
+            ):
+                summary = report.get(summary_key, {})
+                calibration_kind = "raw" if "raw" in summary_key else "calibrated"
+                for level, values in summary.items():
+                    records.append(
+                        {
+                            "series_name": report["series_name"],
+                            "model_name": report["model_name"],
+                            "split": split_name,
+                            "calibration_kind": calibration_kind,
+                            "interval_level": int(level),
+                            "nominal_coverage": values["nominal_coverage"],
+                            "empirical_coverage": values["empirical_coverage"],
+                            "coverage_gap": values["coverage_gap"],
+                            "average_interval_width": values["average_interval_width"],
+                            "uncertainty_method": report.get("uncertainty_method"),
+                            "uncertainty_draws": report.get("uncertainty_draws"),
+                            "interval_calibration_method": report.get("interval_calibration_method"),
+                            "interval_calibration_scale": scale_map.get(level, shared_scale),
+                            "artifact_dir": str(calibration_path.parent),
+                        }
+                    )
+
+        if not records:
+            return pd.DataFrame(columns=columns)
+
+        return pd.DataFrame.from_records(records).sort_values(
+            ["series_name", "split", "calibration_kind", "interval_level"]
+        ).reset_index(drop=True)
+
+    for forecast_path in sorted(artifact_root.glob("**/forecast_trace.csv")):
+        if forecast_path.parent.name != "probabilistic_seir":
+            continue
+
+        metrics_path = forecast_path.parent / "metrics.json"
+        if not metrics_path.exists():
+            continue
+
+        metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+        forecast_frame = pd.read_csv(forecast_path)
+        test_frame = forecast_frame.loc[forecast_frame["segment"] == "test"].copy()
+        interval_summary = interval_level_summary_from_frame(test_frame)
+        if not interval_summary:
+            continue
+
+        probabilistic_metrics = metrics.get("probabilistic_metrics", {})
+        scale_map = probabilistic_metrics.get("interval_calibration_scales", {})
+        shared_scale = probabilistic_metrics.get("interval_calibration_scale")
+        for level, values in interval_summary.items():
+            records.append(
+                {
+                    "series_name": metrics["series_name"],
+                    "model_name": metrics["model_name"],
+                    "interval_level": int(level),
+                    "nominal_coverage": values["nominal_coverage"],
+                    "empirical_coverage": values["empirical_coverage"],
+                    "coverage_gap": values["coverage_gap"],
+                    "average_interval_width": values["average_interval_width"],
+                    "negative_log_likelihood": probabilistic_metrics.get("negative_log_likelihood"),
+                    "uncertainty_method": probabilistic_metrics.get("uncertainty_method"),
+                    "uncertainty_draws": probabilistic_metrics.get("uncertainty_draws"),
+                    "interval_calibration_method": probabilistic_metrics.get("interval_calibration_method"),
+                    "split": "test",
+                    "calibration_kind": "raw",
+                    "interval_calibration_scale": scale_map.get(level, shared_scale),
+                    "artifact_dir": str(forecast_path.parent),
+                }
+            )
+
+    if not records:
+        return pd.DataFrame(columns=columns)
+
+    return pd.DataFrame.from_records(records).sort_values(["series_name", "interval_level"]).reset_index(drop=True)
+
+
+def _format_float(value: object) -> str:
+    if value is None or pd.isna(value):
+        return ""
+    return f"{float(value):.4f}"
+
+
+def _markdown_table(frame: pd.DataFrame, columns: list[str]) -> str:
+    subset = frame.loc[:, columns].copy()
+    header = "| " + " | ".join(columns) + " |"
+    separator = "| " + " | ".join(["---"] * len(columns)) + " |"
+    rows = []
+    for _, row in subset.iterrows():
+        values = []
+        for value in row.tolist():
+            if isinstance(value, float):
+                values.append(_format_float(value))
+            else:
+                values.append("" if value is None else str(value))
+        rows.append("| " + " | ".join(values) + " |")
+    return "\n".join([header, separator, *rows])
+
+
+def write_v3_result_summary(
+    artifact_root: Path,
+    summary: pd.DataFrame,
+    winners: pd.DataFrame,
+    recommendations: pd.DataFrame,
+    calibration_summary: pd.DataFrame,
+) -> Path:
+    """Write a markdown summary for the current benchmark run."""
+    overall = summary.loc[summary["series_name"] == "Overall"].copy()
+    recommendation_counts = recommendations["recommended_model"].value_counts().to_dict()
+    lines = [
+        "# V3 Result Summary",
+        "",
+        "This report summarizes the current benchmark outputs for the reproducible influenza forecasting pipeline.",
+        "",
+        "## Headline",
+        "",
+        "The current results support age-aware model selection rather than a single globally best model family.",
+        "",
+        "## Overall Series Ranking",
+        "",
+    ]
+
+    if not overall.empty:
+        overall_table = overall.sort_values(["test_mae", "rolling_mean_mae"]).copy()
+        overall_table["test_mae"] = overall_table["test_mae"].map(_format_float)
+        overall_table["rolling_mean_mae"] = overall_table["rolling_mean_mae"].map(_format_float)
+        lines.append(
+            _markdown_table(
+                overall_table,
+                ["model_name", "test_mae", "rolling_mean_mae", "num_free_params", "num_compartments"],
+            )
+        )
+    else:
+        lines.append("No overall-series summary was found.")
+
+    if len(winners) > 1:
+        lines.extend(
+            [
+                "",
+                "## Age-Group Winners",
+                "",
+                _markdown_table(
+                    winners.copy(),
+                    ["series_name", "best_test_model", "best_test_mae", "best_rolling_model", "best_rolling_mean_mae"],
+                ),
+                "",
+                "## Recommended Models",
+                "",
+                _markdown_table(
+                    recommendations.copy(),
+                    ["series_name", "recommended_model", "decision_type", "best_test_model", "best_rolling_model"],
+                ),
+                "",
+                "## Recommendation Tally",
+                "",
+            ]
+        )
+        for model_name, count in sorted(recommendation_counts.items()):
+            lines.append(f"- `{model_name}` recommended for {count} series")
+
+    if not calibration_summary.empty:
+        coverage_rows = calibration_summary.loc[
+            calibration_summary["interval_level"].isin([80, 95])
+        ].copy()
+        if "split" in coverage_rows.columns:
+            coverage_rows = coverage_rows.loc[
+                (coverage_rows["split"] == "test") & (coverage_rows["calibration_kind"] == "calibrated")
+            ].copy()
+        lines.extend(
+            [
+                "",
+                "## Probabilistic Calibration",
+                "",
+                _markdown_table(
+                    coverage_rows,
+                    ["series_name", "interval_level", "empirical_coverage", "nominal_coverage", "coverage_gap", "average_interval_width"],
+                ),
+            ]
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Interpretation",
+            "",
+            "- `deterministic_seir` remains the strongest default baseline for the overall series and several adult groups.",
+            "- `constrained_structure_discovery` is already useful in selected age groups, especially when simpler discovered structures outperform larger hand-specified models.",
+            "- `probabilistic_seir` is best interpreted as a stability and uncertainty baseline rather than the primary point-forecast winner.",
+            "- The next research step is to strengthen stability-aware selection across multiple validation splits rather than further increasing raw structural flexibility.",
+            "",
+        ]
+    )
+
+    summary_path = artifact_root / "v3_result_summary.md"
+    summary_path.write_text("\n".join(lines), encoding="utf-8")
+    return summary_path
+
+
+def write_benchmark_reports(artifact_root: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Write benchmark-wide summary tables and cross-series plots."""
     summary = collect_benchmark_model_summary(artifact_root)
     if summary.empty:
@@ -132,9 +360,13 @@ def write_benchmark_reports(artifact_root: Path) -> tuple[pd.DataFrame, pd.DataF
 
     winners = collect_benchmark_series_winners(summary)
     recommendations = collect_age_group_recommendations(summary)
+    calibration_summary = collect_probabilistic_calibration_summary(artifact_root)
     summary.to_csv(artifact_root / "benchmark_model_summary.csv", index=False)
     winners.to_csv(artifact_root / "benchmark_series_winners.csv", index=False)
     recommendations.to_csv(artifact_root / "age_group_recommendation.csv", index=False)
+    if not calibration_summary.empty:
+        calibration_summary.to_csv(artifact_root / "probabilistic_calibration_summary.csv", index=False)
+    write_v3_result_summary(artifact_root, summary, winners, recommendations, calibration_summary)
 
     if summary["series_name"].nunique() > 1:
         plot_metric_heatmap(
@@ -162,4 +394,4 @@ def write_benchmark_reports(artifact_root: Path) -> tuple[pd.DataFrame, pd.DataF
             path=artifact_root / "benchmark_rolling_mae_bars.png",
         )
 
-    return summary, winners, recommendations
+    return summary, winners, recommendations, calibration_summary

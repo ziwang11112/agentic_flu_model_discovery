@@ -26,10 +26,13 @@
   },
   "model_name": "constrained_structure_discovery",
   "probabilistic_metrics": {
+    "average_interval_width_50": null,
     "average_interval_width_80": null,
     "average_interval_width_95": null,
+    "coverage_50": null,
     "coverage_80": null,
     "coverage_95": null,
+    "interval_summary": {},
     "negative_log_likelihood": null
   },
   "rolling_origin_metrics": {
@@ -54,8 +57,13 @@
     "mean_rmse": 0.09688642777100621
   },
   "search_best_record": {
+    "age_prior_penalty": -0.01,
     "complexity_penalty": 0.12,
     "fractional": false,
+    "multi_split_blocks": 3,
+    "multi_split_penalty": 0.024457884632517652,
+    "multi_split_val_mean_mae": 0.11377180489681707,
+    "multi_split_val_std_mae": 0.048915769265035304,
     "num_compartments": 3,
     "num_free_params": 6,
     "observation_map": "I",
@@ -70,6 +78,7 @@
       "gamma": 0.11225648528175321,
       "rho": 4.779054469764451
     },
+    "rolling_val_error_std": 0.06187614519104784,
     "rolling_val_mean_mae": 0.11752610609418342,
     "rolling_val_mean_rmse": 0.13285253291258872,
     "rolling_val_metrics": {
@@ -90,8 +99,9 @@
       }
     },
     "round": 1,
-    "score": 0.2375261060941834,
+    "score": 0.2606049185675443,
     "spec_key": "SIR|fractional=0|obs=I",
+    "stability_penalty": 0.012375229038209569,
     "structure_name": "SIR",
     "train_mae": 0.170887566397614,
     "train_objective": 0.11823561485539667,

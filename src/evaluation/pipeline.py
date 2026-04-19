@@ -12,12 +12,14 @@ from scipy.stats import t as student_t
 from src.data.split import ChronologicalSplit
 from src.discovery.model import DiscoveryCompartmentModel
 from src.discovery.search import SearchConfig, discovery_regularization_config, run_structure_search
-from src.evaluation.metrics import point_metrics, summarise_probabilistic_metrics
+from src.evaluation.metrics import interval_level_summary, point_metrics, summarise_probabilistic_metrics
+from src.evaluation.metrics import learn_conformal_interval_scales, learn_interval_scales, scale_interval_map
 from src.evaluation.rolling import mean_rolling_metric, rolling_metrics_by_horizon, rolling_origin_forecasts
 from src.models.base import BaseEpidemicModel, FitConfig
 from src.plotting.plots import (
     plot_full_series_fit,
     plot_leaderboard,
+    plot_probabilistic_calibration,
     plot_residuals,
     plot_rolling_forecasts,
     plot_structure_diagram,
@@ -33,6 +35,7 @@ def _forecast_frame(
     split: ChronologicalSplit,
     test_predictions: np.ndarray,
     interval_map: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
+    raw_interval_map: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> pd.DataFrame:
     frame = pd.DataFrame(
         {
@@ -52,6 +55,10 @@ def _forecast_frame(
         for level, (lower, upper) in interval_map.items():
             frame[f"lower_{level}"] = lower
             frame[f"upper_{level}"] = upper
+    if raw_interval_map is not None:
+        for level, (lower, upper) in raw_interval_map.items():
+            frame[f"raw_lower_{level}"] = lower
+            frame[f"raw_upper_{level}"] = upper
     return frame
 
 
@@ -93,14 +100,18 @@ def run_model_family(
     residuals = y - full_predictions
 
     interval_map_full: dict[str, tuple[np.ndarray, np.ndarray]] | None = None
+    raw_interval_map_full: dict[str, tuple[np.ndarray, np.ndarray]] | None = None
     probabilistic_metrics = summarise_probabilistic_metrics(y[split.test_slice], None, None)
+    calibration_report: dict[str, Any] | None = None
+    validation_forecast_frame: pd.DataFrame | None = None
 
     if hasattr(trainval_model, "predictive_summary"):
         predictive = trainval_model.predictive_summary(y[: split.val_end], trainval_fit, len(y), rng)  # type: ignore[attr-defined]
-        interval_map_full = predictive["intervals"]
+        raw_interval_map_full = predictive["intervals"]
+        interval_map_full = raw_interval_map_full
         interval_map_test = {
             level: (bounds[0][split.test_slice], bounds[1][split.test_slice])
-            for level, bounds in interval_map_full.items()
+            for level, bounds in raw_interval_map_full.items()
         }
         test_scale = trainval_fit.params["obs_scale"]
         nll = float(
@@ -113,9 +124,93 @@ def run_model_family(
                 )
             )
         )
+        raw_probabilistic_metrics = summarise_probabilistic_metrics(y[split.test_slice], nll, interval_map_test)
+        calibration_scales = {level: 1.0 for level in interval_map_test}
+        calibration_method = "none"
+        validation_raw_interval_summary: dict[str, dict[str, float]] = {}
+        validation_calibrated_interval_summary: dict[str, dict[str, float]] = {}
+        validation_predictive_raw = train_model.predictive_summary(  # type: ignore[attr-defined]
+            y[split.train_slice],
+            train_fit,
+            split.val_end,
+            rng,
+            n_draws=train_model.fit_config.calibration_draws,
+        )
+        validation_raw_interval_map = {
+            level: (bounds[0][split.val_slice], bounds[1][split.val_slice])
+            for level, bounds in validation_predictive_raw["intervals"].items()
+        }
+        validation_center = validation_predictive_raw["point_forecast"][split.val_slice]
+        validation_forecast_frame = pd.DataFrame(
+            {
+                "t": np.arange(split.train_end, split.val_end),
+                "actual": y[split.val_slice],
+                "point_prediction": validation_center,
+                "segment": "validation",
+                "horizon": "static",
+            }
+        )
+        for level, (lower, upper) in validation_raw_interval_map.items():
+            validation_forecast_frame[f"raw_lower_{level}"] = lower
+            validation_forecast_frame[f"raw_upper_{level}"] = upper
+
+        if trainval_model.fit_config.calibrate_intervals:  # type: ignore[attr-defined]
+            calibration_method = str(trainval_model.fit_config.interval_calibration_method).lower()  # type: ignore[attr-defined]
+            if calibration_method == "scale":
+                calibration_fit = learn_interval_scales(
+                    y_true=y[split.val_slice],
+                    center=validation_center,
+                    interval_map=validation_raw_interval_map,
+                    scale_min=train_model.fit_config.calibration_scale_min,
+                    scale_max=train_model.fit_config.calibration_scale_max,
+                    grid_size=train_model.fit_config.calibration_scale_grid_size,
+                )
+            elif calibration_method == "conformal":
+                calibration_fit = learn_conformal_interval_scales(
+                    y_true=y[split.val_slice],
+                    center=validation_center,
+                    interval_map=validation_raw_interval_map,
+                )
+            else:
+                raise ValueError(f"Unsupported interval calibration method: {calibration_method}")
+            calibration_scales = {level: float(scale) for level, scale in calibration_fit["scales"].items()}
+            validation_raw_interval_summary = interval_level_summary(y[split.val_slice], validation_raw_interval_map)
+            validation_calibrated_interval_summary = calibration_fit["interval_summary"]
+            interval_map_full = scale_interval_map(
+                raw_interval_map_full,
+                predictive["point_forecast"],
+                calibration_scales,
+            )
+            interval_map_test = {
+                level: (bounds[0][split.test_slice], bounds[1][split.test_slice])
+                for level, bounds in interval_map_full.items()
+            }
+
         probabilistic_metrics = summarise_probabilistic_metrics(y[split.test_slice], nll, interval_map_test)
         probabilistic_metrics["uncertainty_method"] = predictive["method"]
         probabilistic_metrics["uncertainty_draws"] = predictive["draw_count"]
+        probabilistic_metrics["interval_calibration_method"] = calibration_method
+        probabilistic_metrics["interval_calibration_scales"] = calibration_scales
+        probabilistic_metrics["raw_interval_summary"] = raw_probabilistic_metrics["interval_summary"]
+        calibration_report = {
+            "series_name": series_name,
+            "model_name": train_model.model_name,
+            "uncertainty_method": predictive["method"],
+            "uncertainty_draws": predictive["draw_count"],
+            "interval_calibration_method": calibration_method,
+            "interval_calibration_scales": calibration_scales,
+            "validation_raw_interval_summary": validation_raw_interval_summary,
+            "validation_calibrated_interval_summary": validation_calibrated_interval_summary,
+            "test_raw_interval_summary": raw_probabilistic_metrics["interval_summary"],
+            "test_calibrated_interval_summary": probabilistic_metrics["interval_summary"],
+        }
+        write_json(calibration_report, artifact_dir / "calibration_report.json")
+        plot_probabilistic_calibration(
+            calibration_summary=calibration_report["test_calibrated_interval_summary"],
+            raw_summary=calibration_report["test_raw_interval_summary"],
+            title=f"{series_name}: {train_model.model_name} calibration",
+            path=artifact_dir / "calibration.png",
+        )
 
     logger.info("Model family rolling-origin start model=%s series=%s", train_model.model_name, series_name)
     rolling_frame = rolling_origin_forecasts(
@@ -127,8 +222,17 @@ def run_model_family(
     )
     rolling_frame.to_csv(artifact_dir / "rolling_origin_forecasts.csv", index=False)
 
-    forecast_frame = _forecast_frame(y, full_predictions, split, test_rollout.predictions, interval_map_full)
+    forecast_frame = _forecast_frame(
+        y,
+        full_predictions,
+        split,
+        test_rollout.predictions,
+        interval_map_full,
+        raw_interval_map_full,
+    )
     forecast_frame.to_csv(artifact_dir / "forecast_trace.csv", index=False)
+    if validation_forecast_frame is not None:
+        validation_forecast_frame.to_csv(artifact_dir / "validation_forecast_trace.csv", index=False)
 
     plot_full_series_fit(
         np.arange(len(y)),
@@ -173,6 +277,8 @@ def run_model_family(
         },
         "best_full_params": full_fit.params,
     }
+    if calibration_report is not None:
+        summary["calibration_report"] = calibration_report
     write_json(summary, artifact_dir / "metrics.json")
     logger.info(
         "Model family done model=%s series=%s test_mae=%.6f rolling_mean_mae=%.6f elapsed=%.1fs",

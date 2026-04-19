@@ -1,0 +1,19 @@
+series_name,age_family,model_name,horizon,interval_level,selected_calibration_kind,validation_empirical_coverage,validation_coverage_gap,validation_average_interval_width,validation_interval_score_mean,validation_selection_score,selection_rule_used,residual_source_used,calibration_points
+0-4 yr,children,probabilistic_seir,static,50,conformal_asymmetric,0.5,0.0,0.43219868372493125,0.8530960812185896,0.0,coverage_floor_then_balanced_score,age_family_static,20
+0-4 yr,children,probabilistic_seir,static,80,conformal_asymmetric,0.8,0.0,0.7052652210101781,1.0539981857707776,0.0,coverage_floor_then_balanced_score,age_family_static,20
+0-4 yr,children,probabilistic_seir,static,95,conformal_asymmetric,1.0,0.050000000000000044,1.1158084721192079,1.1158084721192079,0.0,coverage_floor_then_balanced_score,age_family_static,20
+18-49 yr,adults,probabilistic_seir,static,50,scale_calibrated,0.4,-0.09999999999999998,0.23614235947355353,0.5398116870837162,0.22763784243734306,balanced_score_no_floor_fallback,same_series_static_validation,10
+18-49 yr,adults,probabilistic_seir,static,80,conformal_asymmetric,0.8,0.0,0.42047227299596956,0.5519174679864559,0.0,coverage_floor_then_balanced_score,age_family_static,20
+18-49 yr,adults,probabilistic_seir,static,95,conformal_asymmetric,1.0,0.050000000000000044,0.533066910013674,0.533066910013674,0.0,coverage_floor_then_balanced_score,age_family_static,20
+5-17 yr,children,probabilistic_seir,static,50,conformal_asymmetric,0.6,0.09999999999999998,0.24640989846210332,0.336646524473349,0.25,coverage_floor_then_balanced_score,age_family_static,20
+5-17 yr,children,probabilistic_seir,static,80,scale_calibrated,0.8,0.0,0.38898390143094486,0.42629329781046793,0.25,coverage_floor_then_balanced_score,same_series_static_validation,10
+5-17 yr,children,probabilistic_seir,static,95,conformal_absolute,1.0,0.050000000000000044,0.31554625718943247,0.31554625718943247,0.0,coverage_floor_then_balanced_score,same_series_pooled_horizons,26
+50-64 yr,adults,probabilistic_seir,static,50,scale_calibrated,0.5,0.0,0.13548555443624918,0.44503029555434476,0.0,coverage_floor_then_balanced_score,same_series_static_validation,10
+50-64 yr,adults,probabilistic_seir,static,80,scale_calibrated,0.8,0.0,0.5386933226049548,0.7917118899024423,0.0,coverage_floor_then_balanced_score,same_series_static_validation,10
+50-64 yr,adults,probabilistic_seir,static,95,conformal_absolute,1.0,0.050000000000000044,0.7129907866367906,0.7129907866367906,0.0,coverage_floor_then_balanced_score,same_series_pooled_horizons,26
+>= 65 yr,older_adults,probabilistic_seir,static,50,scale_calibrated,0.5,0.0,1.0306142491385226,1.6206379409231004,0.13973136860849922,coverage_floor_then_balanced_score,same_series_static_validation,10
+>= 65 yr,older_adults,probabilistic_seir,static,80,scale_calibrated,0.8,0.0,1.3856217963182884,1.8483868119964757,0.0,coverage_floor_then_balanced_score,same_series_static_validation,10
+>= 65 yr,older_adults,probabilistic_seir,static,95,conformal_absolute,0.9,-0.04999999999999993,2.1520188478659965,2.153193684993261,0.0,coverage_floor_then_balanced_score,same_series_pooled_horizons,26
+Overall,overall,probabilistic_seir,static,50,conformal_asymmetric,0.5,0.0,0.40861611401186915,0.6382966479314769,0.0,coverage_floor_then_balanced_score,global_pooled,60
+Overall,overall,probabilistic_seir,static,80,conformal_standardized,0.8,0.0,0.6751185711196775,0.8974653760961406,0.25,coverage_floor_then_balanced_score,global_pooled,60
+Overall,overall,probabilistic_seir,static,95,conformal_absolute,1.0,0.050000000000000044,0.7484509952602242,0.7484509952602242,0.0,coverage_floor_then_balanced_score,same_series_pooled_horizons,26

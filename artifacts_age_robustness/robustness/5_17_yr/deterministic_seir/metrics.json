@@ -22,10 +22,13 @@
   },
   "model_name": "deterministic_seir",
   "probabilistic_metrics": {
+    "average_interval_width_50": null,
     "average_interval_width_80": null,
     "average_interval_width_95": null,
+    "coverage_50": null,
     "coverage_80": null,
     "coverage_95": null,
+    "interval_summary": {},
     "negative_log_likelihood": null
   },
   "rolling_origin_metrics": {

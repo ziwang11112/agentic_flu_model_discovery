@@ -1,0 +1,4 @@
+series_name,model_name,interval_level,nominal_coverage,empirical_coverage,coverage_gap,average_interval_width,negative_log_likelihood,uncertainty_method,uncertainty_draws,split,calibration_kind,interval_calibration_scale,artifact_dir
+Overall,probabilistic_seir,50,0.5,0.9090909090909091,0.40909090909090906,0.29063140023442735,-3.0350467621263695,bootstrap,30,test,raw,,artifacts/overall/probabilistic_seir
+Overall,probabilistic_seir,80,0.8,1.0,0.19999999999999996,0.478418818778515,-3.0350467621263695,bootstrap,30,test,raw,,artifacts/overall/probabilistic_seir
+Overall,probabilistic_seir,95,0.95,1.0,0.050000000000000044,0.7564250254680052,-3.0350467621263695,bootstrap,30,test,raw,,artifacts/overall/probabilistic_seir

@@ -1,6 +1,11 @@
 {
+  "age_prior_penalty": -0.0075,
   "complexity_penalty": 0.20500000000000002,
   "fractional": true,
+  "multi_split_blocks": 3,
+  "multi_split_penalty": 0.0360353522504699,
+  "multi_split_val_mean_mae": 0.24655865638839558,
+  "multi_split_val_std_mae": 0.0720707045009398,
   "num_compartments": 4,
   "num_free_params": 10,
   "observation_map": "I",
@@ -19,6 +24,7 @@
     "rho": 81.81369746502978,
     "sigma": 0.9544426791848887
   },
+  "rolling_val_error_std": 0.13418137370036726,
   "rolling_val_mean_mae": 0.2457792279888158,
   "rolling_val_mean_rmse": 0.2810414839596385,
   "rolling_val_metrics": {
@@ -39,8 +45,9 @@
     }
   },
   "round": 2,
-  "score": 0.4507792279888158,
+  "score": 0.506930283378939,
   "spec_key": "SEIRS|fractional=1|obs=I",
+  "stability_penalty": 0.026836274740073454,
   "structure_name": "SEIRS",
   "train_mae": 0.5013123163523876,
   "train_objective": 0.7136442370147378,

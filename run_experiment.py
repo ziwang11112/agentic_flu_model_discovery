@@ -45,6 +45,12 @@ def _fit_config(config: dict[str, Any]) -> FitConfig:
         uncertainty_method=str(fitting.get("uncertainty_method", "laplace")),
         bootstrap_draws=int(fitting.get("bootstrap_draws", 40)),
         bootstrap_n_restarts=int(fitting.get("bootstrap_n_restarts", 0)),
+        calibrate_intervals=bool(fitting.get("calibrate_intervals", True)),
+        interval_calibration_method=str(fitting.get("interval_calibration_method", "conformal")),
+        calibration_draws=int(fitting.get("calibration_draws", 12)),
+        calibration_scale_min=float(fitting.get("calibration_scale_min", 0.25)),
+        calibration_scale_max=float(fitting.get("calibration_scale_max", 1.25)),
+        calibration_scale_grid_size=int(fitting.get("calibration_scale_grid_size", 41)),
         seed=int(config["seed"]),
     )
 
@@ -56,12 +62,14 @@ def _search_config(config: dict[str, Any]) -> SearchConfig:
         max_rounds=int(discovery["max_rounds"]),
         patience=int(discovery["patience"]),
         rolling_horizons=tuple(int(value) for value in discovery["rolling_horizons"]),
+        multi_split_blocks=int(discovery.get("multi_split_blocks", 3)),
         score_param_weight=float(discovery["score_param_weight"]),
         score_compartment_weight=float(discovery["score_compartment_weight"]),
         score_fractional_weight=float(discovery["score_fractional_weight"]),
         score_observation_weight=float(discovery["score_observation_weight"]),
         score_recurrence_weight=float(discovery["score_recurrence_weight"]),
         score_stability_weight=float(discovery["score_stability_weight"]),
+        score_multi_split_std_weight=float(discovery.get("score_multi_split_std_weight", 0.5)),
         raw_l2_weight=float(discovery["raw_l2_weight"]),
         seasonality_l2_weight=float(discovery["seasonality_l2_weight"]),
         rho_l2_weight=float(discovery["rho_l2_weight"]),
@@ -267,7 +275,7 @@ def main() -> None:
 
     combined_board = pd.concat(benchmark_leaderboards, ignore_index=True)
     combined_board.to_csv(artifact_root / "benchmark_leaderboard.csv", index=False)
-    summary_frame, winners_frame, recommendation_frame = write_benchmark_reports(artifact_root)
+    summary_frame, winners_frame, recommendation_frame, calibration_frame = write_benchmark_reports(artifact_root)
     write_json(
         {
             "seed": int(config["seed"]),
@@ -276,16 +284,19 @@ def main() -> None:
             "summary_path": str(artifact_root / "benchmark_model_summary.csv"),
             "winners_path": str(artifact_root / "benchmark_series_winners.csv"),
             "recommendation_path": str(artifact_root / "age_group_recommendation.csv"),
+            "v3_summary_path": str(artifact_root / "v3_result_summary.md"),
+            "probabilistic_calibration_path": str(artifact_root / "probabilistic_calibration_summary.csv"),
         },
         artifact_root / "run_summary.json",
     )
     logger.info(
-        "Benchmark completed series_count=%d leaderboard=%s summary=%s winners=%s recommendations=%s",
+        "Benchmark completed series_count=%d leaderboard=%s summary=%s winners=%s recommendations=%s v3_summary=%s",
         len(combined_board["series_name"].unique()),
         artifact_root / "benchmark_leaderboard.csv",
         artifact_root / "benchmark_model_summary.csv",
         artifact_root / "benchmark_series_winners.csv",
         artifact_root / "age_group_recommendation.csv",
+        artifact_root / "v3_result_summary.md",
     )
 
 

@@ -1,0 +1,92 @@
+{
+  "interval_calibration_method": "conformal",
+  "interval_calibration_scales": {
+    "50": 1.5616807866291467,
+    "80": 1.0441029731338187,
+    "95": 1.0
+  },
+  "model_name": "probabilistic_seir",
+  "series_name": "5-17 yr",
+  "test_calibrated_interval_summary": {
+    "50": {
+      "average_interval_width": 0.3271549848339266,
+      "coverage_gap": 0.31818181818181823,
+      "empirical_coverage": 0.8181818181818182,
+      "nominal_coverage": 0.5
+    },
+    "80": {
+      "average_interval_width": 0.43757818756592126,
+      "coverage_gap": 0.19999999999999996,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.8
+    },
+    "95": {
+      "average_interval_width": 0.6988328483302193,
+      "coverage_gap": 0.050000000000000044,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.95
+    }
+  },
+  "test_raw_interval_summary": {
+    "50": {
+      "average_interval_width": 0.20948902466814834,
+      "coverage_gap": 0.13636363636363635,
+      "empirical_coverage": 0.6363636363636364,
+      "nominal_coverage": 0.5
+    },
+    "80": {
+      "average_interval_width": 0.41909485829022586,
+      "coverage_gap": 0.19999999999999996,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.8
+    },
+    "95": {
+      "average_interval_width": 0.6988328483302193,
+      "coverage_gap": 0.050000000000000044,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.95
+    }
+  },
+  "uncertainty_draws": 30,
+  "uncertainty_method": "bootstrap",
+  "validation_calibrated_interval_summary": {
+    "50": {
+      "average_interval_width": 0.326328608365273,
+      "coverage_gap": 0.09999999999999998,
+      "empirical_coverage": 0.6,
+      "nominal_coverage": 0.5
+    },
+    "80": {
+      "average_interval_width": 0.3978701769848985,
+      "coverage_gap": 0.09999999999999998,
+      "empirical_coverage": 0.9,
+      "nominal_coverage": 0.8
+    },
+    "95": {
+      "average_interval_width": 0.4742938275404652,
+      "coverage_gap": 0.050000000000000044,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.95
+    }
+  },
+  "validation_raw_interval_summary": {
+    "50": {
+      "average_interval_width": 0.2089598662922953,
+      "coverage_gap": -0.2,
+      "empirical_coverage": 0.3,
+      "nominal_coverage": 0.5
+    },
+    "80": {
+      "average_interval_width": 0.3810641164929477,
+      "coverage_gap": -0.10000000000000009,
+      "empirical_coverage": 0.7,
+      "nominal_coverage": 0.8
+    },
+    "95": {
+      "average_interval_width": 0.4742938275404652,
+      "coverage_gap": 0.050000000000000044,
+      "empirical_coverage": 1.0,
+      "nominal_coverage": 0.95
+    }
+  }
+}

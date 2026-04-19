@@ -79,3 +79,46 @@ def rolling_error_stability(frame: pd.DataFrame) -> float:
         for _, subset in frame.groupby("horizon")
     ]
     return float(np.mean(horizon_stds))
+
+
+def rolling_blocked_metric_summary(
+    frame: pd.DataFrame,
+    metric_name: str,
+    num_blocks: int = 3,
+) -> dict[str, Any]:
+    """Summarize rolling forecasts across contiguous target-time blocks."""
+    if frame.empty:
+        return {
+            "details": pd.DataFrame(columns=["horizon", "block", "count", "mae", "rmse", "smape"]),
+            "mean": float("nan"),
+            "std": float("nan"),
+            "num_blocks": 0,
+        }
+
+    records: list[dict[str, Any]] = []
+    for horizon, subset in frame.groupby("horizon"):
+        ordered = subset.sort_values("target_t").reset_index(drop=True)
+        block_count = max(1, min(num_blocks, len(ordered)))
+        for block_index, indices in enumerate(np.array_split(np.arange(len(ordered)), block_count), start=1):
+            block = ordered.iloc[indices]
+            metrics = point_metrics(
+                block["actual"].to_numpy(dtype=float),
+                block["prediction"].to_numpy(dtype=float),
+            )
+            records.append(
+                {
+                    "horizon": int(horizon),
+                    "block": block_index,
+                    "count": int(len(block)),
+                    **metrics,
+                }
+            )
+
+    details = pd.DataFrame.from_records(records).sort_values(["horizon", "block"]).reset_index(drop=True)
+    values = details[metric_name].to_numpy(dtype=float)
+    return {
+        "details": details,
+        "mean": float(np.mean(values)),
+        "std": float(np.std(values)),
+        "num_blocks": int(len(details)),
+    }

@@ -7,7 +7,7 @@ import pandas as pd
 from src.discovery.model import DiscoveryCompartmentModel, DiscoveryRegularizationConfig
 from src.discovery.rules import StructureSpec, generate_neighbors, validate_structure
 from src.discovery.search import SearchConfig, age_structure_prior_penalty, discovery_complexity_penalty
-from src.evaluation.rolling import rolling_error_stability
+from src.evaluation.rolling import rolling_blocked_metric_summary, rolling_error_stability
 from src.models.base import FitConfig
 
 
@@ -89,3 +89,22 @@ def test_rolling_error_stability_penalizes_variable_candidates() -> None:
     )
 
     assert rolling_error_stability(unstable) > rolling_error_stability(stable)
+
+
+def test_rolling_blocked_metric_summary_returns_mean_and_std() -> None:
+    frame = pd.DataFrame(
+        {
+            "horizon": [1, 1, 1, 1, 2, 2, 2, 2],
+            "target_t": [10, 11, 12, 13, 10, 11, 12, 13],
+            "actual": [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0],
+            "prediction": [0.9, 1.1, 0.8, 1.2, 2.1, 1.9, 2.2, 1.8],
+            "abs_error": [0.1, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.2],
+        }
+    )
+
+    summary = rolling_blocked_metric_summary(frame, metric_name="mae", num_blocks=2)
+
+    assert summary["num_blocks"] == 4
+    assert summary["mean"] >= 0.0
+    assert summary["std"] >= 0.0
+    assert list(summary["details"].columns) == ["horizon", "block", "count", "mae", "rmse", "smape"]

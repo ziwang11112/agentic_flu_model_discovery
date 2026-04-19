@@ -24,6 +24,12 @@ class FitConfig:
     uncertainty_method: str = "laplace"
     bootstrap_draws: int = 40
     bootstrap_n_restarts: int = 0
+    calibrate_intervals: bool = True
+    interval_calibration_method: str = "conformal"
+    calibration_draws: int = 12
+    calibration_scale_min: float = 0.25
+    calibration_scale_max: float = 1.25
+    calibration_scale_grid_size: int = 41
     seed: int = 42
 
 

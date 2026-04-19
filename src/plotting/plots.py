@@ -125,3 +125,52 @@ def plot_structure_diagram(spec: StructureSpec, path: Path) -> None:
         f"fractional={spec.fractional} | observation={spec.observation_map}"
     )
     _finalize_plot(path)
+
+
+def plot_probabilistic_calibration(
+    calibration_summary: dict[str, dict[str, float]],
+    title: str,
+    path: Path,
+    raw_summary: dict[str, dict[str, float]] | None = None,
+) -> None:
+    if not calibration_summary:
+        return
+
+    levels = sorted(calibration_summary.keys(), key=int)
+    nominal = [calibration_summary[level]["nominal_coverage"] for level in levels]
+    empirical = [calibration_summary[level]["empirical_coverage"] for level in levels]
+    widths = [calibration_summary[level]["average_interval_width"] for level in levels]
+    x_positions = np.arange(len(levels))
+
+    figure, axes = plt.subplots(1, 2, figsize=(11, 4))
+    if raw_summary is None:
+        width = 0.34
+        axes[0].bar(x_positions - width / 2.0, nominal, width=width, color="#94d2bd", label="Nominal")
+        axes[0].bar(x_positions + width / 2.0, empirical, width=width, color="#005f73", label="Empirical")
+        axes[1].bar(x_positions, widths, color="#ee9b00")
+    else:
+        raw_empirical = [raw_summary[level]["empirical_coverage"] for level in levels]
+        raw_widths = [raw_summary[level]["average_interval_width"] for level in levels]
+        width = 0.24
+        axes[0].bar(x_positions - width, nominal, width=width, color="#94d2bd", label="Nominal")
+        axes[0].bar(x_positions, raw_empirical, width=width, color="#bb3e03", label="Raw")
+        axes[0].bar(x_positions + width, empirical, width=width, color="#005f73", label="Calibrated")
+        axes[1].bar(x_positions - width / 2.0, raw_widths, width=width, color="#ca6702", label="Raw")
+        axes[1].bar(x_positions + width / 2.0, widths, width=width, color="#0a9396", label="Calibrated")
+
+    axes[0].set_xticks(x_positions)
+    axes[0].set_xticklabels([f"{level}%" for level in levels])
+    axes[0].set_ylim(0.0, 1.05)
+    axes[0].set_ylabel("Coverage")
+    axes[0].set_title("Interval Coverage")
+    axes[0].legend()
+
+    axes[1].set_xticks(x_positions)
+    axes[1].set_xticklabels([f"{level}%" for level in levels])
+    axes[1].set_ylabel("Average interval width")
+    axes[1].set_title("Interval Width")
+    if raw_summary is not None:
+        axes[1].legend()
+
+    figure.suptitle(title)
+    _finalize_plot(path)

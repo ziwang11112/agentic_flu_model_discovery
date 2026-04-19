@@ -1,6 +1,11 @@
 {
+  "age_prior_penalty": -0.01,
   "complexity_penalty": 0.12,
   "fractional": false,
+  "multi_split_blocks": 3,
+  "multi_split_penalty": 0.02722336580450297,
+  "multi_split_val_mean_mae": 0.06977516410326393,
+  "multi_split_val_std_mae": 0.05444673160900594,
   "num_compartments": 3,
   "num_free_params": 6,
   "observation_map": "I",
@@ -15,6 +20,7 @@
     "gamma": 0.13780387799011348,
     "rho": 13.777233059242464
   },
+  "rolling_val_error_std": 0.07605338810549603,
   "rolling_val_mean_mae": 0.07405167026321292,
   "rolling_val_mean_rmse": 0.1069506805467541,
   "rolling_val_metrics": {
@@ -35,8 +41,9 @@
     }
   },
   "round": 1,
-  "score": 0.1940516702632129,
+  "score": 0.22220920752886608,
   "spec_key": "SIR|fractional=0|obs=I",
+  "stability_penalty": 0.015210677621099206,
   "structure_name": "SIR",
   "train_mae": 0.4206126402797029,
   "train_objective": 0.3845279200292714,

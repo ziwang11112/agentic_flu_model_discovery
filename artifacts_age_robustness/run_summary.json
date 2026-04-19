@@ -1,5 +1,7 @@
 {
   "leaderboard_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/benchmark_leaderboard.csv",
+  "probabilistic_calibration_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/probabilistic_calibration_summary.csv",
+  "recommendation_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/age_group_recommendation.csv",
   "seed": 42,
   "series_evaluated": [
     "Overall",
@@ -8,5 +10,8 @@
     "18-49 yr",
     "50-64 yr",
     ">= 65 yr"
-  ]
+  ],
+  "summary_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/benchmark_model_summary.csv",
+  "v3_summary_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/v3_result_summary.md",
+  "winners_path": "/scrfs/storage/zwang/home/agentic_flu_model_discovery/artifacts_age_robustness/benchmark_series_winners.csv"
 }

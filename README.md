@@ -49,6 +49,12 @@ Run the age-group robustness benchmark:
 python run_experiment.py --config configs/age_robustness.yaml --log-level INFO
 ```
 
+Run benchmark-level conformal calibration postprocessing after the benchmark artifacts exist:
+
+```bash
+python scripts/run_conformal_postprocess.py --config configs/age_robustness.yaml --artifact-root artifacts_age_robustness --output-root artifacts_v5_conformal_v3 --log-level INFO
+```
+
 Run the test suite:
 
 ```bash
@@ -61,6 +67,37 @@ If you only want the most important outputs after a run, start here:
 - age-group winners: [`artifacts_age_robustness/benchmark_series_winners.csv`](artifacts_age_robustness/benchmark_series_winners.csv)
 - age-aware recommendation table: [`artifacts_age_robustness/age_group_recommendation.csv`](artifacts_age_robustness/age_group_recommendation.csv)
 - rolling-origin heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+- conformal comparison table: [`artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv`](artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv)
+- conformal phase report: [`reports/conformal_v5_report.md`](reports/conformal_v5_report.md)
+- current phase summary: [`reports/phase2_status_report.md`](reports/phase2_status_report.md)
+
+## Benchmark-Level Conformal Calibration
+
+Conformal calibration is implemented as a benchmark-level post-processing stage over existing probabilistic forecast artifacts. It does not refit models or alter point forecasts.
+
+The postprocess compares five calibration kinds:
+
+- `raw`
+- `scale_calibrated`
+- `conformal_absolute`
+- `conformal_standardized`
+- `conformal_asymmetric`
+
+Winner selection is based on validation rows only. Test rows are evaluation-only and cannot influence calibration-method selection.
+
+The conformal residual bank is benchmark-level rather than series-local. It can prefer horizon-specific rolling validation residuals, then fall back to pooled horizons, age-family pooling, and finally global pooling when calibration counts are too small.
+
+The current postprocess expects leakage-free probabilistic validation artifacts written by the current benchmark pipeline, including `validation_forecast_trace.csv` inside each `probabilistic_seir` artifact directory. If those files are missing, rerun the benchmark first and then rerun the conformal postprocess.
+
+The current recommended conformal outputs are under [`artifacts_v5_conformal_v3/`](artifacts_v5_conformal_v3).
+
+A detailed conformal write-up is available in [`reports/conformal_v5_report.md`](reports/conformal_v5_report.md), and a broader benchmark-plus-conformal status report is available in [`reports/phase2_status_report.md`](reports/phase2_status_report.md).
+
+Selected conformal result previews:
+
+![Selected conformal method by series and interval level](artifacts_v5_conformal_v3/selected_method_by_series_heatmap.png)
+
+![Conformal test coverage gap versus interval width](artifacts_v5_conformal_v3/calibration_gap_vs_width_test.png)
 
 ## Key Files
 
