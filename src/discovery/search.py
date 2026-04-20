@@ -45,6 +45,7 @@ class SearchConfig:
     rho_l2_weight: float = 2.0e-3
     init_l2_weight: float = 2.0e-3
     fractional_alpha_weight: float = 2.0e-3
+    use_age_prior: bool = True
     age_prior_simple_bonus: float = 0.01
     age_prior_recurrence_bonus: float = 0.01
     age_prior_fractional_bonus: float = 0.005
@@ -97,6 +98,9 @@ def age_structure_prior_penalty(
     search_config: SearchConfig,
 ) -> float:
     """Age-group-specific score adjustment for discovery candidates."""
+    if not search_config.use_age_prior:
+        return 0.0
+
     simple_bonus = search_config.age_prior_simple_bonus
     recurrence_bonus = search_config.age_prior_recurrence_bonus
     fractional_bonus = search_config.age_prior_fractional_bonus

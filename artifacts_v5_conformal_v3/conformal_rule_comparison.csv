@@ -1,0 +1,4 @@
+rule_name,mean_abs_gap,mean_interval_score,mean_width,selected_default,rationale
+v1,0.18939393939393934,0.4606184707911802,0.4516704893647646,False,narrowest / best interval score
+v2,0.1838383838383838,0.48424723588450036,0.4731000700322883,False,"best coverage gap, too wide"
+v3,0.18434343434343428,0.4653189766645574,0.45629810019476946,True,selected compromise

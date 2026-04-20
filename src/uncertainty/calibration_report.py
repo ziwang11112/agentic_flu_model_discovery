@@ -31,7 +31,7 @@ def resolve_conformal_config(config: dict[str, Any], output_root: Path | None = 
     conformal = uncertainty.get("conformal", {})
     resolved = {
         "enabled": bool(conformal.get("enabled", True)),
-        "output_dir": str(output_root) if output_root is not None else str(conformal.get("output_dir", "artifacts_v5_conformal")),
+        "output_dir": str(output_root) if output_root is not None else str(conformal.get("output_dir", "artifacts_v5_conformal_v3")),
         "calibration_kinds": list(
             conformal.get(
                 "calibration_kinds",
@@ -418,6 +418,51 @@ def build_selected_test_report(comparison: pd.DataFrame, winners: pd.DataFrame) 
         }
     )
     return report.sort_values(["series_name", "horizon", "interval_level"]).reset_index(drop=True)
+
+
+def build_conformal_rule_comparison(
+    rule_roots: dict[str, Path],
+    selected_default: str = "v3",
+) -> pd.DataFrame:
+    records: list[dict[str, Any]] = []
+    rationale_map = {
+        "v1": "narrowest / best interval score",
+        "v2": "best coverage gap, too wide",
+        "v3": "selected compromise",
+    }
+
+    for rule_name, root in sorted(rule_roots.items()):
+        report_path = root / "calibration_selected_test_report.csv"
+        if not report_path.exists():
+            raise RuntimeError(
+                f"Missing selected test report for {rule_name}: {report_path}. "
+                "Generate the conformal outputs for that rule before building the comparison table."
+            )
+        report = pd.read_csv(report_path)
+        records.append(
+            {
+                "rule_name": rule_name,
+                "mean_abs_gap": float(report["test_coverage_gap"].abs().mean()),
+                "mean_interval_score": float(report["test_interval_score_mean"].mean()),
+                "mean_width": float(report["test_average_interval_width"].mean()),
+                "selected_default": bool(rule_name == selected_default),
+                "rationale": rationale_map.get(rule_name, ""),
+            }
+        )
+
+    return pd.DataFrame.from_records(records).sort_values("rule_name").reset_index(drop=True)
+
+
+def write_conformal_rule_comparison(
+    rule_roots: dict[str, Path],
+    output_path: Path,
+    selected_default: str = "v3",
+) -> pd.DataFrame:
+    comparison = build_conformal_rule_comparison(rule_roots, selected_default=selected_default)
+    ensure_dir(output_path.parent)
+    comparison.to_csv(output_path, index=False)
+    logger.info("Conformal rule comparison written path=%s", output_path)
+    return comparison
 
 
 def _plot_metric_by_method(comparison: pd.DataFrame, split: str, metric: str, path: Path, title: str) -> None:

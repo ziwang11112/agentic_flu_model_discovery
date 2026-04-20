@@ -25,8 +25,8 @@ fitting:
   uncertainty_method: bootstrap
   bootstrap_draws: 30
   bootstrap_n_restarts: 0
-  calibrate_intervals: true
-  interval_calibration_method: conformal
+  calibrate_intervals: false
+  interval_calibration_method: conformal  # ignored when benchmark-level conformal postprocess is enabled
   calibration_draws: 12
   calibration_scale_min: 0.25
   calibration_scale_max: 1.25
@@ -35,7 +35,7 @@ fitting:
 uncertainty:
   conformal:
     enabled: true
-    output_dir: artifacts_v5_conformal
+    output_dir: artifacts_v5_conformal_v3
     calibration_kinds:
       - raw
       - scale_calibrated
@@ -96,6 +96,7 @@ discovery:
   rho_l2_weight: 0.002
   init_l2_weight: 0.002
   fractional_alpha_weight: 0.002
+  use_age_prior: true
   age_prior_simple_bonus: 0.01
   age_prior_recurrence_bonus: 0.01
   age_prior_fractional_bonus: 0.005

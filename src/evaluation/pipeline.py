@@ -16,6 +16,7 @@ from src.evaluation.metrics import interval_level_summary, point_metrics, summar
 from src.evaluation.metrics import learn_conformal_interval_scales, learn_interval_scales, scale_interval_map
 from src.evaluation.rolling import mean_rolling_metric, rolling_metrics_by_horizon, rolling_origin_forecasts
 from src.models.base import BaseEpidemicModel, FitConfig
+from src.models.seir_delayed_observation import DelayedObservationSEIRModel
 from src.plotting.plots import (
     plot_full_series_fit,
     plot_leaderboard,
@@ -192,25 +193,26 @@ def run_model_family(
         probabilistic_metrics["interval_calibration_method"] = calibration_method
         probabilistic_metrics["interval_calibration_scales"] = calibration_scales
         probabilistic_metrics["raw_interval_summary"] = raw_probabilistic_metrics["interval_summary"]
-        calibration_report = {
-            "series_name": series_name,
-            "model_name": train_model.model_name,
-            "uncertainty_method": predictive["method"],
-            "uncertainty_draws": predictive["draw_count"],
-            "interval_calibration_method": calibration_method,
-            "interval_calibration_scales": calibration_scales,
-            "validation_raw_interval_summary": validation_raw_interval_summary,
-            "validation_calibrated_interval_summary": validation_calibrated_interval_summary,
-            "test_raw_interval_summary": raw_probabilistic_metrics["interval_summary"],
-            "test_calibrated_interval_summary": probabilistic_metrics["interval_summary"],
-        }
-        write_json(calibration_report, artifact_dir / "calibration_report.json")
-        plot_probabilistic_calibration(
-            calibration_summary=calibration_report["test_calibrated_interval_summary"],
-            raw_summary=calibration_report["test_raw_interval_summary"],
-            title=f"{series_name}: {train_model.model_name} calibration",
-            path=artifact_dir / "calibration.png",
-        )
+        if trainval_model.fit_config.calibrate_intervals:  # type: ignore[attr-defined]
+            calibration_report = {
+                "series_name": series_name,
+                "model_name": train_model.model_name,
+                "uncertainty_method": predictive["method"],
+                "uncertainty_draws": predictive["draw_count"],
+                "interval_calibration_method": calibration_method,
+                "interval_calibration_scales": calibration_scales,
+                "validation_raw_interval_summary": validation_raw_interval_summary,
+                "validation_calibrated_interval_summary": validation_calibrated_interval_summary,
+                "test_raw_interval_summary": raw_probabilistic_metrics["interval_summary"],
+                "test_calibrated_interval_summary": probabilistic_metrics["interval_summary"],
+            }
+            write_json(calibration_report, artifact_dir / "calibration_report.json")
+            plot_probabilistic_calibration(
+                calibration_summary=calibration_report["test_calibrated_interval_summary"],
+                raw_summary=calibration_report["test_raw_interval_summary"],
+                title=f"{series_name}: {train_model.model_name} calibration",
+                path=artifact_dir / "calibration.png",
+            )
 
     logger.info("Model family rolling-origin start model=%s series=%s", train_model.model_name, series_name)
     rolling_frame = rolling_origin_forecasts(
@@ -299,6 +301,71 @@ def run_model_family(
             "num_compartments": summary["complexity"]["num_compartments"],
         },
     }
+
+
+def select_delayed_observation_delay(
+    y: np.ndarray,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    seed: int,
+) -> tuple[int, pd.DataFrame]:
+    """Select the delayed-observation lag using validation MAE only."""
+    rng = np.random.default_rng(seed)
+    records: list[dict[str, float]] = []
+
+    for delay in DelayedObservationSEIRModel.delay_candidates:
+        model = DelayedObservationSEIRModel(fit_config, fixed_delay=delay)
+        fit = model.fit(y[split.train_slice], rng)
+        rollout = model.simulate(fit.raw_params, split.val_end)
+        metrics = point_metrics(y[split.val_slice], rollout.predictions[split.val_slice])
+        records.append(
+            {
+                "delay": delay,
+                "validation_mae": metrics["mae"],
+                "validation_rmse": metrics["rmse"],
+                "validation_smape": metrics["smape"],
+            }
+        )
+
+    table = pd.DataFrame.from_records(records).sort_values(
+        ["validation_mae", "validation_rmse", "delay"]
+    ).reset_index(drop=True)
+    selected_delay = int(table.iloc[0]["delay"])
+    return selected_delay, table
+
+
+def run_delayed_observation_family(
+    series_name: str,
+    y: np.ndarray,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    """Select the observation delay by validation MAE, then run the fixed-delay family."""
+    ensure_dir(artifact_dir)
+    selected_delay, selection_table = select_delayed_observation_delay(y, split, fit_config, seed)
+    selection_table.to_csv(artifact_dir / "delay_selection.csv", index=False)
+    logger.info(
+        "Delayed observation selection series=%s selected_delay=%d table=%s",
+        series_name,
+        selected_delay,
+        artifact_dir / "delay_selection.csv",
+    )
+
+    result = run_model_family(
+        model_factory=lambda: DelayedObservationSEIRModel(fit_config, fixed_delay=selected_delay),
+        series_name=series_name,
+        y=y,
+        split=split,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    result["summary"]["selected_delay"] = selected_delay
+    write_json(result["summary"], artifact_dir / "metrics.json")
+    return result
 
 
 def run_discovery_family(

@@ -70,6 +70,14 @@ def test_age_structure_prior_penalty_matches_series_pattern() -> None:
     assert pediatric_fractional < pediatric_recurrent
 
 
+def test_age_structure_prior_penalty_disabled_when_config_off() -> None:
+    config = SearchConfig(use_age_prior=False)
+
+    penalty = age_structure_prior_penalty("0-4 yr", StructureSpec("SEIRS", fractional=False, observation_map="I"), config)
+
+    assert penalty == 0.0
+
+
 def test_rolling_error_stability_penalizes_variable_candidates() -> None:
     stable = pd.DataFrame(
         {

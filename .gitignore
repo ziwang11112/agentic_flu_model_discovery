@@ -10,3 +10,6 @@ __pycache__/
 
 # Local scratch artifacts
 .DS_Store
+*benchmark_leaderboard_partial.csv
+artifacts_multiseed_age_robustness/seed_runs/
+artifacts_multiseed_age_robustness/temp_configs/

@@ -12,12 +12,12 @@ This repository studies weekly influenza hospitalization-rate forecasting with i
 
 ## Key Findings
 
-- On the overall series, the strongest held-out test MAE is currently achieved by `fractional_seir` (`0.03511`), with `deterministic_seir` very close behind (`0.03523`).
-- On the same overall series, `deterministic_seir` remains the most stable recommendation when rolling-origin behavior is considered.
-- In the age-group robustness benchmark, `constrained_structure_discovery` is the consensus winner for `0-4 yr` and `50-64 yr`.
-- For `5-17 yr`, discovery wins on the final test split but `probabilistic_seir` is preferred under stability-aware recommendation logic.
-- For `Overall` and `18-49 yr`, the best current recommendation is still `deterministic_seir`.
-- The central empirical takeaway is not that one model wins everywhere, but that model choice should depend on age group and stability criteria.
+- After adding fair hospitalization-aware baselines and aggregating over five seeds, `0-4 yr` remains the clearest stable win for `constrained_structure_discovery`.
+- `Overall` is now best served on held-out test MAE by `delayed_observation_seir`, while `18-49 yr` is best served on held-out test MAE by `hospitalized_seihr`.
+- `5-17 yr` remains a split-sensitive case: discovery is usually the best held-out test model, but `probabilistic_seir` is the rolling-origin winner across all five seeds.
+- `>= 65 yr` remains another split-sensitive case: `deterministic_seir` is usually best on held-out test MAE, but discovery wins rolling-origin MAE in every seed.
+- Single-seed age-prior ablation currently shows no change in selected discovery structure or discovery MAE, suggesting the observed structure pattern is not being trivially forced by the age prior.
+- The main repository claim is now age-aware model selection under structural and observation uncertainty, not a single globally best model family.
 
 ## Result Preview
 
@@ -28,6 +28,10 @@ Overall-series model comparison:
 Age-group rolling-origin MAE heatmap:
 
 ![Age-group rolling mean MAE heatmap](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+
+Five-seed robustness summary:
+
+![Multi-seed rolling mean MAE error bars](artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png)
 
 ## Quick Start
 
@@ -49,10 +53,38 @@ Run the age-group robustness benchmark:
 python run_experiment.py --config configs/age_robustness.yaml --log-level INFO
 ```
 
+Run the age-prior ablation variants:
+
+```bash
+python run_experiment.py --config configs/age_robustness_age_prior.yaml --log-level INFO
+python run_experiment.py --config configs/age_robustness_no_age_prior.yaml --log-level INFO
+python scripts/build_age_prior_ablation_summary.py
+```
+
+Run the 5-seed robustness aggregation:
+
+```bash
+python scripts/run_multiseed_benchmark.py --config configs/age_robustness_multiseed.yaml --log-level INFO --skip-existing
+```
+
+The multi-seed runner writes:
+
+- `multiseed_model_summary.csv`
+- `multiseed_age_group_recommendation.csv`
+- `multiseed_discovery_structure_frequency.csv`
+- `multiseed_test_mae_errorbars.png`
+- `multiseed_rolling_mae_errorbars.png`
+
 Run benchmark-level conformal calibration postprocessing after the benchmark artifacts exist:
 
 ```bash
 python scripts/run_conformal_postprocess.py --config configs/age_robustness.yaml --artifact-root artifacts_age_robustness --output-root artifacts_v5_conformal_v3 --log-level INFO
+```
+
+Build the `v1/v2/v3` winner-rule comparison table:
+
+```bash
+python scripts/build_conformal_rule_comparison.py
 ```
 
 Run the test suite:
@@ -68,12 +100,25 @@ If you only want the most important outputs after a run, start here:
 - age-aware recommendation table: [`artifacts_age_robustness/age_group_recommendation.csv`](artifacts_age_robustness/age_group_recommendation.csv)
 - rolling-origin heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
 - conformal comparison table: [`artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv`](artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv)
+- conformal rule comparison table: [`artifacts_v5_conformal_v3/conformal_rule_comparison.csv`](artifacts_v5_conformal_v3/conformal_rule_comparison.csv)
+- age-prior ablation summary: [`artifacts_age_prior_ablation/age_prior_ablation_summary.csv`](artifacts_age_prior_ablation/age_prior_ablation_summary.csv)
+- multi-seed model summary: [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
+- multi-seed recommendation summary: [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
+- multi-seed structure frequency: [`artifacts_multiseed_age_robustness/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness/multiseed_discovery_structure_frequency.csv)
 - conformal phase report: [`reports/conformal_v5_report.md`](reports/conformal_v5_report.md)
 - current phase summary: [`reports/phase2_status_report.md`](reports/phase2_status_report.md)
+- fair-baseline and multi-seed report: [`reports/multiseed_fair_baseline_report.md`](reports/multiseed_fair_baseline_report.md)
 
 ## Benchmark-Level Conformal Calibration
 
 Conformal calibration is implemented as a benchmark-level post-processing stage over existing probabilistic forecast artifacts. It does not refit models or alter point forecasts.
+
+The main benchmark now treats probabilistic interval generation and conformal calibration as two separate stages:
+
+- the benchmark run writes raw probabilistic forecasts, including `validation_forecast_trace.csv`
+- the conformal postprocess reads those raw artifacts and applies benchmark-level calibration afterward
+
+When benchmark-level conformal is enabled in the config, fitting-level interval calibration is disabled to avoid double calibration.
 
 The postprocess compares five calibration kinds:
 
@@ -90,6 +135,15 @@ The conformal residual bank is benchmark-level rather than series-local. It can 
 The current postprocess expects leakage-free probabilistic validation artifacts written by the current benchmark pipeline, including `validation_forecast_trace.csv` inside each `probabilistic_seir` artifact directory. If those files are missing, rerun the benchmark first and then rerun the conformal postprocess.
 
 The current recommended conformal outputs are under [`artifacts_v5_conformal_v3/`](artifacts_v5_conformal_v3).
+
+The current default winner-selection rule is the `v3` balanced rule:
+
+- filter out methods with validation `coverage_gap < -0.05`
+- then minimize `normalized_abs_coverage_gap + 0.25 * normalized_interval_score`
+- then minimize interval width
+- if all methods violate the floor, fall back to the same balanced score without the floor
+
+`v3` is the current default because it preserves nearly the same coverage error as `v2` while substantially improving interval score and width.
 
 A detailed conformal write-up is available in [`reports/conformal_v5_report.md`](reports/conformal_v5_report.md), and a broader benchmark-plus-conformal status report is available in [`reports/phase2_status_report.md`](reports/phase2_status_report.md).
 
@@ -118,6 +172,9 @@ The repository contains many artifacts, but these files are the fastest path to 
 - age-group model summary: [`artifacts_age_robustness/benchmark_model_summary.csv`](artifacts_age_robustness/benchmark_model_summary.csv)
 - age-group winners: [`artifacts_age_robustness/benchmark_series_winners.csv`](artifacts_age_robustness/benchmark_series_winners.csv)
 - recommended model by age group: [`artifacts_age_robustness/age_group_recommendation.csv`](artifacts_age_robustness/age_group_recommendation.csv)
+- multi-seed model summary: [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
+- multi-seed recommendation summary: [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
+- age-prior ablation summary: [`artifacts_age_prior_ablation/age_prior_ablation_summary.csv`](artifacts_age_prior_ablation/age_prior_ablation_summary.csv)
 
 ### Discovery Outputs
 
@@ -130,6 +187,8 @@ The repository contains many artifacts, but these files are the fastest path to 
 - overall model comparison: [`artifacts/overall/model_comparison.png`](artifacts/overall/model_comparison.png)
 - age-group test MAE heatmap: [`artifacts_age_robustness/benchmark_test_mae_heatmap.png`](artifacts_age_robustness/benchmark_test_mae_heatmap.png)
 - age-group rolling MAE heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+- multi-seed test MAE error bars: [`artifacts_multiseed_age_robustness/multiseed_test_mae_errorbars.png`](artifacts_multiseed_age_robustness/multiseed_test_mae_errorbars.png)
+- multi-seed rolling MAE error bars: [`artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png`](artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png)
 - per-series example forecast plot: [`artifacts_age_robustness/robustness/50_64_yr/model_comparison.png`](artifacts_age_robustness/robustness/50_64_yr/model_comparison.png)
 
 ## Why This Repository Exists
@@ -162,12 +221,17 @@ This gives a search process that is transparent, reproducible, and auditable.
 
 ## Benchmark Overview
 
-The benchmark compares four model families:
+The benchmark compares four core model families:
 
 1. `deterministic_seir`
 2. `probabilistic_seir`
 3. `fractional_seir`
 4. `constrained_structure_discovery`
+
+The current benchmark also includes two manual hospitalization-aware baselines:
+
+5. `hospitalized_seihr`
+6. `delayed_observation_seir`
 
 The core forecasting task is weekly hospitalization-rate prediction from a FluSurv-NET CSV using chronological train, validation, and test splits plus rolling-origin forecasting at horizons 1, 2, and 4 weeks.
 

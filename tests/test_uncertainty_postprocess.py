@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.uncertainty.calibration_report import select_validation_winners
+from src.uncertainty.calibration_report import build_conformal_rule_comparison, select_validation_winners
 from src.uncertainty.conformal import (
     apply_absolute_conformal,
     apply_asymmetric_conformal,
@@ -268,3 +268,41 @@ def test_static_horizon_compatibility() -> None:
 
     assert len(scores) == 3
     assert metadata["residual_source_used"] == "same_series_static"
+
+
+def test_build_conformal_rule_comparison_aggregates_v1_v2_v3(tmp_path: Path) -> None:
+    reports = {
+        "v1": pd.DataFrame(
+            {
+                "test_coverage_gap": [0.10, 0.20],
+                "test_interval_score_mean": [0.40, 0.60],
+                "test_average_interval_width": [0.30, 0.50],
+            }
+        ),
+        "v2": pd.DataFrame(
+            {
+                "test_coverage_gap": [0.05, 0.15],
+                "test_interval_score_mean": [0.70, 0.50],
+                "test_average_interval_width": [0.60, 0.40],
+            }
+        ),
+        "v3": pd.DataFrame(
+            {
+                "test_coverage_gap": [0.06, 0.14],
+                "test_interval_score_mean": [0.45, 0.55],
+                "test_average_interval_width": [0.35, 0.45],
+            }
+        ),
+    }
+    rule_roots: dict[str, Path] = {}
+    for rule_name, frame in reports.items():
+        root = tmp_path / rule_name
+        root.mkdir(parents=True, exist_ok=True)
+        frame.to_csv(root / "calibration_selected_test_report.csv", index=False)
+        rule_roots[rule_name] = root
+
+    comparison = build_conformal_rule_comparison(rule_roots, selected_default="v3")
+
+    assert comparison["rule_name"].tolist() == ["v1", "v2", "v3"]
+    assert comparison.loc[comparison["rule_name"] == "v3", "selected_default"].item() is True
+    assert comparison.loc[comparison["rule_name"] == "v1", "rationale"].item() == "narrowest / best interval score"

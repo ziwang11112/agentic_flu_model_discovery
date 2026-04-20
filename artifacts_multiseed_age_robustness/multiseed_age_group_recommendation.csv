@@ -1,0 +1,7 @@
+series_name,num_seeds,recommended_model_mode,recommended_model_frequency,best_test_model_mode,best_test_model_frequency,best_rolling_model_mode,best_rolling_model_frequency,decision_type_mode,decision_type_frequency,recommended_discovery_structure_mode,recommended_discovery_structure_frequency,recommended_discovery_fractional_mode,recommended_discovery_fractional_frequency,recommended_discovery_observation_map_mode,recommended_discovery_observation_map_frequency
+0-4 yr,5,constrained_structure_discovery,1.0,constrained_structure_discovery,1.0,constrained_structure_discovery,1.0,consensus,1.0,SEIRS,1.0,False,0.8,I,1.0
+18-49 yr,5,deterministic_seir,0.8,hospitalized_seihr,0.6,deterministic_seir,0.6,stability_preferred,0.6,,0.0,,0.0,,0.0
+5-17 yr,5,constrained_structure_discovery,1.0,constrained_structure_discovery,0.8,probabilistic_seir,1.0,test_preferred,0.8,SEIRS,1.0,False,0.6,I,1.0
+50-64 yr,5,constrained_structure_discovery,0.4,constrained_structure_discovery,0.6,delayed_observation_seir,0.8,stability_preferred,0.6,SIR,0.4,False,0.4,I,0.4
+>= 65 yr,5,deterministic_seir,0.6,deterministic_seir,0.6,constrained_structure_discovery,1.0,test_preferred,0.8,SEIRS,0.2,True,0.2,I,0.2
+Overall,5,delayed_observation_seir,0.4,delayed_observation_seir,0.6,delayed_observation_seir,0.4,stability_preferred,0.6,,0.0,,0.0,,0.0

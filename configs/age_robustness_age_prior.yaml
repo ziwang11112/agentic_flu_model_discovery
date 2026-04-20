@@ -12,7 +12,7 @@ data:
     - ">= 65 yr"
 
 artifacts:
-  root_dir: artifacts_age_robustness
+  root_dir: artifacts_age_robustness_age_prior
 
 fitting:
   n_restarts: 6

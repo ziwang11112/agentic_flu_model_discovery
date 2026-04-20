@@ -1,11 +1,12 @@
-# Phase 2 Status Report
+# Current Benchmark Status Report
 
 ## Executive Summary
 
-The repository now has two stable deliverables:
+The repository now has three stable deliverables:
 
 - a reproducible influenza hospitalization-rate forecasting benchmark across four epidemic-model families
 - a benchmark-level conformal uncertainty postprocess for the probabilistic baseline
+- a strengthened point-forecast benchmark with fair hospitalization-aware baselines, age-prior ablation, and five-seed aggregation
 
 The current evidence does not support a single globally best forecasting model or a single globally best interval-adjustment rule. The main project conclusion remains:
 
@@ -16,7 +17,7 @@ The current evidence does not support a single globally best forecasting model o
 
 The practical goal of the repository is to determine when hand-specified epidemic models are sufficient and when constrained structure discovery adds value for weekly influenza hospitalization-rate forecasting.
 
-The uncertainty-calibration work in Phase 2 extends that goal from point forecasts to interval forecasts. The question is no longer only "which model predicts best," but also "which uncertainty postprocess yields intervals that are closer to nominal coverage without becoming unnecessarily wide."
+The uncertainty-calibration work extends that goal from point forecasts to interval forecasts. The question is no longer only "which model predicts best," but also "which uncertainty postprocess yields intervals that are closer to nominal coverage without becoming unnecessarily wide."
 
 ## What Was Added In Phase 2
 
@@ -60,7 +61,23 @@ Interpretation:
 - the overall held-out split is extremely close between `fractional_seir` and `deterministic_seir`
 - rolling-origin behavior still makes `deterministic_seir` the more stable practical recommendation
 
-### Age-Group Winners
+### Updated Point-Forecast Interpretation
+
+The most current point-forecast picture is now in the five-seed aggregation:
+
+- [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](../artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
+- [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](../artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
+- [`reports/multiseed_fair_baseline_report.md`](../reports/multiseed_fair_baseline_report.md)
+
+Current high-confidence points:
+
+- `0-4 yr`: discovery is the stable winner on both held-out and rolling-origin metrics across all five seeds
+- `Overall`: `delayed_observation_seir` is now the strongest held-out test baseline
+- `18-49 yr`: `hospitalized_seihr` is now the strongest held-out test baseline
+- `5-17 yr`: discovery wins held-out test most often, but probabilistic SEIR wins rolling-origin MAE in every seed
+- `>= 65 yr`: deterministic SEIR wins held-out test most often, but discovery wins rolling-origin MAE in every seed
+
+### Single-Seed Age-Group Winners
 
 From [`artifacts_age_robustness/benchmark_series_winners.csv`](../artifacts_age_robustness/benchmark_series_winners.csv):
 
@@ -80,11 +97,25 @@ From [`artifacts_age_robustness/age_group_recommendation.csv`](../artifacts_age_
 - `>= 65 yr` -> `deterministic_seir`
 - `Overall` -> `deterministic_seir`
 
-Practical conclusion:
+Single-seed practical conclusion:
 
-- discovery is clearly valuable for `0-4 yr` and `50-64 yr`
-- deterministic SEIR remains the strongest stable baseline for `Overall` and `18-49 yr`
-- `5-17 yr` and `>= 65 yr` remain stability-sensitive cases
+- discovery is clearly valuable for `0-4 yr`
+- `50-64 yr`, `5-17 yr`, and `>= 65 yr` remain stability-sensitive once fair baselines are added
+- the strengthened manual baselines matter materially for `Overall` and `18-49 yr`
+
+### Age-Prior Ablation
+
+The current age-prior ablation summary is:
+
+- [`artifacts_age_prior_ablation/age_prior_ablation_summary.csv`](../artifacts_age_prior_ablation/age_prior_ablation_summary.csv)
+
+Current result:
+
+- in the present single-seed run, `use_age_prior=true` and `use_age_prior=false` give the same selected discovery structures and the same discovery MAE values for all six series
+
+Interpretation:
+
+- the observed structure pattern does not appear to be trivially imposed by the current age prior in the existing single-seed benchmark
 
 ## Conformal Calibration Results
 
@@ -93,6 +124,7 @@ The current recommended conformal result set is:
 - comparison table: [`artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv`](../artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv)
 - validation-selected winners: [`artifacts_v5_conformal_v3/calibration_method_winners.csv`](../artifacts_v5_conformal_v3/calibration_method_winners.csv)
 - selected test report: [`artifacts_v5_conformal_v3/calibration_selected_test_report.csv`](../artifacts_v5_conformal_v3/calibration_selected_test_report.csv)
+- rule-comparison table: [`artifacts_v5_conformal_v3/conformal_rule_comparison.csv`](../artifacts_v5_conformal_v3/conformal_rule_comparison.csv)
 
 ### Selection Rule Comparison
 
@@ -176,9 +208,10 @@ This mirrors the point-forecast result: age-aware selection remains more useful 
 The current repository state should be interpreted as follows:
 
 1. Use age-aware point-forecast model selection rather than a single global winner.
-2. Treat `artifacts_v5_conformal_v3/` as the recommended Phase 2 conformal result set.
-3. Keep conformal calibration as uncertainty-only postprocessing; do not mix it into model fitting.
-4. Treat `V3` as the default winner-selection rule until a later experiment demonstrates a clearly better tradeoff.
+2. Treat `0-4 yr` as the clearest stable discovery success case in the current repository.
+3. Treat `artifacts_v5_conformal_v3/` as the recommended conformal result set.
+4. Keep conformal calibration as uncertainty-only postprocessing; do not mix it into model fitting or fitting-time interval calibration.
+5. Treat `V3` as the default winner-selection rule until a later experiment demonstrates a clearly better tradeoff.
 
 ## Reproduction
 

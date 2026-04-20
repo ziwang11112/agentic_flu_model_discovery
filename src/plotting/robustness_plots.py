@@ -10,6 +10,8 @@ import pandas as pd
 MODEL_ORDER = [
     "deterministic_seir",
     "probabilistic_seir",
+    "hospitalized_seihr",
+    "delayed_observation_seir",
     "fractional_seir",
     "constrained_structure_discovery",
 ]
@@ -66,11 +68,14 @@ def plot_metric_bars(
 ) -> None:
     """Plot grouped bars by series for one benchmark metric."""
     ordered_series = _series_order(summary)
-    width = 0.18
+    n_models = len(MODEL_ORDER)
+    width = min(0.8 / max(n_models, 1), 0.18)
     x_positions = np.arange(len(ordered_series), dtype=float)
     colors = {
         "deterministic_seir": "#005f73",
         "probabilistic_seir": "#0a9396",
+        "hospitalized_seihr": "#2a9d8f",
+        "delayed_observation_seir": "#7f5539",
         "fractional_seir": "#94d2bd",
         "constrained_structure_discovery": "#ca6702",
     }
@@ -78,9 +83,10 @@ def plot_metric_bars(
     plt.figure(figsize=(12, 5.5))
     for idx, model_name in enumerate(MODEL_ORDER):
         subset = summary.loc[summary["model_name"] == model_name].set_index("series_name")
-        values = [subset.loc[series_name, metric_column] for series_name in ordered_series]
+        metric_map = subset[metric_column].to_dict()
+        values = [metric_map.get(series_name, np.nan) for series_name in ordered_series]
         plt.bar(
-            x_positions + (idx - 1.5) * width,
+            x_positions + (idx - (n_models - 1) / 2) * width,
             values,
             width=width,
             label=model_name,

@@ -24,6 +24,8 @@ The implementation is benchmark-level rather than series-local:
 - winner selection uses validation rows only
 - test rows are evaluation-only
 
+The benchmark now keeps fitting-time interval calibration disabled when benchmark-level conformal postprocessing is enabled, so the conformal layer always operates on raw probabilistic artifacts rather than doubly calibrated intervals.
+
 Main code paths:
 
 - uncertainty postprocess core: [`src/uncertainty/`](../src/uncertainty)
@@ -37,6 +39,7 @@ The current recommended conformal outputs are under:
 - comparison table: [`artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv`](../artifacts_v5_conformal_v3/probabilistic_calibration_comparison.csv)
 - validation-selected winners: [`artifacts_v5_conformal_v3/calibration_method_winners.csv`](../artifacts_v5_conformal_v3/calibration_method_winners.csv)
 - selected test report: [`artifacts_v5_conformal_v3/calibration_selected_test_report.csv`](../artifacts_v5_conformal_v3/calibration_selected_test_report.csv)
+- rule-comparison table: [`artifacts_v5_conformal_v3/conformal_rule_comparison.csv`](../artifacts_v5_conformal_v3/conformal_rule_comparison.csv)
 
 Useful plots:
 

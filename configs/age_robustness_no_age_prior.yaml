@@ -12,7 +12,7 @@ data:
     - ">= 65 yr"
 
 artifacts:
-  root_dir: artifacts_age_robustness
+  root_dir: artifacts_age_robustness_no_age_prior
 
 fitting:
   n_restarts: 6
@@ -96,7 +96,7 @@ discovery:
   rho_l2_weight: 0.002
   init_l2_weight: 0.002
   fractional_alpha_weight: 0.002
-  use_age_prior: true
+  use_age_prior: false
   age_prior_simple_bonus: 0.01
   age_prior_recurrence_bonus: 0.01
   age_prior_fractional_bonus: 0.005

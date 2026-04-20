@@ -12,6 +12,8 @@ from src.plotting.robustness_plots import plot_metric_bars, plot_metric_heatmap
 MODEL_DIRECTORIES = {
     "deterministic_seir",
     "probabilistic_seir",
+    "hospitalized_seihr",
+    "delayed_observation_seir",
     "fractional_seir",
     "constrained_structure_discovery",
 }
@@ -319,8 +321,11 @@ def write_v3_result_summary(
             calibration_summary["interval_level"].isin([80, 95])
         ].copy()
         if "split" in coverage_rows.columns:
-            coverage_rows = coverage_rows.loc[
+            calibrated_rows = coverage_rows.loc[
                 (coverage_rows["split"] == "test") & (coverage_rows["calibration_kind"] == "calibrated")
+            ].copy()
+            coverage_rows = calibrated_rows if not calibrated_rows.empty else coverage_rows.loc[
+                coverage_rows["split"] == "test"
             ].copy()
         lines.extend(
             [

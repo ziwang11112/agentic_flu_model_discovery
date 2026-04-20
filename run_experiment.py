@@ -13,9 +13,11 @@ import yaml
 from src.data.loader import build_processed_series, filter_series, load_flu_surv_data, save_processed_outputs
 from src.data.split import make_chronological_split
 from src.discovery.search import SearchConfig
-from src.evaluation.pipeline import run_discovery_family, run_model_family
+from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family
 from src.evaluation.reporting import write_benchmark_reports
 from src.models.base import FitConfig
+from src.models.seihr_hospitalized import HospitalizedSEIHRModel
+from src.models.seir_delayed_observation import DelayedObservationSEIRModel
 from src.models.seir_deterministic import DeterministicSEIRModel
 from src.models.seir_fractional import FractionalSEIRModel
 from src.models.seir_probabilistic import ProbabilisticSEIRModel
@@ -32,8 +34,16 @@ def _load_config(path: Path) -> dict[str, Any]:
         return yaml.safe_load(handle)
 
 
+def _benchmark_level_conformal_enabled(config: dict[str, Any]) -> bool:
+    conformal = config.get("uncertainty", {}).get("conformal", {})
+    return bool(conformal.get("enabled", False))
+
+
 def _fit_config(config: dict[str, Any]) -> FitConfig:
     fitting = config["fitting"]
+    calibrate_intervals = bool(fitting.get("calibrate_intervals", True))
+    if _benchmark_level_conformal_enabled(config) and calibrate_intervals:
+        calibrate_intervals = False
     return FitConfig(
         n_restarts=int(fitting["n_restarts"]),
         rolling_n_restarts=int(fitting["rolling_n_restarts"]),
@@ -45,7 +55,7 @@ def _fit_config(config: dict[str, Any]) -> FitConfig:
         uncertainty_method=str(fitting.get("uncertainty_method", "laplace")),
         bootstrap_draws=int(fitting.get("bootstrap_draws", 40)),
         bootstrap_n_restarts=int(fitting.get("bootstrap_n_restarts", 0)),
-        calibrate_intervals=bool(fitting.get("calibrate_intervals", True)),
+        calibrate_intervals=calibrate_intervals,
         interval_calibration_method=str(fitting.get("interval_calibration_method", "conformal")),
         calibration_draws=int(fitting.get("calibration_draws", 12)),
         calibration_scale_min=float(fitting.get("calibration_scale_min", 0.25)),
@@ -75,6 +85,7 @@ def _search_config(config: dict[str, Any]) -> SearchConfig:
         rho_l2_weight=float(discovery["rho_l2_weight"]),
         init_l2_weight=float(discovery["init_l2_weight"]),
         fractional_alpha_weight=float(discovery["fractional_alpha_weight"]),
+        use_age_prior=bool(discovery.get("use_age_prior", True)),
         age_prior_simple_bonus=float(discovery["age_prior_simple_bonus"]),
         age_prior_recurrence_bonus=float(discovery["age_prior_recurrence_bonus"]),
         age_prior_fractional_bonus=float(discovery["age_prior_fractional_bonus"]),
@@ -147,6 +158,40 @@ def _run_series_benchmark(
         "Completed model=probabilistic_seir series=%s test_mae=%.6f",
         series_name,
         probabilistic["comparison_row"]["test_mae"],
+    )
+
+    logger.info("Running model=hospitalized_seihr series=%s", series_name)
+    hospitalized = run_model_family(
+        model_factory=lambda: HospitalizedSEIHRModel(fit_config),
+        series_name=series_name,
+        y=y,
+        split=split,
+        horizons=horizons,
+        artifact_dir=series_artifact_root / "hospitalized_seihr",
+        seed=seed + 17,
+    )
+    results.append(hospitalized["comparison_row"])
+    logger.info(
+        "Completed model=hospitalized_seihr series=%s test_mae=%.6f",
+        series_name,
+        hospitalized["comparison_row"]["test_mae"],
+    )
+
+    logger.info("Running model=delayed_observation_seir series=%s", series_name)
+    delayed = run_delayed_observation_family(
+        series_name=series_name,
+        y=y,
+        split=split,
+        fit_config=fit_config,
+        horizons=horizons,
+        artifact_dir=series_artifact_root / "delayed_observation_seir",
+        seed=seed + 19,
+    )
+    results.append(delayed["comparison_row"])
+    logger.info(
+        "Completed model=delayed_observation_seir series=%s test_mae=%.6f",
+        series_name,
+        delayed["comparison_row"]["test_mae"],
     )
 
     logger.info("Running model=fractional_seir series=%s", series_name)
@@ -229,6 +274,11 @@ def main() -> None:
         repo_root / config["data"]["processed_dir"],
         sorted(processed["series_name"].unique().tolist()),
     )
+
+    if _benchmark_level_conformal_enabled(config) and bool(config["fitting"].get("calibrate_intervals", True)):
+        logger.info(
+            "Benchmark-level conformal postprocess is enabled; disabling fitting-level interval calibration to avoid double calibration."
+        )
 
     fit_config = _fit_config(config)
     search_config = _search_config(config)
