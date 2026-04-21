@@ -167,6 +167,28 @@ Interpretation:
 - the current story is not “discovery globally wins once observation is added”
 - the current story is “observation-aware baselines and observation-aware discovery both matter, but in different age groups”
 
+## Observation-Aware No-Age-Prior Ablation
+
+The corresponding no-age-prior comparison is summarized in:
+
+- [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv`](../artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv)
+- [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_structure_comparison.csv`](../artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_structure_comparison.csv)
+- [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_model_delta.csv`](../artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_model_delta.csv)
+- [`reports/multiseed_observation_age_prior_ablation_report.md`](../reports/multiseed_observation_age_prior_ablation_report.md)
+
+Current result:
+
+- removing the age prior changes none of the six recommended model modes
+- removing the age prior changes none of the six dominant discovery structure modes
+- removing the age prior changes none of the dominant observation-map modes
+- removing the age prior changes none of the dominant delay modes
+- discovery mean test MAE and discovery mean rolling MAE are numerically unchanged for all six series
+
+Interpretation:
+
+- the observation-aware discovery results, including the newly selected `delayed_I` structures, are not being driven by the current age prior
+- this substantially strengthens the non-LLM control condition for future LLM proposal experiments
+
 ## Figures
 
 - [`artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png`](../artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png)
@@ -179,5 +201,6 @@ The latest benchmark evidence supports the following interpretation:
 1. Observation structure should be treated as a first-class modeling choice.
 2. Non-LLM discovery can recover delayed-observation semantics in some age groups.
 3. The current season-level benchmark does not support a claim that discovery prefers hospitalization observation maps such as `H` or `I+H`.
-4. The strongest overall framing remains age-aware model selection under structural and observation uncertainty.
-5. This observation-aware grammar is now a stronger non-LLM control baseline for future LLM proposal experiments.
+4. The observation-aware discovery results remain unchanged when the age prior is removed in the five-seed benchmark.
+5. The strongest overall framing remains age-aware model selection under structural and observation uncertainty.
+6. This observation-aware grammar is now a stronger non-LLM control baseline for future LLM proposal experiments.

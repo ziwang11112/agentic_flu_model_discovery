@@ -1,0 +1,72 @@
+\section{Introduction}
+
+Weekly influenza hospitalization forecasting sits at an awkward intersection
+between mechanistic epidemiology and operational prediction. On one hand,
+compartmental epidemic models remain attractive because they offer interpretable
+latent states, controllable inductive bias, and explicit constraints such as
+non-negativity and approximate mass conservation. On the other hand, practical
+forecast targets such as hospitalization rate are not observed directly as
+canonical infectious prevalence. A model can therefore fail not only because
+its latent disease dynamics are misspecified, but also because its
+\emph{observation semantics} are mismatched to the public-health quantity being
+predicted.
+
+This mismatch is especially relevant for a proof-of-concept benchmark based on
+a single FluSurv-NET season. In such a setting, one should not expect a single
+model family to dominate across all age strata. Different age groups may differ
+in latency, effective susceptibility recycling, reporting delay, and the extent
+to which observed hospitalization rates align with latent infectious burden.
+Accordingly, the central scientific question is not simply which model wins on
+one leaderboard, but rather:
+\begin{quote}
+Can a constrained, fully programmatic structure-discovery loop identify when
+simple mechanistic baselines are sufficient and when alternative latent or
+observation structures become useful?
+\end{quote}
+
+This repository deliberately answers that question without placing a language
+model inside the fitting loop. The current benchmark treats the ``agentic''
+component as a propose-fit-verify-refine search procedure over a small grammar
+of epidemic structures and observation maps. Candidate models are generated
+programmatically, screened for biological and structural validity, fitted with
+multiple random restarts, scored on validation and rolling-origin behavior, and
+refined through beam search. This design makes the non-LLM control condition
+strong enough to support a later LLM-based extension without confusing search
+automation with semantic reasoning.
+
+The benchmark evolved in three substantive steps. First, it established a
+reproducible non-LLM forecasting core spanning deterministic, probabilistic,
+and fractional SEIR baselines together with constrained structure discovery.
+Second, it strengthened the comparison set with fair hospitalization-aware
+manual baselines and benchmark-level conformal uncertainty post-processing.
+Third, it elevated observation structure to a first-class discovery object by
+allowing delayed infectious observation and hospitalization-aware observation
+maps inside the search grammar. This last step matters because the target is a
+hospitalization-rate series: if discovery is allowed to vary only latent
+compartments while the observation map remains effectively fixed, then the
+comparison between hand-designed and discovered models is incomplete.
+
+The main empirical outcome is now clear. The benchmark does \emph{not} support
+a single globally dominant model family. Instead, it supports
+\emph{age-aware model selection under structural and observation uncertainty}.
+In the current five-seed observation-aware benchmark:
+\begin{itemize}[leftmargin=1.5em]
+\item constrained discovery is a stable success case for the \texttt{0--4 yr}
+series;
+\item stronger manual baselines dominate or match discovery for
+\texttt{Overall}, \texttt{18--49 yr}, and \texttt{50--64 yr};
+\item delayed infectious observation emerges repeatedly in children and older
+adults;
+\item direct hospitalization observation is not selected by discovery in the
+current single-season benchmark; and
+\item removing the age prior does not change the selected structures,
+observation maps, delays, or aggregate discovery errors.
+\end{itemize}
+
+These results turn the repository into a strong non-LLM experimental core for a
+subsequent LLM phase. Because the current benchmark already contains fair manual
+baselines, observation-aware discovery, multi-seed robustness analysis,
+benchmark-level uncertainty calibration, and no-age-prior ablations, the next
+step can focus narrowly on whether an LLM improves candidate proposal and
+critique efficiency rather than on whether the underlying fitting and
+evaluation pipeline is sound.

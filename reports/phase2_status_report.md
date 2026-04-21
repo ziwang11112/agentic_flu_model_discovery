@@ -111,14 +111,17 @@ Single-seed practical conclusion:
 The current age-prior ablation summary is:
 
 - [`artifacts_age_prior_ablation/age_prior_ablation_summary.csv`](../artifacts_age_prior_ablation/age_prior_ablation_summary.csv)
+- [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv`](../artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv)
+- [`reports/multiseed_observation_age_prior_ablation_report.md`](../reports/multiseed_observation_age_prior_ablation_report.md)
 
 Current result:
 
 - in the present single-seed run, `use_age_prior=true` and `use_age_prior=false` give the same selected discovery structures and the same discovery MAE values for all six series
+- in the observation-aware five-seed rerun, removing the age prior again gives the same recommended model modes, the same dominant discovery structures, the same dominant observation-map modes, the same dominant delay modes, and the same aggregate discovery MAE values for all six series
 
 Interpretation:
 
-- the observed structure pattern does not appear to be trivially imposed by the current age prior in the existing single-seed benchmark
+- the observed structure pattern does not appear to be trivially imposed by the current age prior in either the single-seed benchmark or the observation-aware five-seed benchmark
 
 ## Conformal Calibration Results
 
