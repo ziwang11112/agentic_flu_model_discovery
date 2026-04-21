@@ -33,6 +33,7 @@ def test_multiseed_model_summary_computes_win_rates(tmp_path: Path) -> None:
             "discovery_structure_name": None,
             "discovery_fractional": None,
             "discovery_observation_map": None,
+            "discovery_delay_weeks": None,
         },
         {
             "series_name": "Overall",
@@ -44,6 +45,7 @@ def test_multiseed_model_summary_computes_win_rates(tmp_path: Path) -> None:
             "discovery_structure_name": "SIR",
             "discovery_fractional": False,
             "discovery_observation_map": "I",
+            "discovery_delay_weeks": 0,
         },
     ]
     _write_seed_bundle(
@@ -71,6 +73,7 @@ def test_multiseed_model_summary_computes_win_rates(tmp_path: Path) -> None:
                     "recommended_discovery_structure_name": "SIR",
                     "recommended_discovery_fractional": False,
                     "recommended_discovery_observation_map": "I",
+                    "recommended_discovery_delay_weeks": 0,
                 }
             ],
         },
@@ -101,6 +104,7 @@ def test_multiseed_model_summary_computes_win_rates(tmp_path: Path) -> None:
                     "recommended_discovery_structure_name": None,
                     "recommended_discovery_fractional": None,
                     "recommended_discovery_observation_map": None,
+                    "recommended_discovery_delay_weeks": None,
                 }
             ],
         },
@@ -129,6 +133,7 @@ def test_multiseed_age_group_recommendation_uses_mode_frequency(tmp_path: Path) 
             "discovery_structure_name": None,
             "discovery_fractional": None,
             "discovery_observation_map": None,
+            "discovery_delay_weeks": None,
         }
     ]
     common_winners = [
@@ -157,6 +162,7 @@ def test_multiseed_age_group_recommendation_uses_mode_frequency(tmp_path: Path) 
                     "recommended_discovery_structure_name": None,
                     "recommended_discovery_fractional": None,
                     "recommended_discovery_observation_map": None,
+                    "recommended_discovery_delay_weeks": None,
                 }
             ],
         },
@@ -178,6 +184,7 @@ def test_multiseed_age_group_recommendation_uses_mode_frequency(tmp_path: Path) 
                     "recommended_discovery_structure_name": "SIR",
                     "recommended_discovery_fractional": False,
                     "recommended_discovery_observation_map": "I",
+                    "recommended_discovery_delay_weeks": 0,
                 }
             ],
         },
@@ -208,6 +215,7 @@ def test_multiseed_discovery_structure_frequency_counts_selection(tmp_path: Path
                     "discovery_structure_name": "SIR",
                     "discovery_fractional": False,
                     "discovery_observation_map": "I",
+                    "discovery_delay_weeks": 0,
                 }
             ],
             "winners": [
@@ -231,6 +239,7 @@ def test_multiseed_discovery_structure_frequency_counts_selection(tmp_path: Path
                     "recommended_discovery_structure_name": "SIR",
                     "recommended_discovery_fractional": False,
                     "recommended_discovery_observation_map": "I",
+                    "recommended_discovery_delay_weeks": 0,
                 }
             ],
         },
@@ -249,6 +258,7 @@ def test_multiseed_discovery_structure_frequency_counts_selection(tmp_path: Path
                     "discovery_structure_name": "SEIRS",
                     "discovery_fractional": True,
                     "discovery_observation_map": "I",
+                    "discovery_delay_weeks": 0,
                 }
             ],
             "winners": [
@@ -272,6 +282,7 @@ def test_multiseed_discovery_structure_frequency_counts_selection(tmp_path: Path
                     "recommended_discovery_structure_name": "SEIRS",
                     "recommended_discovery_fractional": True,
                     "recommended_discovery_observation_map": "I",
+                    "recommended_discovery_delay_weeks": 0,
                 }
             ],
         },
@@ -297,6 +308,7 @@ def test_write_multiseed_outputs_creates_csvs_and_plots(tmp_path: Path) -> None:
                 "discovery_structure_name": None,
                 "discovery_fractional": None,
                 "discovery_observation_map": None,
+                "discovery_delay_weeks": None,
             }
         ],
         "winners": [
@@ -320,6 +332,7 @@ def test_write_multiseed_outputs_creates_csvs_and_plots(tmp_path: Path) -> None:
                 "recommended_discovery_structure_name": None,
                 "recommended_discovery_fractional": None,
                 "recommended_discovery_observation_map": None,
+                "recommended_discovery_delay_weeks": None,
             }
         ],
     }

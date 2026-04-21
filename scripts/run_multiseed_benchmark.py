@@ -30,6 +30,13 @@ def main() -> None:
     parser.add_argument("--config", type=str, required=True, help="Path to the YAML config.")
     parser.add_argument("--log-level", type=str, default="INFO", help="Logging verbosity passed to run_experiment.py")
     parser.add_argument(
+        "--seeds",
+        type=int,
+        nargs="+",
+        default=None,
+        help="Optional explicit seed subset to run or aggregate. Defaults to experiment.seeds from config.",
+    )
+    parser.add_argument(
         "--aggregate-only",
         action="store_true",
         help="Skip benchmark runs and only aggregate existing per-seed artifacts.",
@@ -45,7 +52,10 @@ def main() -> None:
     config_path = repo_root / args.config
     config = _load_config(config_path)
     experiment = config.get("experiment", {})
-    seeds = [int(value) for value in experiment.get("seeds", [int(config["seed"])])]
+    if args.seeds:
+        seeds = [int(value) for value in args.seeds]
+    else:
+        seeds = [int(value) for value in experiment.get("seeds", [int(config["seed"])])]
     multiseed_root = ensure_dir(repo_root / experiment.get("multiseed_output_root", "artifacts_multiseed"))
     temp_config_root = ensure_dir(multiseed_root / "temp_configs")
 

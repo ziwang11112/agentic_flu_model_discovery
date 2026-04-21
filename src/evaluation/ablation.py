@@ -14,10 +14,16 @@ def _read_csv(path: Path) -> pd.DataFrame:
 
 
 def _load_benchmark_bundle(artifact_root: Path) -> dict[str, pd.DataFrame]:
+    summary = _read_csv(artifact_root / "benchmark_model_summary.csv")
+    recommendations = _read_csv(artifact_root / "age_group_recommendation.csv")
+    if "discovery_delay_weeks" not in summary.columns:
+        summary["discovery_delay_weeks"] = None
+    if "recommended_discovery_delay_weeks" not in recommendations.columns:
+        recommendations["recommended_discovery_delay_weeks"] = None
     return {
-        "summary": _read_csv(artifact_root / "benchmark_model_summary.csv"),
+        "summary": summary,
         "winners": _read_csv(artifact_root / "benchmark_series_winners.csv"),
-        "recommendations": _read_csv(artifact_root / "age_group_recommendation.csv"),
+        "recommendations": recommendations,
     }
 
 
@@ -35,6 +41,7 @@ def build_age_prior_ablation_summary(
         "recommended_discovery_structure_name",
         "recommended_discovery_fractional",
         "recommended_discovery_observation_map",
+        "recommended_discovery_delay_weeks",
     ]
 
     def _discovery_subset(summary: pd.DataFrame, prefix: str) -> pd.DataFrame:
@@ -46,6 +53,7 @@ def build_age_prior_ablation_summary(
             "discovery_structure_name": f"{prefix}_discovery_structure_name",
             "discovery_fractional": f"{prefix}_discovery_fractional",
             "discovery_observation_map": f"{prefix}_discovery_observation_map",
+            "discovery_delay_weeks": f"{prefix}_discovery_delay_weeks",
         }
         return frame.loc[:, columns.keys()].rename(columns=columns)
 
@@ -64,6 +72,7 @@ def build_age_prior_ablation_summary(
                 "recommended_discovery_structure_name": "age_prior_recommended_discovery_structure_name",
                 "recommended_discovery_fractional": "age_prior_recommended_discovery_fractional",
                 "recommended_discovery_observation_map": "age_prior_recommended_discovery_observation_map",
+                "recommended_discovery_delay_weeks": "age_prior_recommended_discovery_delay_weeks",
             }
         )
     )
@@ -83,24 +92,61 @@ def build_age_prior_ablation_summary(
                 "recommended_discovery_structure_name": "no_age_prior_recommended_discovery_structure_name",
                 "recommended_discovery_fractional": "no_age_prior_recommended_discovery_fractional",
                 "recommended_discovery_observation_map": "no_age_prior_recommended_discovery_observation_map",
+                "recommended_discovery_delay_weeks": "no_age_prior_recommended_discovery_delay_weeks",
             }
         )
     )
 
     comparison = age_prior_rows.merge(no_age_prior_rows, on="series_name", how="outer")
-    age_recommended_structure = comparison["age_prior_recommended_discovery_structure_name"].fillna("")
-    no_age_recommended_structure = comparison["no_age_prior_recommended_discovery_structure_name"].fillna("")
-    age_discovery_structure = comparison["age_prior_discovery_structure_name"].fillna("")
-    no_age_discovery_structure = comparison["no_age_prior_discovery_structure_name"].fillna("")
+    age_recommended_delay = pd.to_numeric(
+        comparison["age_prior_recommended_discovery_delay_weeks"], errors="coerce"
+    ).fillna(0).astype(int)
+    no_age_recommended_delay = pd.to_numeric(
+        comparison["no_age_prior_recommended_discovery_delay_weeks"], errors="coerce"
+    ).fillna(0).astype(int)
+    age_discovery_delay = pd.to_numeric(
+        comparison["age_prior_discovery_delay_weeks"], errors="coerce"
+    ).fillna(0).astype(int)
+    no_age_discovery_delay = pd.to_numeric(
+        comparison["no_age_prior_discovery_delay_weeks"], errors="coerce"
+    ).fillna(0).astype(int)
+    age_recommended_signature = (
+        comparison["age_prior_recommended_discovery_structure_name"].fillna("").astype(str)
+        + "|obs="
+        + comparison["age_prior_recommended_discovery_observation_map"].fillna("").astype(str)
+        + "|delay="
+        + age_recommended_delay.astype(str)
+    )
+    no_age_recommended_signature = (
+        comparison["no_age_prior_recommended_discovery_structure_name"].fillna("").astype(str)
+        + "|obs="
+        + comparison["no_age_prior_recommended_discovery_observation_map"].fillna("").astype(str)
+        + "|delay="
+        + no_age_recommended_delay.astype(str)
+    )
+    age_discovery_signature = (
+        comparison["age_prior_discovery_structure_name"].fillna("").astype(str)
+        + "|obs="
+        + comparison["age_prior_discovery_observation_map"].fillna("").astype(str)
+        + "|delay="
+        + age_discovery_delay.astype(str)
+    )
+    no_age_discovery_signature = (
+        comparison["no_age_prior_discovery_structure_name"].fillna("").astype(str)
+        + "|obs="
+        + comparison["no_age_prior_discovery_observation_map"].fillna("").astype(str)
+        + "|delay="
+        + no_age_discovery_delay.astype(str)
+    )
 
     comparison["recommended_model_changed"] = (
         comparison["age_prior_recommended_model"] != comparison["no_age_prior_recommended_model"]
     )
     comparison["recommended_discovery_structure_changed"] = (
-        age_recommended_structure != no_age_recommended_structure
+        age_recommended_signature != no_age_recommended_signature
     )
     comparison["discovery_structure_changed"] = (
-        age_discovery_structure != no_age_discovery_structure
+        age_discovery_signature != no_age_discovery_signature
     )
     comparison["age_prior_discovery_wins_test"] = (
         comparison["age_prior_best_test_model"] == "constrained_structure_discovery"

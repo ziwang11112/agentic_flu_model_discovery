@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 from src.discovery.model import DiscoveryCompartmentModel, DiscoveryRegularizationConfig
-from src.discovery.rules import StructureSpec, generate_neighbors, validate_structure
+from src.discovery.rules import StructureSpec, generate_neighbors, observation_family, validate_structure
 from src.evaluation.metrics import point_metrics
 from src.evaluation.rolling import (
     rolling_blocked_metric_summary,
@@ -37,6 +37,8 @@ class SearchConfig:
     score_compartment_weight: float = 0.02
     score_fractional_weight: float = 0.015
     score_observation_weight: float = 0.005
+    score_delay_weight: float = 0.005
+    score_h_observation_weight: float = 0.005
     score_recurrence_weight: float = 0.01
     score_stability_weight: float = 0.2
     score_multi_split_std_weight: float = 0.5
@@ -81,15 +83,35 @@ def discovery_complexity_penalty(
     search_config: SearchConfig,
 ) -> float:
     """Structured validation-time penalty for flexible discovered models."""
-    penalty = search_config.score_param_weight * param_count
-    penalty += search_config.score_compartment_weight * num_compartments
-    if spec.fractional:
-        penalty += search_config.score_fractional_weight
-    if spec.observation_map == "I+H":
-        penalty += search_config.score_observation_weight
-    if spec.structure_name == "SEIRS":
-        penalty += search_config.score_recurrence_weight
-    return float(penalty)
+    components = discovery_complexity_penalty_components(spec, param_count, num_compartments, search_config)
+    return float(components["complexity_penalty"])
+
+
+def discovery_complexity_penalty_components(
+    spec: StructureSpec,
+    param_count: int,
+    num_compartments: int,
+    search_config: SearchConfig,
+) -> dict[str, float]:
+    """Return named complexity-penalty components for one candidate."""
+    param_penalty = search_config.score_param_weight * param_count
+    compartment_penalty = search_config.score_compartment_weight * num_compartments
+    fractional_penalty = search_config.score_fractional_weight if spec.fractional else 0.0
+    observation_penalty = search_config.score_observation_weight if spec.observation_map == "I+H" else 0.0
+    h_observation_penalty = search_config.score_h_observation_weight if spec.observation_map == "H" else 0.0
+    delay_penalty = search_config.score_delay_weight * float(spec.delay_weeks) if spec.observation_map == "delayed_I" else 0.0
+    recurrence_penalty = search_config.score_recurrence_weight if spec.structure_name == "SEIRS" else 0.0
+    penalty = param_penalty + compartment_penalty + fractional_penalty + observation_penalty + h_observation_penalty + delay_penalty + recurrence_penalty
+    return {
+        "param_penalty": float(param_penalty),
+        "compartment_penalty": float(compartment_penalty),
+        "fractional_penalty": float(fractional_penalty),
+        "observation_penalty": float(observation_penalty),
+        "h_observation_penalty": float(h_observation_penalty),
+        "delay_penalty": float(delay_penalty),
+        "recurrence_penalty": float(recurrence_penalty),
+        "complexity_penalty": float(penalty),
+    }
 
 
 def age_structure_prior_penalty(
@@ -159,7 +181,7 @@ def run_structure_search(
 ) -> SearchOutcome:
     """Run the constrained propose-fit-verify-refine loop."""
     ensure_dir(artifact_dir)
-    start_spec = StructureSpec("SEIR", fractional=False, observation_map="I")
+    start_spec = StructureSpec("SEIR", fractional=False, observation_map="I", delay_weeks=0)
     beam = [start_spec]
     expanded: set[str] = set()
     evaluated_records: dict[str, dict[str, Any]] = {}
@@ -237,12 +259,13 @@ def run_structure_search(
             rolling_error_std = rolling_error_stability(rolling_frame)
             multi_split_penalty = search_config.score_multi_split_std_weight * multi_split_std_mae
             stability_penalty = search_config.score_stability_weight * rolling_error_std
-            complexity_penalty = discovery_complexity_penalty(
+            complexity_components = discovery_complexity_penalty_components(
                 spec=spec,
                 param_count=fit_result.param_count,
                 num_compartments=len(model.compartment_names),
                 search_config=search_config,
             )
+            complexity_penalty = float(complexity_components["complexity_penalty"])
             age_prior_penalty = age_structure_prior_penalty(series_name, spec, search_config)
             score = multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty
 
@@ -252,6 +275,8 @@ def run_structure_search(
                 "structure_name": spec.structure_name,
                 "fractional": spec.fractional,
                 "observation_map": spec.observation_map,
+                "delay_weeks": int(spec.delay_weeks),
+                "observation_family": observation_family(spec),
                 "num_free_params": fit_result.param_count,
                 "num_compartments": len(model.compartment_names),
                 "train_objective": fit_result.objective,
@@ -270,6 +295,13 @@ def run_structure_search(
                 "rolling_val_metrics": rolling_metrics,
                 "stability_penalty": stability_penalty,
                 "complexity_penalty": complexity_penalty,
+                "complexity_penalty_params": complexity_components["param_penalty"],
+                "complexity_penalty_compartments": complexity_components["compartment_penalty"],
+                "complexity_penalty_fractional": complexity_components["fractional_penalty"],
+                "complexity_penalty_observation": complexity_components["observation_penalty"],
+                "complexity_penalty_h_observation": complexity_components["h_observation_penalty"],
+                "complexity_penalty_delay": complexity_components["delay_penalty"],
+                "complexity_penalty_recurrence": complexity_components["recurrence_penalty"],
                 "age_prior_penalty": age_prior_penalty,
                 "score": score,
                 "params": fit_result.params,
@@ -312,6 +344,7 @@ def run_structure_search(
                 structure_name=row["structure_name"],
                 fractional=bool(row["fractional"]),
                 observation_map=row["observation_map"],
+                delay_weeks=int(row.get("delay_weeks", 0)),
             )
             for _, row in leaderboard.head(search_config.beam_width).iterrows()
         ]
@@ -334,6 +367,7 @@ def run_structure_search(
         structure_name=str(best_record["structure_name"]),
         fractional=bool(best_record["fractional"]),
         observation_map=str(best_record["observation_map"]),
+        delay_weeks=int(best_record.get("delay_weeks", 0)),
     )
 
     leaderboard.to_csv(artifact_dir / "leaderboard.csv", index=False)

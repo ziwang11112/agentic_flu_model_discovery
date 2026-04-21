@@ -88,6 +88,8 @@ discovery:
   score_compartment_weight: 0.02
   score_fractional_weight: 0.015
   score_observation_weight: 0.005
+  score_delay_weight: 0.005
+  score_h_observation_weight: 0.005
   score_recurrence_weight: 0.01
   score_stability_weight: 0.2
   score_multi_split_std_weight: 0.5

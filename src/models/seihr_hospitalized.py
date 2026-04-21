@@ -28,7 +28,7 @@ class HospitalizedSEIHRModel(BaseEpidemicModel):
 
     @property
     def raw_parameter_dim(self) -> int:
-        return 10
+        return 11
 
     def sample_initial_parameters(self, y_train: np.ndarray, rng: np.random.Generator) -> np.ndarray:
         rho_guess = np.log(max(float(np.max(y_train)) / 0.01, 1.0))
@@ -39,6 +39,7 @@ class HospitalizedSEIHRModel(BaseEpidemicModel):
                 -0.15,
                 _logit(0.25),
                 _logit(0.30),
+                _logit(0.25),
                 _logit(0.20),
                 rho_guess,
                 -4.5,
@@ -50,18 +51,20 @@ class HospitalizedSEIHRModel(BaseEpidemicModel):
         return center + rng.normal(loc=0.0, scale=0.7, size=center.size)
 
     def transform_parameters(self, raw_params: np.ndarray) -> dict[str, float]:
-        init_simplex = softmax(np.array([0.0, raw_params[7], raw_params[8], raw_params[9]], dtype=float))
+        init_simplex = softmax(np.array([0.0, raw_params[8], raw_params[9], raw_params[10]], dtype=float))
         sigma = float(sigmoid(raw_params[3]))
-        hosp_rate = float(sigmoid(raw_params[4]))
-        discharge_rate = float(sigmoid(raw_params[5]))
-        rho = float(np.exp(np.clip(raw_params[6], -12.0, 14.0)))
+        eta = float(sigmoid(raw_params[4]))
+        gamma_i = float(sigmoid(raw_params[5]))
+        gamma_h = float(sigmoid(raw_params[6]))
+        rho = float(np.exp(np.clip(raw_params[7], -12.0, 14.0)))
         return {
             "b0": float(raw_params[0]),
             "b1": float(raw_params[1]),
             "b2": float(raw_params[2]),
             "sigma": sigma,
-            "hosp_rate": hosp_rate,
-            "discharge_rate": discharge_rate,
+            "eta": eta,
+            "gamma_i": gamma_i,
+            "gamma_h": gamma_h,
             "rho": rho,
             "S0": float(init_simplex[0]),
             "E0": float(init_simplex[1]),
@@ -81,15 +84,16 @@ class HospitalizedSEIHRModel(BaseEpidemicModel):
             beta_t = float(seasonal_beta(t, params["b0"], params["b1"], params["b2"]))
             s_val, e_val, i_val, h_val, _ = state
             infection = beta_t * s_val * i_val
-            hosp_flow = params["hosp_rate"] * i_val
-            discharge_flow = params["discharge_rate"] * h_val
+            hosp_flow = params["eta"] * i_val
+            direct_recovery = params["gamma_i"] * i_val
+            discharge_flow = params["gamma_h"] * h_val
             return np.array(
                 [
                     -infection,
                     infection - params["sigma"] * e_val,
-                    params["sigma"] * e_val - hosp_flow,
+                    params["sigma"] * e_val - hosp_flow - direct_recovery,
                     hosp_flow - discharge_flow,
-                    discharge_flow,
+                    direct_recovery + discharge_flow,
                 ],
                 dtype=float,
             )

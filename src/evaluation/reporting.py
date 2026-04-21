@@ -47,10 +47,12 @@ def collect_benchmark_model_summary(artifact_root: Path) -> pd.DataFrame:
             row["discovery_structure_name"] = best_spec["structure_name"]
             row["discovery_fractional"] = best_spec["fractional"]
             row["discovery_observation_map"] = best_spec["observation_map"]
+            row["discovery_delay_weeks"] = best_spec.get("delay_weeks")
         else:
             row["discovery_structure_name"] = None
             row["discovery_fractional"] = None
             row["discovery_observation_map"] = None
+            row["discovery_delay_weeks"] = None
 
         records.append(row)
 
@@ -121,6 +123,7 @@ def collect_age_group_recommendations(summary: pd.DataFrame) -> pd.DataFrame:
                 "recommended_discovery_structure_name": recommended["discovery_structure_name"],
                 "recommended_discovery_fractional": recommended["discovery_fractional"],
                 "recommended_discovery_observation_map": recommended["discovery_observation_map"],
+                "recommended_discovery_delay_weeks": recommended["discovery_delay_weeks"],
             }
         )
 

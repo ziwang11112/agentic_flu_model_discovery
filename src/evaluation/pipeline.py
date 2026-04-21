@@ -419,6 +419,7 @@ def run_discovery_family(
         "structure_name": outcome.best_spec.structure_name,
         "fractional": outcome.best_spec.fractional,
         "observation_map": outcome.best_spec.observation_map,
+        "delay_weeks": int(outcome.best_spec.delay_weeks),
     }
     summary["search_best_record"] = outcome.best_record
     write_json(summary, artifact_dir / "metrics.json")

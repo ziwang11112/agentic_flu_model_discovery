@@ -1,5 +1,14 @@
 seed: 42
 
+experiment:
+  seeds:
+    - 0
+    - 1
+    - 2
+    - 42
+    - 2024
+  multiseed_output_root: artifacts_multiseed_age_robustness_observation
+
 data:
   raw_csv: FluSurveillance_Custom_Download_Data.csv
   processed_dir: data/processed_age_robustness
@@ -12,7 +21,7 @@ data:
     - ">= 65 yr"
 
 artifacts:
-  root_dir: artifacts_age_robustness_age_prior
+  root_dir: artifacts_multiseed_age_robustness_observation/single_seed_placeholder
 
 fitting:
   n_restarts: 6
@@ -26,7 +35,7 @@ fitting:
   bootstrap_draws: 30
   bootstrap_n_restarts: 0
   calibrate_intervals: false
-  interval_calibration_method: conformal  # ignored when benchmark-level conformal postprocess is enabled
+  interval_calibration_method: conformal
   calibration_draws: 12
   calibration_scale_min: 0.25
   calibration_scale_max: 1.25
@@ -35,7 +44,7 @@ fitting:
 uncertainty:
   conformal:
     enabled: true
-    output_dir: artifacts_v5_conformal_v3
+    output_dir: artifacts_v5_conformal_v3_observation
     calibration_kinds:
       - raw
       - scale_calibrated

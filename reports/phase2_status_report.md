@@ -6,7 +6,7 @@ The repository now has three stable deliverables:
 
 - a reproducible influenza hospitalization-rate forecasting benchmark across four epidemic-model families
 - a benchmark-level conformal uncertainty postprocess for the probabilistic baseline
-- a strengthened point-forecast benchmark with fair hospitalization-aware baselines, age-prior ablation, and five-seed aggregation
+- a strengthened point-forecast benchmark with fair hospitalization-aware baselines, age-prior ablation, five-seed aggregation, and observation-aware discovery grammar
 
 The current evidence does not support a single globally best forecasting model or a single globally best interval-adjustment rule. The main project conclusion remains:
 
@@ -63,19 +63,22 @@ Interpretation:
 
 ### Updated Point-Forecast Interpretation
 
-The most current point-forecast picture is now in the five-seed aggregation:
+The most current point-forecast picture is now in the observation-aware five-seed aggregation:
 
-- [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](../artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
-- [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](../artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
+- [`artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv`](../artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv)
+- [`artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv`](../artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv)
+- [`artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv`](../artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv)
 - [`reports/multiseed_fair_baseline_report.md`](../reports/multiseed_fair_baseline_report.md)
+- [`reports/observation_structure_multiseed_report.md`](../reports/observation_structure_multiseed_report.md)
 
 Current high-confidence points:
 
 - `0-4 yr`: discovery is the stable winner on both held-out and rolling-origin metrics across all five seeds
-- `Overall`: `delayed_observation_seir` is now the strongest held-out test baseline
-- `18-49 yr`: `hospitalized_seihr` is now the strongest held-out test baseline
+- `Overall`: `delayed_observation_seir` is the strongest held-out test baseline, while recommendation mode remains close to deterministic stability
+- `18-49 yr`: discovery is not competitive; stronger manual baselines dominate this age group
 - `5-17 yr`: discovery wins held-out test most often, but probabilistic SEIR wins rolling-origin MAE in every seed
-- `>= 65 yr`: deterministic SEIR wins held-out test most often, but discovery wins rolling-origin MAE in every seed
+- `>= 65 yr`: deterministic SEIR wins held-out test most often, but discovery still wins rolling-origin MAE most often
+- discovery now selects `delayed_I` in children and older adults, but it does not select `H` or `I+H` in the current benchmark
 
 ### Single-Seed Age-Group Winners
 
@@ -199,6 +202,8 @@ This mirrors the point-forecast result: age-aware selection remains more useful 
 
 - overall benchmark comparison: [`artifacts/overall/model_comparison.png`](../artifacts/overall/model_comparison.png)
 - age-group rolling MAE heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](../artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
+- observation-aware multi-seed test MAE: [`artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png`](../artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png)
+- observation-aware multi-seed rolling MAE: [`artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png`](../artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png)
 - conformal selected-method heatmap: [`artifacts_v5_conformal_v3/selected_method_by_series_heatmap.png`](../artifacts_v5_conformal_v3/selected_method_by_series_heatmap.png)
 - conformal validation coverage by method: [`artifacts_v5_conformal_v3/calibration_validation_coverage_by_method.png`](../artifacts_v5_conformal_v3/calibration_validation_coverage_by_method.png)
 - conformal test gap-vs-width view: [`artifacts_v5_conformal_v3/calibration_gap_vs_width_test.png`](../artifacts_v5_conformal_v3/calibration_gap_vs_width_test.png)
@@ -209,9 +214,10 @@ The current repository state should be interpreted as follows:
 
 1. Use age-aware point-forecast model selection rather than a single global winner.
 2. Treat `0-4 yr` as the clearest stable discovery success case in the current repository.
-3. Treat `artifacts_v5_conformal_v3/` as the recommended conformal result set.
-4. Keep conformal calibration as uncertainty-only postprocessing; do not mix it into model fitting or fitting-time interval calibration.
-5. Treat `V3` as the default winner-selection rule until a later experiment demonstrates a clearly better tradeoff.
+3. Treat observation structure as a first-class modeling choice; delayed observation matters more than explicit `H` observation in the current season-level benchmark.
+4. Treat `artifacts_v5_conformal_v3/` as the recommended conformal result set.
+5. Keep conformal calibration as uncertainty-only postprocessing; do not mix it into model fitting or fitting-time interval calibration.
+6. Treat `V3` as the default winner-selection rule until a later experiment demonstrates a clearly better tradeoff.
 
 ## Reproduction
 

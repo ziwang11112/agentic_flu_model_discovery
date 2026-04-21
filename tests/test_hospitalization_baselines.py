@@ -28,6 +28,7 @@ def test_hospitalized_seihr_prediction_tracks_h_compartment() -> None:
             _logit(0.5),
             _logit(0.25),
             _logit(0.5),
+            _logit(0.4),
             np.log(2.0),
             np.log(0.1 / 0.7),
             np.log(0.1 / 0.7),
@@ -39,6 +40,30 @@ def test_hospitalized_seihr_prediction_tracks_h_compartment() -> None:
     simulation = model.simulate(raw_params, n_steps=3)
 
     assert np.allclose(simulation.predictions, 2.0 * simulation.states[:, 3])
+
+
+def test_hospitalized_seihr_mass_conservation_with_direct_recovery() -> None:
+    model = HospitalizedSEIHRModel(FitConfig())
+    raw_params = np.array(
+        [
+            _inverse_softplus(0.25),
+            0.0,
+            0.0,
+            _logit(0.4),
+            _logit(0.2),
+            _logit(0.35),
+            _logit(0.45),
+            np.log(1.0),
+            np.log(0.08 / 0.76),
+            np.log(0.08 / 0.76),
+            np.log(0.08 / 0.76),
+        ],
+        dtype=float,
+    )
+
+    simulation = model.simulate(raw_params, n_steps=6)
+
+    assert np.allclose(simulation.states.sum(axis=1), 1.0, atol=1.0e-8)
 
 
 def test_delayed_observation_seir_uses_fixed_delay() -> None:

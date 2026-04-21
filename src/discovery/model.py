@@ -63,7 +63,7 @@ class DiscoveryCompartmentModel(BaseEpidemicModel):
             "SIR": ["gamma"],
             "SEIR": ["sigma", "gamma"],
             "SEIRS": ["sigma", "gamma", "omega"],
-            "SEIHR": ["sigma", "eta", "delta"],
+            "SEIHR": ["sigma", "eta", "gamma_i", "gamma_h"],
             "SEIAR": ["sigma", "p_asym", "gamma_i", "gamma_a"],
         }
         return mapping[self.spec.structure_name]
@@ -156,13 +156,16 @@ class DiscoveryCompartmentModel(BaseEpidemicModel):
         if self.spec.structure_name == "SEIHR":
             s_val, e_val, i_val, h_val, _ = state
             infection = beta_t * s_val * i_val
+            hosp_flow = params["eta"] * i_val
+            direct_recovery = params["gamma_i"] * i_val
+            discharge_flow = params["gamma_h"] * h_val
             return np.array(
                 [
                     -infection,
                     infection - params["sigma"] * e_val,
-                    params["sigma"] * e_val - params["eta"] * i_val,
-                    params["eta"] * i_val - params["delta"] * h_val,
-                    params["delta"] * h_val,
+                    params["sigma"] * e_val - hosp_flow - direct_recovery,
+                    hosp_flow - discharge_flow,
+                    direct_recovery + discharge_flow,
                 ],
                 dtype=float,
             )
@@ -231,10 +234,20 @@ class DiscoveryCompartmentModel(BaseEpidemicModel):
             states = euler_discrete_simulation(initial_state, n_steps, drift_fn)
 
         index_map = {name: idx for idx, name in enumerate(self.compartment_names)}
-        if self.spec.observation_map == "I+H":
-            observed_state = states[:, index_map["I"]] + states[:, index_map["H"]]
-        else:
+        if self.spec.observation_map == "I":
             observed_state = states[:, index_map["I"]]
+        elif self.spec.observation_map == "H":
+            observed_state = states[:, index_map["H"]]
+        elif self.spec.observation_map == "I+H":
+            observed_state = states[:, index_map["I"]] + states[:, index_map["H"]]
+        elif self.spec.observation_map == "delayed_I":
+            delayed_i = np.zeros(n_steps, dtype=float)
+            delay = int(self.spec.delay_weeks)
+            for t in range(n_steps):
+                delayed_i[t] = states[max(t - delay, 0), index_map["I"]]
+            observed_state = delayed_i
+        else:
+            raise ValueError(f"Unsupported observation map: {self.spec.observation_map}")
         predictions = params["rho"] * observed_state
 
         return SimulationResult(

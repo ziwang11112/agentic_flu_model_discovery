@@ -34,6 +34,7 @@ def _write_metrics(
             "structure_name": discovery_structure_name,
             "fractional": False,
             "observation_map": "I",
+            "delay_weeks": 0,
         }
     if model_name == "probabilistic_seir":
         metrics["probabilistic_metrics"] = {

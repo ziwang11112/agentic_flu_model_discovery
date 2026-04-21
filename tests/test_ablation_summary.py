@@ -46,6 +46,7 @@ def test_build_age_prior_ablation_summary_compares_variants(tmp_path: Path) -> N
                 "recommended_discovery_structure_name": "SEIRS",
                 "recommended_discovery_fractional": False,
                 "recommended_discovery_observation_map": "I",
+                "recommended_discovery_delay_weeks": 0,
             }
         ],
         summary=[
@@ -57,6 +58,7 @@ def test_build_age_prior_ablation_summary_compares_variants(tmp_path: Path) -> N
                 "discovery_structure_name": "SEIRS",
                 "discovery_fractional": False,
                 "discovery_observation_map": "I",
+                "discovery_delay_weeks": 0,
             }
         ],
     )
@@ -84,6 +86,7 @@ def test_build_age_prior_ablation_summary_compares_variants(tmp_path: Path) -> N
                 "recommended_discovery_structure_name": "",
                 "recommended_discovery_fractional": "",
                 "recommended_discovery_observation_map": "",
+                "recommended_discovery_delay_weeks": "",
             }
         ],
         summary=[
@@ -95,6 +98,7 @@ def test_build_age_prior_ablation_summary_compares_variants(tmp_path: Path) -> N
                 "discovery_structure_name": "SIR",
                 "discovery_fractional": False,
                 "discovery_observation_map": "I",
+                "discovery_delay_weeks": 0,
             }
         ],
     )

@@ -21,7 +21,7 @@ STRUCTURE_TEMPLATES = {
     },
     "SEIHR": {
         "compartments": ("S", "E", "I", "H", "R"),
-        "edges": (("S", "E"), ("E", "I"), ("I", "H"), ("H", "R")),
+        "edges": (("S", "E"), ("E", "I"), ("I", "H"), ("I", "R"), ("H", "R")),
         "infectious": ("I",),
     },
     "SEIAR": {
@@ -31,6 +31,9 @@ STRUCTURE_TEMPLATES = {
     },
 }
 
+VALID_OBSERVATION_MAPS = {"I", "H", "I+H", "delayed_I"}
+VALID_DELAY_WEEKS = {0, 1, 2, 3}
+
 
 @dataclass(frozen=True)
 class StructureSpec:
@@ -39,10 +42,14 @@ class StructureSpec:
     structure_name: str
     fractional: bool = False
     observation_map: str = "I"
+    delay_weeks: int = 0
 
     @property
     def spec_key(self) -> str:
-        return f"{self.structure_name}|fractional={int(self.fractional)}|obs={self.observation_map}"
+        key = f"{self.structure_name}|fractional={int(self.fractional)}|obs={self.observation_map}"
+        if self.observation_map == "delayed_I":
+            key += f"|delay={int(self.delay_weeks)}"
+        return key
 
     @property
     def slug(self) -> str:
@@ -58,6 +65,18 @@ class StructureSpec:
 class ValidationResult:
     valid: bool
     reason: str
+
+
+def observation_family(spec: StructureSpec) -> str:
+    if spec.observation_map == "I":
+        return "infectious"
+    if spec.observation_map == "H":
+        return "hospitalized"
+    if spec.observation_map == "I+H":
+        return "joint"
+    if spec.observation_map == "delayed_I":
+        return "delayed"
+    return "unknown"
 
 
 def structure_template(spec: StructureSpec | str) -> dict[str, tuple[str, ...]]:
@@ -88,6 +107,12 @@ def validate_structure(spec: StructureSpec) -> ValidationResult:
     """Validate one constrained candidate structure."""
     if spec.structure_name not in STRUCTURE_TEMPLATES:
         return ValidationResult(False, "structure_not_allowed")
+    if spec.observation_map not in VALID_OBSERVATION_MAPS:
+        return ValidationResult(False, "invalid_observation_map")
+    if int(spec.delay_weeks) not in VALID_DELAY_WEEKS:
+        return ValidationResult(False, "invalid_delay")
+    if spec.observation_map != "delayed_I" and int(spec.delay_weeks) != 0:
+        return ValidationResult(False, "delay_requires_delayed_i")
 
     template = structure_template(spec)
     compartments = template["compartments"]
@@ -113,10 +138,18 @@ def validate_structure(spec: StructureSpec) -> ValidationResult:
         if degree == 0:
             return ValidationResult(False, f"isolated_compartment_{compartment}")
 
-    if spec.observation_map == "I+H" and "H" not in compartments:
-        return ValidationResult(False, "observation_map_requires_h")
-    if spec.observation_map not in {"I", "I+H"}:
-        return ValidationResult(False, "invalid_observation_map")
+    if spec.observation_map == "H":
+        if "H" not in compartments:
+            return ValidationResult(False, "observation_map_requires_h")
+        if spec.structure_name != "SEIHR":
+            return ValidationResult(False, "h_observation_requires_seihr")
+    if spec.observation_map == "I+H":
+        if "H" not in compartments:
+            return ValidationResult(False, "observation_map_requires_h")
+        if spec.structure_name != "SEIHR":
+            return ValidationResult(False, "joint_observation_requires_seihr")
+    if spec.observation_map == "delayed_I" and "I" not in compartments:
+        return ValidationResult(False, "delayed_i_requires_i")
 
     return ValidationResult(True, "ok")
 
@@ -130,6 +163,7 @@ def generate_neighbors(spec: StructureSpec) -> list[StructureSpec]:
             structure_name=spec.structure_name,
             fractional=not spec.fractional,
             observation_map=spec.observation_map,
+            delay_weeks=spec.delay_weeks,
         )
     )
 
@@ -139,6 +173,8 @@ def generate_neighbors(spec: StructureSpec) -> list[StructureSpec]:
                 StructureSpec("SIR", spec.fractional, "I"),
                 StructureSpec("SEIRS", spec.fractional, "I"),
                 StructureSpec("SEIHR", spec.fractional, "I"),
+                StructureSpec("SEIHR", spec.fractional, "H"),
+                StructureSpec("SEIHR", spec.fractional, "I+H"),
                 StructureSpec("SEIAR", spec.fractional, "I"),
             }
         )
@@ -148,10 +184,40 @@ def generate_neighbors(spec: StructureSpec) -> list[StructureSpec]:
         neighbors.add(StructureSpec("SEIR", spec.fractional, "I"))
     elif spec.structure_name == "SEIHR":
         neighbors.add(StructureSpec("SEIR", spec.fractional, "I"))
-        alternate = "I+H" if spec.observation_map == "I" else "I"
-        neighbors.add(StructureSpec("SEIHR", spec.fractional, alternate))
+        for observation_map in ("I", "H", "I+H"):
+            neighbors.add(StructureSpec("SEIHR", spec.fractional, observation_map))
     elif spec.structure_name == "SEIAR":
         neighbors.add(StructureSpec("SEIR", spec.fractional, "I"))
+
+    if spec.structure_name in {"SIR", "SEIR", "SEIRS"}:
+        if spec.observation_map == "I":
+            neighbors.update(
+                {
+                    StructureSpec(spec.structure_name, spec.fractional, "delayed_I", delay_weeks=1),
+                    StructureSpec(spec.structure_name, spec.fractional, "delayed_I", delay_weeks=2),
+                    StructureSpec(spec.structure_name, spec.fractional, "delayed_I", delay_weeks=3),
+                }
+            )
+        elif spec.observation_map == "delayed_I":
+            neighbors.add(StructureSpec(spec.structure_name, spec.fractional, "I"))
+            if spec.delay_weeks > 1:
+                neighbors.add(
+                    StructureSpec(
+                        spec.structure_name,
+                        spec.fractional,
+                        "delayed_I",
+                        delay_weeks=spec.delay_weeks - 1,
+                    )
+                )
+            if spec.delay_weeks < 3:
+                neighbors.add(
+                    StructureSpec(
+                        spec.structure_name,
+                        spec.fractional,
+                        "delayed_I",
+                        delay_weeks=spec.delay_weeks + 1,
+                    )
+                )
 
     valid_neighbors = [neighbor for neighbor in neighbors if validate_structure(neighbor).valid]
     return sorted(valid_neighbors, key=lambda candidate: candidate.spec_key)

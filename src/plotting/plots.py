@@ -86,7 +86,16 @@ def plot_leaderboard(leaderboard: pd.DataFrame, path: Path) -> None:
 
 def plot_model_comparison(summary: pd.DataFrame, path: Path) -> None:
     figure = plt.figure(figsize=(10, 5))
-    plt.bar(summary["model_name"], summary["test_mae"], color=["#005f73", "#0a9396", "#94d2bd", "#ca6702"])
+    color_map = {
+        "deterministic_seir": "#005f73",
+        "probabilistic_seir": "#0a9396",
+        "hospitalized_seihr": "#2a9d8f",
+        "delayed_observation_seir": "#7f5539",
+        "fractional_seir": "#94d2bd",
+        "constrained_structure_discovery": "#ca6702",
+    }
+    colors = [color_map.get(model_name, "#6c757d") for model_name in summary["model_name"]]
+    plt.bar(summary["model_name"], summary["test_mae"], color=colors)
     plt.ylabel("Test MAE")
     plt.title("Manual Baselines vs. Discovered Model")
     plt.xticks(rotation=15)
@@ -123,6 +132,7 @@ def plot_structure_diagram(spec: StructureSpec, path: Path) -> None:
     plt.title(
         f"Best discovered structure: {spec.structure_name} | "
         f"fractional={spec.fractional} | observation={spec.observation_map}"
+        + (f" | delay={spec.delay_weeks}" if spec.observation_map == "delayed_I" else "")
     )
     _finalize_plot(path)
 

@@ -40,6 +40,10 @@ def load_multiseed_tables(seed_artifact_roots: dict[int, Path]) -> dict[str, pd.
 
     for seed, artifact_root in sorted(seed_artifact_roots.items()):
         bundle = _seed_bundle(seed, artifact_root)
+        if "discovery_delay_weeks" not in bundle["summary"].columns:
+            bundle["summary"]["discovery_delay_weeks"] = None
+        if "recommended_discovery_delay_weeks" not in bundle["recommendations"].columns:
+            bundle["recommendations"]["recommended_discovery_delay_weeks"] = None
         summary_frames.append(bundle["summary"].assign(seed=seed))
         winner_frames.append(bundle["winners"].assign(seed=seed))
         recommendation_frames.append(bundle["recommendations"].assign(seed=seed))
@@ -101,6 +105,7 @@ def build_multiseed_age_group_recommendation(seed_artifact_roots: dict[int, Path
         recommended_structure, structure_count = _stable_mode(subset["recommended_discovery_structure_name"])
         fractional_mode, fractional_count = _stable_mode(subset["recommended_discovery_fractional"])
         observation_mode, observation_count = _stable_mode(subset["recommended_discovery_observation_map"])
+        delay_mode, delay_count = _stable_mode(subset["recommended_discovery_delay_weeks"])
         total = int(subset["seed"].nunique())
         rows.append(
             {
@@ -120,6 +125,8 @@ def build_multiseed_age_group_recommendation(seed_artifact_roots: dict[int, Path
                 "recommended_discovery_fractional_frequency": fractional_count / total if total else 0.0,
                 "recommended_discovery_observation_map_mode": observation_mode,
                 "recommended_discovery_observation_map_frequency": observation_count / total if total else 0.0,
+                "recommended_discovery_delay_weeks_mode": delay_mode,
+                "recommended_discovery_delay_weeks_frequency": delay_count / total if total else 0.0,
             }
         )
 
@@ -129,6 +136,9 @@ def build_multiseed_age_group_recommendation(seed_artifact_roots: dict[int, Path
 def build_multiseed_discovery_structure_frequency(seed_artifact_roots: dict[int, Path]) -> pd.DataFrame:
     summary = load_multiseed_tables(seed_artifact_roots)["summary"]
     discovery = summary.loc[summary["model_name"] == "constrained_structure_discovery"].copy()
+    delay_series = discovery["discovery_delay_weeks"].apply(
+        lambda value: int(value) if pd.notna(value) else 0
+    )
     fractional_flag = discovery["discovery_fractional"].apply(
         lambda value: "1" if pd.notna(value) and bool(value) else "0"
     )
@@ -138,6 +148,7 @@ def build_multiseed_discovery_structure_frequency(seed_artifact_roots: dict[int,
         + fractional_flag
         + "|obs="
         + discovery["discovery_observation_map"].fillna("unknown").astype(str)
+        + delay_series.apply(lambda value: f"|delay={value}" if value > 0 else "")
     )
     frequency = (
         discovery.groupby(["series_name", "structure_spec"], as_index=False)

@@ -77,6 +77,8 @@ def _search_config(config: dict[str, Any]) -> SearchConfig:
         score_compartment_weight=float(discovery["score_compartment_weight"]),
         score_fractional_weight=float(discovery["score_fractional_weight"]),
         score_observation_weight=float(discovery["score_observation_weight"]),
+        score_delay_weight=float(discovery.get("score_delay_weight", 0.005)),
+        score_h_observation_weight=float(discovery.get("score_h_observation_weight", 0.005)),
         score_recurrence_weight=float(discovery["score_recurrence_weight"]),
         score_stability_weight=float(discovery["score_stability_weight"]),
         score_multi_split_std_weight=float(discovery.get("score_multi_split_std_weight", 0.5)),

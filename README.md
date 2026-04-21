@@ -12,12 +12,12 @@ This repository studies weekly influenza hospitalization-rate forecasting with i
 
 ## Key Findings
 
-- After adding fair hospitalization-aware baselines and aggregating over five seeds, `0-4 yr` remains the clearest stable win for `constrained_structure_discovery`.
-- `Overall` is now best served on held-out test MAE by `delayed_observation_seir`, while `18-49 yr` is best served on held-out test MAE by `hospitalized_seihr`.
-- `5-17 yr` remains a split-sensitive case: discovery is usually the best held-out test model, but `probabilistic_seir` is the rolling-origin winner across all five seeds.
-- `>= 65 yr` remains another split-sensitive case: `deterministic_seir` is usually best on held-out test MAE, but discovery wins rolling-origin MAE in every seed.
+- After making observation structure first-class in discovery and rerunning the five-seed benchmark, `0-4 yr` remains the clearest stable win for `constrained_structure_discovery`.
+- Discovery now selects `delayed_I` observation maps in children and older adults, but it does not select `H` or `I+H` in the current season-level benchmark.
+- `Overall` is now best served on held-out test MAE by `delayed_observation_seir`, while `18-49 yr` and `50-64 yr` are more competitive for stronger manual hospitalization-aware baselines than they were in the earlier grammar.
+- `5-17 yr` and `>= 65 yr` remain split-sensitive: discovery often proposes semantically richer delayed-observation structures, but the rolling-origin winner is still different from the held-out test winner.
 - Single-seed age-prior ablation currently shows no change in selected discovery structure or discovery MAE, suggesting the observed structure pattern is not being trivially forced by the age prior.
-- The main repository claim is now age-aware model selection under structural and observation uncertainty, not a single globally best model family.
+- The main repository claim is now age-aware model selection under structural and observation uncertainty, not a single globally best model family or a single globally best observation map.
 
 ## Result Preview
 
@@ -29,9 +29,13 @@ Age-group rolling-origin MAE heatmap:
 
 ![Age-group rolling mean MAE heatmap](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
 
-Five-seed robustness summary:
+Observation-aware five-seed robustness summary:
 
-![Multi-seed rolling mean MAE error bars](artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png)
+![Observation-aware multi-seed rolling mean MAE error bars](artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png)
+
+Observation-aware five-seed test MAE summary:
+
+![Observation-aware multi-seed test MAE error bars](artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png)
 
 ## Quick Start
 
@@ -75,6 +79,13 @@ The multi-seed runner writes:
 - `multiseed_test_mae_errorbars.png`
 - `multiseed_rolling_mae_errorbars.png`
 
+Run the observation-aware five-seed robustness benchmark in a fresh output root:
+
+```bash
+python scripts/run_multiseed_benchmark.py --config configs/age_robustness_multiseed_observation.yaml --log-level INFO --skip-existing
+python scripts/run_multiseed_benchmark.py --config configs/age_robustness_multiseed_observation.yaml --aggregate-only
+```
+
 Run benchmark-level conformal calibration postprocessing after the benchmark artifacts exist:
 
 ```bash
@@ -105,9 +116,13 @@ If you only want the most important outputs after a run, start here:
 - multi-seed model summary: [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
 - multi-seed recommendation summary: [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
 - multi-seed structure frequency: [`artifacts_multiseed_age_robustness/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness/multiseed_discovery_structure_frequency.csv)
+- observation-aware multi-seed model summary: [`artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv)
+- observation-aware multi-seed recommendation summary: [`artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv)
+- observation-aware multi-seed structure frequency: [`artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv)
 - conformal phase report: [`reports/conformal_v5_report.md`](reports/conformal_v5_report.md)
 - current phase summary: [`reports/phase2_status_report.md`](reports/phase2_status_report.md)
 - fair-baseline and multi-seed report: [`reports/multiseed_fair_baseline_report.md`](reports/multiseed_fair_baseline_report.md)
+- observation-structure report: [`reports/observation_structure_multiseed_report.md`](reports/observation_structure_multiseed_report.md)
 
 ## Benchmark-Level Conformal Calibration
 
@@ -175,6 +190,9 @@ The repository contains many artifacts, but these files are the fastest path to 
 - multi-seed model summary: [`artifacts_multiseed_age_robustness/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness/multiseed_model_summary.csv)
 - multi-seed recommendation summary: [`artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness/multiseed_age_group_recommendation.csv)
 - age-prior ablation summary: [`artifacts_age_prior_ablation/age_prior_ablation_summary.csv`](artifacts_age_prior_ablation/age_prior_ablation_summary.csv)
+- latest observation-aware multi-seed summary: [`artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv)
+- latest observation-aware recommendation summary: [`artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv)
+- latest observation-aware structure frequency: [`artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv)
 
 ### Discovery Outputs
 
@@ -189,6 +207,8 @@ The repository contains many artifacts, but these files are the fastest path to 
 - age-group rolling MAE heatmap: [`artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`](artifacts_age_robustness/benchmark_rolling_mae_heatmap.png)
 - multi-seed test MAE error bars: [`artifacts_multiseed_age_robustness/multiseed_test_mae_errorbars.png`](artifacts_multiseed_age_robustness/multiseed_test_mae_errorbars.png)
 - multi-seed rolling MAE error bars: [`artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png`](artifacts_multiseed_age_robustness/multiseed_rolling_mae_errorbars.png)
+- latest observation-aware multi-seed test MAE error bars: [`artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png`](artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png)
+- latest observation-aware multi-seed rolling MAE error bars: [`artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png`](artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png)
 - per-series example forecast plot: [`artifacts_age_robustness/robustness/50_64_yr/model_comparison.png`](artifacts_age_robustness/robustness/50_64_yr/model_comparison.png)
 
 ## Why This Repository Exists
