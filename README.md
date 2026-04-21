@@ -17,6 +17,7 @@ This repository studies weekly influenza hospitalization-rate forecasting with i
 - `Overall` is now best served on held-out test MAE by `delayed_observation_seir`, while `18-49 yr` and `50-64 yr` are more competitive for stronger manual hospitalization-aware baselines than they were in the earlier grammar.
 - `5-17 yr` and `>= 65 yr` remain split-sensitive: discovery often proposes semantically richer delayed-observation structures, but the rolling-origin winner is still different from the held-out test winner.
 - Observation-aware five-seed no-age-prior ablation shows no change in recommended models, selected discovery structures, selected observation maps, delay modes, or aggregate discovery MAE, suggesting the observed delayed-observation pattern is not being trivially forced by the age prior.
+- A tie-aware objective-policy summary shows that `4/6` age groups have different held-out-test and rolling-origin preferences, so several series are better described as practical ties or objective-dependent choices than as single-model wins.
 - The main repository claim is now age-aware model selection under structural and observation uncertainty, not a single globally best model family or a single globally best observation map.
 
 ## Result Preview
@@ -94,6 +95,12 @@ python scripts/run_multiseed_benchmark.py --config configs/age_robustness_multis
 python scripts/build_multiseed_observation_age_prior_ablation.py
 ```
 
+Build tie-aware and objective-aware policy outputs for the observation-aware five-seed benchmark:
+
+```bash
+python scripts/build_objective_aware_policy.py --input-root artifacts_multiseed_age_robustness_observation --report-path reports/objective_aware_policy_report.md
+```
+
 Run benchmark-level conformal calibration postprocessing after the benchmark artifacts exist:
 
 ```bash
@@ -127,6 +134,8 @@ If you only want the most important outputs after a run, start here:
 - observation-aware multi-seed model summary: [`artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv)
 - observation-aware multi-seed recommendation summary: [`artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv)
 - observation-aware multi-seed structure frequency: [`artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv)
+- observation-aware objective-aware policy: [`artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv`](artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv)
+- observation-aware pairwise model differences: [`artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv`](artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv)
 - observation-aware age-prior ablation summary: [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv`](artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv)
 - observation-aware age-prior structure comparison: [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_structure_comparison.csv`](artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_structure_comparison.csv)
 - observation-aware age-prior model delta: [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_model_delta.csv`](artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_model_delta.csv)
@@ -135,6 +144,7 @@ If you only want the most important outputs after a run, start here:
 - fair-baseline and multi-seed report: [`reports/multiseed_fair_baseline_report.md`](reports/multiseed_fair_baseline_report.md)
 - observation-structure report: [`reports/observation_structure_multiseed_report.md`](reports/observation_structure_multiseed_report.md)
 - observation-aware age-prior ablation report: [`reports/multiseed_observation_age_prior_ablation_report.md`](reports/multiseed_observation_age_prior_ablation_report.md)
+- objective-aware policy report: [`reports/objective_aware_policy_report.md`](reports/objective_aware_policy_report.md)
 
 ## Benchmark-Level Conformal Calibration
 
@@ -205,6 +215,8 @@ The repository contains many artifacts, but these files are the fastest path to 
 - latest observation-aware multi-seed summary: [`artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv`](artifacts_multiseed_age_robustness_observation/multiseed_model_summary.csv)
 - latest observation-aware recommendation summary: [`artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv`](artifacts_multiseed_age_robustness_observation/multiseed_age_group_recommendation.csv)
 - latest observation-aware structure frequency: [`artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv`](artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv)
+- latest observation-aware objective-aware policy: [`artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv`](artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv)
+- latest observation-aware pairwise differences: [`artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv`](artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv)
 - observation-aware no-age-prior ablation summary: [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv`](artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv)
 - observation-aware no-age-prior ablation report: [`reports/multiseed_observation_age_prior_ablation_report.md`](reports/multiseed_observation_age_prior_ablation_report.md)
 

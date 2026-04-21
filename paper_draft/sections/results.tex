@@ -68,6 +68,41 @@ between-seed variability.}
 \label{fig:obs-aware-multiseed}
 \end{figure}
 
+\subsection{Objective-aware policy interpretation}
+
+The five-seed aggregate also benefits from a tie-aware policy layer. Rather
+than forcing a single recommendation whenever one mean error is numerically
+smallest, we define a practical tie separately for held-out test MAE and
+rolling-origin MAE:
+\[
+|m - m^\star| \leq \max(0.001, 0.02 m^\star),
+\]
+where $m^\star$ is the best mean metric for the current series and objective.
+Within each tie set, models are ranked by win rate, between-seed variability,
+parameter count, and simplicity priority. This produces
+\texttt{test\_policy\_model}, \texttt{rolling\_policy\_model}, and, when
+possible, a shared \texttt{parsimony\_policy\_model}.
+
+This policy layer changes how the benchmark should be interpreted. It shows
+that $4/6$ series have different held-out-test and rolling-origin policy
+winners, but only two series remain fully objective-dependent with no shared
+parsimonious compromise. The clean cases are still informative:
+\texttt{0--4 yr} remains a discovery win under both objectives, while
+\texttt{18--49 yr} collapses to a deterministic recommendation once practical
+ties are acknowledged. More interestingly, \texttt{Overall} becomes a
+practical tie between \texttt{deterministic\_seir} and
+\texttt{delayed\_observation\_seir}, with the deterministic model preferred as
+the simpler shared compromise. Likewise, \texttt{50--64 yr} has different test
+and rolling winners, yet discovery remains inside both tie sets and therefore
+survives as the parsimonious compromise even after fair hospitalization-aware
+baselines are added.
+
+The implication is that the current non-LLM benchmark should be described not
+only as age-aware but also as objective-aware. Some series genuinely reward one
+model over another, but several series are better interpreted as practical ties
+whose final recommendation depends on whether the user prioritizes held-out
+split accuracy, rolling-origin stability, or model simplicity.
+
 \subsection{Discovery structure and observation semantics}
 
 Table~\ref{tab:discovery-structures} summarizes the structures selected by the

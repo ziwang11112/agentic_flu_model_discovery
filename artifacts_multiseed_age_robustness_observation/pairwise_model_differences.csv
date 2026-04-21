@@ -1,0 +1,181 @@
+series_name,model_a,model_b,metric,mean_difference,median_difference,num_seeds_model_a_better,num_seeds_model_b_better,practical_tie_flag
+0-4 yr,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,-0.08922933555688005,-0.0875145240841988,5,0,False
+0-4 yr,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,-0.08965716096407408,-0.0923270606221641,5,0,False
+0-4 yr,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.09924682943255578,-0.1001385143767092,5,0,False
+0-4 yr,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,-0.0896927240710664,-0.092780267180952,5,0,False
+0-4 yr,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,-0.06601110498939688,-0.0686746262340959,5,0,False
+0-4 yr,delayed_observation_seir,deterministic_seir,rolling_mean_mae,-0.00042782540719403793,0.0004559313260663056,2,3,True
+0-4 yr,delayed_observation_seir,fractional_seir,rolling_mean_mae,-0.010017493875675737,-0.01019509188997772,4,1,False
+0-4 yr,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,-0.00046338851418635806,9.508437833680161e-05,2,3,True
+0-4 yr,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,0.023218230567483168,0.023540983406394406,0,5,False
+0-4 yr,deterministic_seir,fractional_seir,rolling_mean_mae,-0.009589668468481699,-0.01007857455556771,4,1,False
+0-4 yr,deterministic_seir,hospitalized_seihr,rolling_mean_mae,-3.5563106992320126e-05,-6.835575049499165e-05,3,2,True
+0-4 yr,deterministic_seir,probabilistic_seir,rolling_mean_mae,0.023646055974677206,0.023539142464205215,0,5,False
+0-4 yr,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.009554105361489379,0.0100082363338726,1,4,False
+0-4 yr,fractional_seir,probabilistic_seir,rolling_mean_mae,0.03323572444315891,0.033736075296372126,0,5,False
+0-4 yr,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,0.023681619081669526,0.023607498214700207,0,5,False
+0-4 yr,constrained_structure_discovery,delayed_observation_seir,test_mae,-0.027384180378723977,-0.026989210187226206,5,0,False
+0-4 yr,constrained_structure_discovery,deterministic_seir,test_mae,-0.02762121532447278,-0.027248208821793893,5,0,False
+0-4 yr,constrained_structure_discovery,fractional_seir,test_mae,-0.041224250868869564,-0.029669875811843202,5,0,False
+0-4 yr,constrained_structure_discovery,hospitalized_seihr,test_mae,-0.02671555422467068,-0.0263185559970521,5,0,False
+0-4 yr,constrained_structure_discovery,probabilistic_seir,test_mae,-0.014457113871178495,-0.013895636800232689,5,0,False
+0-4 yr,delayed_observation_seir,deterministic_seir,test_mae,-0.00023703494574880136,-0.00020136600753610512,5,0,True
+0-4 yr,delayed_observation_seir,fractional_seir,test_mae,-0.013840070490145583,-0.0002887676733808048,4,1,False
+0-4 yr,delayed_observation_seir,hospitalized_seihr,test_mae,0.0006686261540533006,0.000584712454873404,0,5,True
+0-4 yr,delayed_observation_seir,probabilistic_seir,test_mae,0.012927066507545482,0.012859037233684603,0,5,False
+0-4 yr,deterministic_seir,fractional_seir,test_mae,-0.013603035544396782,-0.0002013796328764056,4,1,False
+0-4 yr,deterministic_seir,hospitalized_seihr,test_mae,0.000905661099802102,0.0008921727768108068,0,5,True
+0-4 yr,deterministic_seir,probabilistic_seir,test_mae,0.013164101453294283,0.013197519758432003,0,5,False
+0-4 yr,fractional_seir,hospitalized_seihr,test_mae,0.014508696644198885,0.000892206823817604,0,5,False
+0-4 yr,fractional_seir,probabilistic_seir,test_mae,0.026767136997691066,0.0131975538054388,0,5,False
+0-4 yr,hospitalized_seihr,probabilistic_seir,test_mae,0.01225844035349218,0.0122743247788112,0,5,False
+18-49 yr,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,0.005661346615548882,0.0054715343578738,0,5,False
+18-49 yr,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,0.0058096915262925266,0.00584416551254191,0,5,False
+18-49 yr,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.02045399972099028,-0.020462574347421797,5,0,False
+18-49 yr,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,0.004581205033978445,0.004741867068685707,0,5,False
+18-49 yr,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,-0.001977306848159116,-0.001922171352244595,5,0,False
+18-49 yr,delayed_observation_seir,deterministic_seir,rolling_mean_mae,0.00014834491074364463,0.00012026416930670247,1,4,True
+18-49 yr,delayed_observation_seir,fractional_seir,rolling_mean_mae,-0.02611534633653916,-0.0267693110879616,5,0,False
+18-49 yr,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,-0.0010801415815704374,-0.0005653337494970906,4,1,True
+18-49 yr,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,-0.007638653463707998,-0.0074743526588730985,5,0,False
+18-49 yr,deterministic_seir,fractional_seir,rolling_mean_mae,-0.026263691247282804,-0.025648550774812803,5,0,False
+18-49 yr,deterministic_seir,hospitalized_seihr,rolling_mean_mae,-0.001228486492314082,-0.0011022984438562033,4,1,True
+18-49 yr,deterministic_seir,probabilistic_seir,rolling_mean_mae,-0.007786998374451642,-0.007785759023141103,5,0,False
+18-49 yr,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.02503520475496872,0.025106288559140696,0,5,False
+18-49 yr,fractional_seir,probabilistic_seir,rolling_mean_mae,0.018476692872831164,0.018540402995177202,1,4,False
+18-49 yr,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,-0.00655851188213756,-0.006869003523600897,5,0,False
+18-49 yr,constrained_structure_discovery,delayed_observation_seir,test_mae,0.003106241501448161,0.0030054712147948998,0,5,False
+18-49 yr,constrained_structure_discovery,deterministic_seir,test_mae,0.00315818798327224,0.003151260814983202,0,5,False
+18-49 yr,constrained_structure_discovery,fractional_seir,test_mae,-0.0034788438350697214,0.003151190989684201,1,4,False
+18-49 yr,constrained_structure_discovery,hospitalized_seihr,test_mae,0.0011320068682556792,0.0030865098878062047,2,3,False
+18-49 yr,constrained_structure_discovery,probabilistic_seir,test_mae,0.0013283780958385407,0.0013283920243932004,0,5,False
+18-49 yr,delayed_observation_seir,deterministic_seir,test_mae,5.1946481824079184e-05,0.00014249929360869718,2,3,True
+18-49 yr,delayed_observation_seir,fractional_seir,test_mae,-0.006585085336517882,0.0001145013374485998,2,3,False
+18-49 yr,delayed_observation_seir,hospitalized_seihr,test_mae,-0.0019742346331924816,-0.000284619611320501,3,2,False
+18-49 yr,delayed_observation_seir,probabilistic_seir,test_mae,-0.0017778634056096199,-0.0016770791904016993,5,0,False
+18-49 yr,deterministic_seir,fractional_seir,test_mae,-0.006637031818341961,-6.9825299001125e-08,3,2,False
+18-49 yr,deterministic_seir,hospitalized_seihr,test_mae,-0.0020261811150165607,-6.475092717699721e-05,3,2,False
+18-49 yr,deterministic_seir,probabilistic_seir,test_mae,-0.001829809887433699,-0.0018221806550556968,5,0,False
+18-49 yr,fractional_seir,hospitalized_seihr,test_mae,0.0046108507033254,-6.468110187799608e-05,3,2,False
+18-49 yr,fractional_seir,probabilistic_seir,test_mae,0.004807221930908262,-0.0018221108297566957,4,1,False
+18-49 yr,hospitalized_seihr,probabilistic_seir,test_mae,0.00019637122758286163,-0.0017574297278786996,3,2,True
+5-17 yr,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,-0.02802490879737878,-0.029793141607927898,5,0,False
+5-17 yr,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,-0.02520264915996792,-0.030693754793485996,5,0,False
+5-17 yr,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.027134547773508023,-0.028953890963894204,5,0,False
+5-17 yr,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,-0.0005197387937829201,-0.0035826058070259972,3,2,True
+5-17 yr,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,0.01148678258547622,0.0112912772051924,0,5,False
+5-17 yr,delayed_observation_seir,deterministic_seir,rolling_mean_mae,0.0028222596374108564,-0.00039513868642090944,3,2,False
+5-17 yr,delayed_observation_seir,fractional_seir,rolling_mean_mae,0.000890361023870756,-0.0004358464256112027,3,2,True
+5-17 yr,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,0.02750517000359586,0.026487576891853895,0,5,False
+5-17 yr,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,0.039511691382855,0.03923318170879209,0,5,False
+5-17 yr,deterministic_seir,fractional_seir,rolling_mean_mae,-0.0019318986135401007,-4.0707739190293246e-05,3,2,False
+5-17 yr,deterministic_seir,hospitalized_seihr,rolling_mean_mae,0.024682910366184998,0.026700055371830594,0,5,False
+5-17 yr,deterministic_seir,probabilistic_seir,rolling_mean_mae,0.036689431745444145,0.038101533873548,0,5,False
+5-17 yr,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.026614808979725103,0.026482352799461997,0,5,False
+5-17 yr,fractional_seir,probabilistic_seir,rolling_mean_mae,0.03862133035898425,0.0377248101251561,0,5,False
+5-17 yr,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,0.01200652137925914,0.011242457325694101,0,5,False
+5-17 yr,constrained_structure_discovery,delayed_observation_seir,test_mae,-0.037314863899584716,-0.0345612316072102,5,0,False
+5-17 yr,constrained_structure_discovery,deterministic_seir,test_mae,-0.03649323261755246,-0.0350265933269611,5,0,False
+5-17 yr,constrained_structure_discovery,fractional_seir,test_mae,-0.020805458639335882,-0.0313878929831229,4,1,False
+5-17 yr,constrained_structure_discovery,hospitalized_seihr,test_mae,-0.01855456496081952,-0.0177601660537827,5,0,False
+5-17 yr,constrained_structure_discovery,probabilistic_seir,test_mae,-0.02690280407846814,-0.026265678755550602,5,0,False
+5-17 yr,delayed_observation_seir,deterministic_seir,test_mae,0.0008216312820322591,-0.00017534998699759996,3,2,True
+5-17 yr,delayed_observation_seir,fractional_seir,test_mae,0.016509405260248838,0.004618415934912801,2,3,False
+5-17 yr,delayed_observation_seir,hospitalized_seihr,test_mae,0.0187602989387652,0.017037380377079796,0,5,False
+5-17 yr,delayed_observation_seir,probabilistic_seir,test_mae,0.010412059821116579,0.008652125719850301,0,5,False
+5-17 yr,deterministic_seir,fractional_seir,test_mae,0.01568777397821658,3.509755305929757e-05,1,4,False
+5-17 yr,deterministic_seir,hospitalized_seihr,test_mae,0.01793866765673294,0.017212730364077396,0,5,False
+5-17 yr,deterministic_seir,probabilistic_seir,test_mae,0.00959042853908432,0.0087287201984588,0,5,False
+5-17 yr,fractional_seir,hospitalized_seihr,test_mae,0.00225089367851636,0.0167116811917737,2,3,False
+5-17 yr,fractional_seir,probabilistic_seir,test_mae,-0.00609734543913226,0.0086586595968349,2,3,False
+5-17 yr,hospitalized_seihr,probabilistic_seir,test_mae,-0.00834823911764862,-0.008379141345315703,5,0,False
+50-64 yr,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,-0.000980053922437621,0.002050355202103102,1,4,True
+50-64 yr,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,-0.002136534834905379,0.001399946971465997,1,4,False
+50-64 yr,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.0831774906733113,-0.08815899307255648,5,0,False
+50-64 yr,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,-0.0030583786938380166,-0.0019860848807900996,4,1,False
+50-64 yr,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,-0.008921931097833258,-0.008792382838382497,5,0,False
+50-64 yr,delayed_observation_seir,deterministic_seir,rolling_mean_mae,-0.0011564809124677583,-0.0006746852486542027,5,0,False
+50-64 yr,delayed_observation_seir,fractional_seir,rolling_mean_mae,-0.08219743675087368,-0.09028008082468798,5,0,False
+50-64 yr,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,-0.0020783247714003957,-0.003925482163462696,4,1,False
+50-64 yr,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,-0.007941877175395637,-0.010864589363547297,4,1,False
+50-64 yr,deterministic_seir,fractional_seir,rolling_mean_mae,-0.08104095583840591,-0.08880173485172968,5,0,False
+50-64 yr,deterministic_seir,hospitalized_seihr,rolling_mean_mae,-0.0009218438589326375,-0.0026288266599633,4,1,True
+50-64 yr,deterministic_seir,probabilistic_seir,rolling_mean_mae,-0.006785396262927878,-0.0102240957136574,4,1,False
+50-64 yr,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.08011911197947327,0.08617290819176639,0,5,False
+50-64 yr,fractional_seir,probabilistic_seir,rolling_mean_mae,0.07425555957547804,0.07926628072622151,0,5,False
+50-64 yr,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,-0.005863552403995241,-0.006815881183071401,4,1,False
+50-64 yr,constrained_structure_discovery,delayed_observation_seir,test_mae,-0.0007815511330928809,-0.0008425043403931035,5,0,True
+50-64 yr,constrained_structure_discovery,deterministic_seir,test_mae,-0.0008722395407546018,-0.0008755340310276014,5,0,True
+50-64 yr,constrained_structure_discovery,fractional_seir,test_mae,-0.06123259631977309,-0.06509058484437111,5,0,False
+50-64 yr,constrained_structure_discovery,hospitalized_seihr,test_mae,-0.000119227427675081,0.00016136601724429933,2,3,True
+50-64 yr,constrained_structure_discovery,probabilistic_seir,test_mae,-0.0006124189442514028,-0.0006371095677398034,5,0,True
+50-64 yr,delayed_observation_seir,deterministic_seir,test_mae,-9.068840766172093e-05,-5.927019986879528e-05,4,1,True
+50-64 yr,delayed_observation_seir,fractional_seir,test_mae,-0.06045104518668021,-0.064248080503978,5,0,False
+50-64 yr,delayed_observation_seir,hospitalized_seihr,test_mae,0.0006623237054178,0.0010039044698051044,0,5,True
+50-64 yr,delayed_observation_seir,probabilistic_seir,test_mae,0.0001691321888414782,0.00021429555257619637,1,4,True
+50-64 yr,deterministic_seir,fractional_seir,test_mae,-0.06036035677901848,-0.0641888103041092,5,0,False
+50-64 yr,deterministic_seir,hospitalized_seihr,test_mae,0.0007530121130795209,0.0009864922712389049,0,5,True
+50-64 yr,deterministic_seir,probabilistic_seir,test_mae,0.0002598205965031991,0.0002365851663947982,0,5,True
+50-64 yr,fractional_seir,hospitalized_seihr,test_mae,0.061113368892097994,0.0652519849737831,0,5,False
+50-64 yr,fractional_seir,probabilistic_seir,test_mae,0.06062017737552169,0.0645816711525776,0,5,False
+50-64 yr,hospitalized_seihr,probabilistic_seir,test_mae,-0.0004931915165763218,-0.0006703138212055051,4,1,True
+>= 65 yr,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,-0.03586815062029201,-0.03957398450620642,4,1,False
+>= 65 yr,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,-0.0360534069687304,-0.0393500069950119,5,0,False
+>= 65 yr,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.2520231870895899,-0.232734589518485,5,0,False
+>= 65 yr,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,-0.06028041729483939,-0.0640173725722811,5,0,False
+>= 65 yr,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,-0.09081779883760988,-0.09522503000159002,5,0,False
+>= 65 yr,delayed_observation_seir,deterministic_seir,rolling_mean_mae,-0.00018525634843838957,0.00022397751119451748,2,3,True
+>= 65 yr,delayed_observation_seir,fractional_seir,rolling_mean_mae,-0.21615503646929785,-0.23288175900374972,5,0,False
+>= 65 yr,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,-0.024412266674547396,-0.023923934822911885,5,0,False
+>= 65 yr,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,-0.05494964821731787,-0.055136530219268204,5,0,False
+>= 65 yr,deterministic_seir,fractional_seir,rolling_mean_mae,-0.2159697801208595,-0.23125772420199142,5,0,False
+>= 65 yr,deterministic_seir,hospitalized_seihr,rolling_mean_mae,-0.024227010326109005,-0.024278411243281395,5,0,False
+>= 65 yr,deterministic_seir,probabilistic_seir,rolling_mean_mae,-0.05476439186887949,-0.05458520386376589,5,0,False
+>= 65 yr,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.19174276979475047,0.1955408758697812,0,5,False
+>= 65 yr,fractional_seir,probabilistic_seir,rolling_mean_mae,0.16120538825198,0.1769991252566152,0,5,False
+>= 65 yr,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,-0.03053738154277048,-0.03121259539635632,5,0,False
+>= 65 yr,constrained_structure_discovery,delayed_observation_seir,test_mae,0.006631072915314615,0.009409851174529901,0,5,False
+>= 65 yr,constrained_structure_discovery,deterministic_seir,test_mae,0.006676500165692672,0.009478127561013683,0,5,False
+>= 65 yr,constrained_structure_discovery,fractional_seir,test_mae,-0.07116141712576793,-0.09307622240650601,3,2,False
+>= 65 yr,constrained_structure_discovery,hospitalized_seihr,test_mae,0.002747317431485474,0.0012252414154959035,2,3,False
+>= 65 yr,constrained_structure_discovery,probabilistic_seir,test_mae,0.002524743988593517,0.004793795660612096,2,3,False
+>= 65 yr,delayed_observation_seir,deterministic_seir,test_mae,4.5427250378057836e-05,8.441109367331168e-05,1,4,True
+>= 65 yr,delayed_observation_seir,fractional_seir,test_mae,-0.07779249004108255,-0.1025805745483813,4,1,False
+>= 65 yr,delayed_observation_seir,hospitalized_seihr,test_mae,-0.0038837554838291404,-0.002373203535320001,5,0,False
+>= 65 yr,delayed_observation_seir,probabilistic_seir,test_mae,-0.004106328926721098,-0.0043960315955094975,5,0,False
+>= 65 yr,deterministic_seir,fractional_seir,test_mae,-0.07783791729146061,-0.10256238801339979,4,1,False
+>= 65 yr,deterministic_seir,hospitalized_seihr,test_mae,-0.003929182734207198,-0.0024643751448184953,5,0,False
+>= 65 yr,deterministic_seir,probabilistic_seir,test_mae,-0.004151756177099156,-0.0042454013096504956,5,0,False
+>= 65 yr,fractional_seir,hospitalized_seihr,test_mae,0.07390873455725341,0.09256339705108588,2,3,False
+>= 65 yr,fractional_seir,probabilistic_seir,test_mae,0.07368616111436146,0.0983332951541851,2,3,False
+>= 65 yr,hospitalized_seihr,probabilistic_seir,test_mae,-0.00022257344289195735,-0.002179089225634298,3,2,True
+Overall,constrained_structure_discovery,delayed_observation_seir,rolling_mean_mae,0.014130000066959178,0.007198693571525597,0,5,False
+Overall,constrained_structure_discovery,deterministic_seir,rolling_mean_mae,0.01401001644030336,0.0072328750568600025,0,5,False
+Overall,constrained_structure_discovery,fractional_seir,rolling_mean_mae,-0.03524693313629688,-0.0482756050825766,4,1,False
+Overall,constrained_structure_discovery,hospitalized_seihr,rolling_mean_mae,0.01160724722641554,0.0052707662643936,0,5,False
+Overall,constrained_structure_discovery,probabilistic_seir,rolling_mean_mae,4.340842167930015e-05,-0.006823007177547899,4,1,True
+Overall,delayed_observation_seir,deterministic_seir,rolling_mean_mae,-0.00011998362665581741,3.418148533440579e-05,2,3,True
+Overall,delayed_observation_seir,fractional_seir,rolling_mean_mae,-0.049376933203256056,-0.055474298654102194,5,0,False
+Overall,delayed_observation_seir,hospitalized_seihr,rolling_mean_mae,-0.002522752840543638,-0.0015545672455195975,4,1,False
+Overall,delayed_observation_seir,probabilistic_seir,rolling_mean_mae,-0.014086591645279877,-0.014021700749073496,5,0,False
+Overall,deterministic_seir,fractional_seir,rolling_mean_mae,-0.04925694957660025,-0.0555084801394366,5,0,False
+Overall,deterministic_seir,hospitalized_seihr,rolling_mean_mae,-0.0024027692138878206,-0.0019546143482265937,4,1,False
+Overall,deterministic_seir,probabilistic_seir,rolling_mean_mae,-0.01396660801862406,-0.014055882234407902,5,0,False
+Overall,fractional_seir,hospitalized_seihr,rolling_mean_mae,0.046854180362712425,0.0501166891770921,0,5,False
+Overall,fractional_seir,probabilistic_seir,rolling_mean_mae,0.03529034155797618,0.0414525979050287,0,5,False
+Overall,hospitalized_seihr,probabilistic_seir,rolling_mean_mae,-0.01156383880473624,-0.012043151205962,5,0,False
+Overall,constrained_structure_discovery,delayed_observation_seir,test_mae,0.0019110265633470985,0.0018880641977792045,0,5,False
+Overall,constrained_structure_discovery,deterministic_seir,test_mae,0.0017624664962731574,0.0018621338344250934,0,5,False
+Overall,constrained_structure_discovery,fractional_seir,test_mae,-0.04891465149636176,-0.057330747959488594,4,1,False
+Overall,constrained_structure_discovery,hospitalized_seihr,test_mae,-0.0011094694162202602,-0.0023521029205295987,3,2,False
+Overall,constrained_structure_discovery,probabilistic_seir,test_mae,0.00014752048541823853,0.00015072061633569778,0,5,True
+Overall,delayed_observation_seir,deterministic_seir,test_mae,-0.0001485600670739412,-1.438049490420229e-05,4,1,True
+Overall,delayed_observation_seir,fractional_seir,test_mae,-0.05082567805970887,-0.05927737398116569,5,0,False
+Overall,delayed_observation_seir,hospitalized_seihr,test_mae,-0.0030204959795673584,-0.004245377944275104,5,0,False
+Overall,delayed_observation_seir,probabilistic_seir,test_mae,-0.00176350607792886,-0.001752820329746503,5,0,False
+Overall,deterministic_seir,fractional_seir,test_mae,-0.050677117992634926,-0.059267403741660694,5,0,False
+Overall,deterministic_seir,hospitalized_seihr,test_mae,-0.0028719359124934176,-0.0041656306364851944,5,0,False
+Overall,deterministic_seir,probabilistic_seir,test_mae,-0.0016149460108549189,-0.0017232154721348938,5,0,False
+Overall,fractional_seir,hospitalized_seihr,test_mae,0.0478051820801415,0.057580267267966896,1,4,False
+Overall,fractional_seir,probabilistic_seir,test_mae,0.04906217198178,0.057485776708734795,1,4,False
+Overall,hospitalized_seihr,probabilistic_seir,test_mae,0.0012569899016384987,0.002492557614528601,2,3,False

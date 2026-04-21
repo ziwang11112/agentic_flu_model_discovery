@@ -79,6 +79,7 @@ Current high-confidence points:
 - `5-17 yr`: discovery wins held-out test most often, but probabilistic SEIR wins rolling-origin MAE in every seed
 - `>= 65 yr`: deterministic SEIR wins held-out test most often, but discovery still wins rolling-origin MAE most often
 - discovery now selects `delayed_I` in children and older adults, but it does not select `H` or `I+H` in the current benchmark
+- a tie-aware objective-policy layer now shows that `4/6` series have different held-out-test and rolling-origin policy winners, so several age groups are better characterized as practical ties or objective-dependent choices
 
 ### Single-Seed Age-Group Winners
 
@@ -122,6 +123,27 @@ Current result:
 Interpretation:
 
 - the observed structure pattern does not appear to be trivially imposed by the current age prior in either the single-seed benchmark or the observation-aware five-seed benchmark
+
+### Objective-Aware Policy
+
+The current objective-aware policy outputs are:
+
+- [`artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv`](../artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv)
+- [`artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv`](../artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv)
+- [`reports/objective_aware_policy_report.md`](../reports/objective_aware_policy_report.md)
+
+Current result:
+
+- `0-4 yr` remains a clean discovery win under both test and rolling objectives
+- `18-49 yr` collapses to a deterministic recommendation once practical ties are acknowledged
+- `Overall` becomes a practical tie between deterministic and delayed-observation baselines, with deterministic as the simpler compromise
+- `50-64 yr` has different test and rolling winners, but discovery remains a parsimonious compromise because it lies inside both tie sets
+- only `5-17 yr` and `>= 65 yr` remain fully objective-dependent
+
+Interpretation:
+
+- this policy layer strengthens the current paper narrative by separating true model conflicts from negligible metric differences
+- the repository conclusion is therefore not only age-aware but also objective-aware
 
 ## Conformal Calibration Results
 

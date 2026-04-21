@@ -189,6 +189,36 @@ Interpretation:
 - the observation-aware discovery results, including the newly selected `delayed_I` structures, are not being driven by the current age prior
 - this substantially strengthens the non-LLM control condition for future LLM proposal experiments
 
+## Objective-Aware Policy Layer
+
+The tie-aware objective-policy summary is now available in:
+
+- [`artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv`](../artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv)
+- [`artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv`](../artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv)
+- [`reports/objective_aware_policy_report.md`](../reports/objective_aware_policy_report.md)
+
+This layer applies a practical tie rule separately to `mean_test_mae` and
+`mean_rolling_mae`:
+
+- `abs(model_metric - best_metric) <= max(0.001, 0.02 * best_metric)`
+
+Current result:
+
+- `4/6` series show an explicit conflict between held-out-test and rolling-origin objectives
+- `4/6` series still admit a shared parsimonious compromise model
+- only `5-17 yr` and `>= 65 yr` remain fully objective-dependent under the current tie rule
+
+Examples:
+
+- `Overall`: `delayed_observation_seir` is the test-policy winner, but `deterministic_seir` is the rolling-policy winner and also the parsimonious compromise because both are practically tied
+- `50-64 yr`: `hospitalized_seihr` is the test-policy winner, `delayed_observation_seir` is the rolling-policy winner, and `constrained_structure_discovery` remains the simplest shared compromise inside both tie sets
+- `0-4 yr`: all three policies agree on `constrained_structure_discovery`
+
+Interpretation:
+
+- the current observation-aware benchmark is better described as age-aware and objective-aware than as a single leaderboard race
+- this makes the non-LLM control stronger, because future LLM experiments can be evaluated against both fixed-objective winners and tie-aware practical policies
+
 ## Figures
 
 - [`artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png`](../artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png)
