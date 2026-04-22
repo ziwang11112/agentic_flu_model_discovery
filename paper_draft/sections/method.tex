@@ -173,3 +173,105 @@ rather than from the age prior; and
 \item whether probabilistic intervals can be calibrated without contaminating
 point-forecast evaluation.
 \end{enumerate}
+
+\subsection{LLM-V1 iterative refinement}
+
+\paragraph{Motivation.}
+The non-LLM benchmark already exposes a structured search space over latent
+compartment templates, fractional memory, observation maps, and observation
+delay. LLM-V1 is introduced not as a direct forecaster, but as an agentic
+proposal-and-refinement layer over this existing mechanistic benchmark. Its
+purpose is to test whether structured language-agent feedback can organize
+candidate generation and small structural revisions under the same hard
+epidemiological validity and numerical scoring rules used by the non-LLM
+discovery system.
+
+\paragraph{Agent roles.}
+LLM-V1 uses a fixed multi-stage loop. A programmatic summary stage constructs a
+prompt-safe view of the series and the currently observed non-test discovery
+patterns. A semantics stage provides a static knowledge card describing the
+hospitalization-rate target. A proposer emits candidate
+\texttt{StructureSpec}-like JSON records. A critic annotates those candidates
+with priority and risk flags. A hard validator rejects structurally invalid
+specifications. A numerical executor fits and scores all remaining valid
+candidates. For rounds two and beyond, a result analyst reads only
+validation/rolling outputs from the previous round and produces bounded
+refinement feedback for the next proposer call.
+
+\paragraph{DSL-constrained proposal.}
+The proposer never writes code and never emits free-form equations. Instead it
+is restricted to the same discrete DSL used by the non-LLM discovery module:
+compartment template in
+\{\texttt{SIR}, \texttt{SEIR}, \texttt{SEIRS}, \texttt{SEIHR}, \texttt{SEIAR}\},
+fractional toggle, observation map in
+\{\texttt{I}, \texttt{H}, \texttt{I+H}, \texttt{delayed\_I}\}, and delay in
+$\{0,1,2,3\}$ when \texttt{delayed\_I} is used. This restriction keeps the LLM
+search space aligned with the hand-audited benchmark grammar and prevents the
+agent from inventing unsupported flows or compartments.
+
+\paragraph{Critic annotation.}
+The critic reviews proposer outputs before numerical fitting. In V1 it is soft
+by default: it annotates each proposal with priority and risk flags rather than
+acting as a final filter. The critic is allowed to flag likely problems such as
+over-complexity, identifiability risk for \texttt{obs=H}, or mismatch between
+short single-season data and aggressive hospitalization semantics. However,
+schema-valid and hard-valid candidates still proceed to the numerical executor
+unless an explicit hard-filter mode is enabled.
+
+\paragraph{Hard validation.}
+All candidate specifications pass through two non-LLM gates before fitting.
+First, a JSON/schema validator enforces allowed field values and delay
+constraints. Second, the existing benchmark hard validator enforces
+epidemiological and observation-compatibility rules, such as requiring an $H$
+compartment for \texttt{obs=H} or \texttt{obs=I+H}. This stage is critical:
+LLM-V1 cannot bypass the same mechanistic validity checks that govern the
+constrained non-LLM discovery baseline.
+
+\paragraph{Numerical executor.}
+The executor is the existing Python discovery/evaluation stack reused without
+changing its selection logic. Every hard-valid LLM candidate is fitted with the
+current mechanistic solver and evaluated using validation and rolling-origin
+metrics only. Round-level leaderboards include validation MAE/RMSE, rolling
+mean MAE/RMSE, rolling MAE variability, and the same composite score and
+penalty components used by the non-LLM search. Thus LLM-V1 changes the source
+of candidate structures, but not the numerical mechanism used to compare them.
+
+\paragraph{Result analyst and small-edit refinement.}
+From round two onward, a result analyst reads only validation- and
+rolling-derived round outputs and emits structured feedback with three fields:
+observed failure modes, next-round constraints, and a proposer instruction. The
+next proposer call is limited to small edits around the previous best candidate.
+Allowed edits include toggling fractional memory, switching between
+\texttt{I} and \texttt{delayed\_I}, moving delay by at most one week, stepping
+along the bounded chain \texttt{SIR} $\leftrightarrow$ \texttt{SEIR}
+$\leftrightarrow$ \texttt{SEIRS}, and trying or dropping \texttt{SEIHR} when
+hospitalization semantics justify it. The agent may not invent new compartments,
+new flows, new observation maps, or new fitting objectives.
+
+\paragraph{Early stopping.}
+LLM-V1 runs for at most three rounds. Let $s_r$ denote the best
+validation/rolling composite score in round $r$. Refinement stops early if the
+best score fails to improve by at least a minimum threshold over the current
+best for more than the configured patience. This makes the iterative loop
+explicitly validation-driven and prevents arbitrary extra LLM rounds once the
+executor shows no meaningful improvement.
+
+\paragraph{No-test-leakage protocol.}
+LLM-V1 is designed so that the proposer, critic, and analyst never observe
+held-out test information. Prompt-safe summaries exclude test metrics, best-test
+model identifiers, test-policy recommendations, and test-oriented winner files.
+Prompt builders explicitly guard against banned terms such as
+\texttt{test\_mae}, \texttt{best\_test\_model}, and
+\texttt{benchmark\_series\_winners}. Round artifacts such as prompts, proposal
+audits, traces, and round leaderboards are also checked to ensure that only
+validation/rolling information is exposed before the final candidate is chosen.
+Held-out test metrics are computed only after validation/rolling selection has
+been fixed.
+
+\paragraph{Mock-provider engineering validation.}
+The current repository implements V1 only with a deterministic mock provider.
+This mock setting is used to validate orchestration, schema enforcement,
+leakage guards, round-aware artifact generation, and executor reuse. It is not
+used to claim that language models improve forecasting or structure search. We
+therefore state the scope explicitly:
+\emph{Mock-provider V1 validates the orchestration and artifact protocol; live-provider evaluation is required for scientific claims about LLM reasoning.}

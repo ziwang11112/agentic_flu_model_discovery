@@ -4,6 +4,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.log
+.env
+.env.*
+!.env.example
 
 # Keep the canonical raw copy under data/raw/
 /FluSurveillance_Custom_Download_Data.csv

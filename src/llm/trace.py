@@ -10,6 +10,7 @@ from src.utils.io import ensure_dir
 
 @dataclass(frozen=True)
 class RoundTraceRecord:
+    series_name: str
     round_id: int
     previous_best_spec: str | None
     previous_best_score: float | None

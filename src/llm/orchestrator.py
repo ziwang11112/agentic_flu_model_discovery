@@ -451,6 +451,7 @@ def run_llm_iterative_refinement(
 
         trace_records.append(
             RoundTraceRecord(
+                series_name=series_name,
                 round_id=round_id,
                 previous_best_spec=(
                     None

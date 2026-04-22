@@ -41,4 +41,5 @@ def test_v1_trace_exists_and_contains_no_test_metrics(tmp_path) -> None:
         assert "test_mae" not in line
         assert "test_rmse" not in line
         payload = json.loads(line)
-        assert {"round_id", "new_specs", "round_best_spec", "early_stop"}.issubset(payload.keys())
+        assert {"series_name", "round_id", "new_specs", "round_best_spec", "early_stop"}.issubset(payload.keys())
+        assert payload["series_name"] == "Overall"

@@ -256,6 +256,14 @@ Run all series in V1 mock mode:
 python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --all-series --provider mock --log-level INFO
 ```
 
+Environment setup for future live-provider support:
+
+```bash
+cp .env.example .env
+```
+
+Then fill in `OPENAI_API_KEY` in `.env`. At the current repository state, the LLM stack is still mock-only, so this environment file is preparatory and does not yet enable live OpenAI calls.
+
 Rebuild the V1 markdown report from existing artifacts:
 
 ```bash
