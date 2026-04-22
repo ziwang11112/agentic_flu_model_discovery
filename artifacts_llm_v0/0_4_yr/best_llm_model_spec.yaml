@@ -1,0 +1,12 @@
+series_name: 0-4 yr
+best_spec:
+  structure_name: SEIRS
+  fractional: false
+  observation_map: delayed_I
+  delay_weeks: 2
+selection_score: 0.3468847515837221
+selection_validation_mae: 0.15052641258533772
+selection_rolling_mean_mae: 0.1409393042648087
+provider: mock
+provider_is_mock: true
+scientific_claim_allowed: false

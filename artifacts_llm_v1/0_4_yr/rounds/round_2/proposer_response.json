@@ -1,0 +1,48 @@
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May fail to improve if the previous round already saturated the local neighborhood.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Carry forward the previous best structure as the local anchor.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May overfit if fractional memory is unnecessary.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Toggle fractional memory as a bounded one-step refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May move the observation lag away from the effective admission timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adjust delayed_I by one week as a bounded temporal refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May move the observation lag away from the effective admission timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adjust delayed_I by one week as a bounded temporal refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May trade structural fit for parsimony or vice versa.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Move one step along the SIR/SEIR/SEIRS chain while preserving the current observation hypothesis.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false,
+  "series_name": "0-4 yr"
+}

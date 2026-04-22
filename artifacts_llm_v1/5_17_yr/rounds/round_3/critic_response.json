@@ -1,0 +1,35 @@
+{
+  "accepted": [
+    {
+      "priority": "high",
+      "proposal_index": 0,
+      "reason": "Mock critic review for 5-17 yr."
+    },
+    {
+      "priority": "medium",
+      "proposal_index": 1,
+      "reason": "Mock critic review for 5-17 yr."
+    },
+    {
+      "priority": "medium",
+      "proposal_index": 2,
+      "reason": "Mock critic review for 5-17 yr."
+    },
+    {
+      "priority": "medium",
+      "proposal_index": 3,
+      "reason": "Mock critic review for 5-17 yr."
+    },
+    {
+      "priority": "medium",
+      "proposal_index": 4,
+      "reason": "Mock critic review for 5-17 yr."
+    }
+  ],
+  "provider": "mock",
+  "provider_is_mock": true,
+  "rejected": [],
+  "scientific_claim_allowed": false,
+  "series_name": "5-17 yr",
+  "suggested_edits": []
+}

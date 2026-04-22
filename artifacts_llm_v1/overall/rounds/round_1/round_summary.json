@@ -1,0 +1,20 @@
+{
+  "num_evaluated": 2,
+  "num_hard_valid": 2,
+  "num_raw_proposals": 2,
+  "num_schema_valid": 2,
+  "provider": "mock",
+  "provider_is_mock": true,
+  "round_best_rolling_mean_mae": 0.15379841597836597,
+  "round_best_score": 0.3179169862989722,
+  "round_best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SIR"
+  },
+  "round_best_validation_mae": 0.1953390048922296,
+  "round_id": 1,
+  "scientific_claim_allowed": false,
+  "series_name": "Overall"
+}

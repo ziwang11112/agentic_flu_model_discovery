@@ -1,0 +1,2 @@
+series_name,selected_round_id,structure_name,fractional,observation_map,delay_weeks,test_mae,test_rmse,test_smape,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,1,SEIRS,False,delayed_I,2,0.09113094524522145,0.12605375575530456,1.9598107291124875,mock,True,False

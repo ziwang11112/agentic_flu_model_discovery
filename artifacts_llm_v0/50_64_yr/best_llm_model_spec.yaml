@@ -1,0 +1,12 @@
+series_name: 50-64 yr
+best_spec:
+  structure_name: SIR
+  fractional: false
+  observation_map: I
+  delay_weeks: 0
+selection_score: 0.22220773794970938
+selection_validation_mae: 0.10180736433893156
+selection_rolling_mean_mae: 0.07405060611991016
+provider: mock
+provider_is_mock: true
+scientific_claim_allowed: false

@@ -1,0 +1,114 @@
+You are a critic for epidemic model structure proposals.
+
+Your job is to review candidate structures before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- biological plausibility
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "18-49 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.04,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag infections, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May fail to improve if the previous round already saturated the local neighborhood.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Carry forward the previous best structure as the local anchor.",
+      "structure_name": "SIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May overfit if fractional memory is unnecessary.",
+      "fractional": true,
+      "observation_map": "I",
+      "rationale": "Toggle fractional memory as a bounded one-step refinement.",
+      "structure_name": "SIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May add unnecessary lag if admissions track incidence closely.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Switch from direct infectious observation to a one-week delayed observation.",
+      "structure_name": "SIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May trade structural fit for parsimony or vice versa.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Move one step along the SIR/SEIR/SEIRS chain while preserving the current observation hypothesis.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May be weakly identifiable in short single-season data.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Try an explicit hospitalization compartment as a bounded structural edit.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "18-49 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

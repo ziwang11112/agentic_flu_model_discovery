@@ -1,0 +1,14 @@
+series_name,round_id,num_raw_proposals,num_schema_valid,num_hard_valid,num_evaluated,valid_proposal_rate,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,1,2,2,2,2,1.0,mock,True,False
+0-4 yr,2,5,5,5,5,1.0,mock,True,False
+18-49 yr,1,2,2,2,2,1.0,mock,True,False
+18-49 yr,2,5,5,5,5,1.0,mock,True,False
+5-17 yr,1,2,2,2,2,1.0,mock,True,False
+5-17 yr,2,6,6,6,6,1.0,mock,True,False
+5-17 yr,3,5,5,5,5,1.0,mock,True,False
+50-64 yr,1,2,2,2,2,1.0,mock,True,False
+50-64 yr,2,5,5,5,5,1.0,mock,True,False
+>= 65 yr,1,2,2,2,2,1.0,mock,True,False
+>= 65 yr,2,5,5,5,5,1.0,mock,True,False
+Overall,1,2,2,2,2,1.0,mock,True,False
+Overall,2,5,5,5,5,1.0,mock,True,False

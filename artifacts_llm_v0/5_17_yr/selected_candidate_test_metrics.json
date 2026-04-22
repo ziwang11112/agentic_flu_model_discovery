@@ -1,0 +1,8 @@
+{
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false,
+  "test_mae": 0.04335736146307385,
+  "test_rmse": 0.047775736104939584,
+  "test_smape": 1.9999994252799878
+}

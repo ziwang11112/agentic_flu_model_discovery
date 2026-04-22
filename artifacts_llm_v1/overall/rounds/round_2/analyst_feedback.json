@@ -1,0 +1,10 @@
+{
+  "next_round_constraints": [],
+  "observed_failure_modes": [
+    "local_search"
+  ],
+  "proposer_instruction": "Refine the previous best with one-step edits and preserve parsimony.",
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false
+}

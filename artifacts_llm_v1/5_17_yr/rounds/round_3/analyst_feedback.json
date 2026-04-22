@@ -1,0 +1,12 @@
+{
+  "next_round_constraints": [
+    "consider delayed_I around the current best"
+  ],
+  "observed_failure_modes": [
+    "local_search"
+  ],
+  "proposer_instruction": "Refine around the current best and keep delayed observation on the table.",
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false
+}

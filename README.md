@@ -190,6 +190,92 @@ Selected conformal result previews:
 
 ![Conformal test coverage gap versus interval width](artifacts_v5_conformal_v3/calibration_gap_vs_width_test.png)
 
+## LLM-V0
+
+LLM-V0 is a proposal-only layer.
+It does not perform iterative refinement.
+It does not make final scientific claims from mock-provider results.
+It is intended to validate schema, leakage guards, hard validation, candidate execution, and comparison against non-LLM discovery.
+
+Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality.
+
+The LLM layer does not fit parameters, does not write Python equations, and does not change the existing non-LLM benchmark. It only proposes and critiques `StructureSpec` candidates, which then pass through the existing hard validator and numerical executor.
+
+Run a one-series smoke test:
+
+```bash
+python scripts/run_llm_structure_search.py --config configs/llm_v0.yaml --series "0-4 yr" --provider mock --log-level INFO
+```
+
+Run all series in mock mode:
+
+```bash
+python scripts/run_llm_structure_search.py --config configs/llm_v0.yaml --all-series --provider mock --log-level INFO
+```
+
+The main outputs are:
+
+- `artifacts_llm_v0/{series_slug}/proposal_audit.csv`
+- `artifacts_llm_v0/{series_slug}/llm_leaderboard.csv`
+- `artifacts_llm_v0/{series_slug}/llm_vs_nonllm_summary.csv`
+- `artifacts_llm_v0/llm_vs_nonllm_summary.csv`
+- `artifacts_llm_v0/llm_valid_proposal_rate.csv`
+- `artifacts_llm_v0/llm_candidate_efficiency.csv`
+- `artifacts_llm_v0/llm_semantic_alignment.csv`
+- `reports/llm_v0_report.md`
+
+## LLM-V1
+
+LLM-V1 adds iterative refinement on top of the LLM-V0 proposal-only layer.
+It still does not fit parameters, does not write Python equations, and does not change the existing non-LLM benchmark.
+V1 remains mock-only in this repository state, and mock-provider outputs are engineering smoke tests rather than scientific evidence.
+
+Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality.
+
+The V1 loop is:
+
+```text
+round 1:
+summary -> semantics -> proposer -> critic -> hard validator -> executor
+
+round 2+:
+analyst -> proposer refinement -> critic -> hard validator -> executor
+```
+
+Selection and early stopping use validation and rolling metrics only. Test metrics are computed only after the final validation-selected candidate is fixed.
+
+Run a one-series V1 smoke test:
+
+```bash
+python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --series ">= 65 yr" --provider mock --log-level INFO
+```
+
+Run all series in V1 mock mode:
+
+```bash
+python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --all-series --provider mock --log-level INFO
+```
+
+Rebuild the V1 markdown report from existing artifacts:
+
+```bash
+python scripts/build_llm_v1_report.py --artifact-root artifacts_llm_v1 --output reports/llm_v1_iterative_report.md
+```
+
+The main V1 outputs are:
+
+- `artifacts_llm_v1/{series_slug}/rounds/round_*/proposal_audit.csv`
+- `artifacts_llm_v1/{series_slug}/rounds/round_*/llm_leaderboard.csv`
+- `artifacts_llm_v1/{series_slug}/llm_refinement_trace.jsonl`
+- `artifacts_llm_v1/{series_slug}/llm_refinement_trace.md`
+- `artifacts_llm_v1/{series_slug}/final_selected_test_report.csv`
+- `artifacts_llm_v1/llm_v1_vs_v0_vs_nonllm_summary.csv`
+- `artifacts_llm_v1/llm_v1_valid_proposal_rate_by_round.csv`
+- `artifacts_llm_v1/llm_v1_candidate_efficiency.csv`
+- `artifacts_llm_v1/llm_v1_refinement_improvement.csv`
+- `artifacts_llm_v1/llm_v1_semantic_alignment.csv`
+- `reports/llm_v1_iterative_report.md`
+
 ## Key Files
 
 The repository contains many artifacts, but these files are the fastest path to understanding the current benchmark.
@@ -219,6 +305,9 @@ The repository contains many artifacts, but these files are the fastest path to 
 - latest observation-aware pairwise differences: [`artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv`](artifacts_multiseed_age_robustness_observation/pairwise_model_differences.csv)
 - observation-aware no-age-prior ablation summary: [`artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv`](artifacts_multiseed_observation_age_prior_ablation/multiseed_age_prior_ablation_summary.csv)
 - observation-aware no-age-prior ablation report: [`reports/multiseed_observation_age_prior_ablation_report.md`](reports/multiseed_observation_age_prior_ablation_report.md)
+- LLM-V0 comparison summary: [`artifacts_llm_v0/llm_vs_nonllm_summary.csv`](artifacts_llm_v0/llm_vs_nonllm_summary.csv)
+- LLM-V1 comparison summary: [`artifacts_llm_v1/llm_v1_vs_v0_vs_nonllm_summary.csv`](artifacts_llm_v1/llm_v1_vs_v0_vs_nonllm_summary.csv)
+- LLM-V1 iterative report: [`reports/llm_v1_iterative_report.md`](reports/llm_v1_iterative_report.md)
 
 ### Discovery Outputs
 

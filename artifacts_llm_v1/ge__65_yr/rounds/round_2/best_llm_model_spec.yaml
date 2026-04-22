@@ -1,0 +1,12 @@
+series_name: '>= 65 yr'
+best_spec:
+  structure_name: SEIRS
+  fractional: true
+  observation_map: delayed_I
+  delay_weeks: 3
+selection_score: 0.6021692391414816
+selection_validation_mae: 0.25483281238676225
+selection_rolling_mean_mae: 0.3020353638481941
+provider: mock
+provider_is_mock: true
+scientific_claim_allowed: false

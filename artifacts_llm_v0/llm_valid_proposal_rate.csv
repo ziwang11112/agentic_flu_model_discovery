@@ -1,0 +1,7 @@
+series_name,num_raw_proposals,num_schema_valid,num_hard_valid,valid_proposal_rate,invalid_reasons,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,2,2,2,1.0,,mock,True,False
+18-49 yr,2,2,2,1.0,,mock,True,False
+5-17 yr,2,2,2,1.0,,mock,True,False
+50-64 yr,2,2,2,1.0,,mock,True,False
+>= 65 yr,2,2,2,1.0,,mock,True,False
+Overall,2,2,2,1.0,,mock,True,False

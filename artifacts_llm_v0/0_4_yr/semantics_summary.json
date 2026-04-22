@@ -1,0 +1,13 @@
+{
+  "mechanistic_note": "Hospital admissions may lag infections, so delayed_I is a plausible observation structure.",
+  "provider": "mock",
+  "provider_is_mock": true,
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "scientific_claim_allowed": false,
+  "target_semantics": "hospitalization_rate"
+}

@@ -1,0 +1,7 @@
+series_name,rounds_completed,initial_round_best_score,final_round_best_score,absolute_score_improvement,improved_flag,early_stop_flag,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,2,0.34867590467588694,0.34867590467588694,0.0,False,True,mock,True,False
+18-49 yr,2,0.26060194102686973,0.26060194102686973,0.0,False,True,mock,True,False
+5-17 yr,3,0.3358605016460927,0.322741082676521,0.013119418969571695,True,True,mock,True,False
+50-64 yr,2,0.2222143655002109,0.2222143655002109,0.0,False,True,mock,True,False
+>= 65 yr,2,0.568660507469542,0.568660507469542,0.0,False,True,mock,True,False
+Overall,2,0.3179169862989722,0.3179169862989722,0.0,False,True,mock,True,False

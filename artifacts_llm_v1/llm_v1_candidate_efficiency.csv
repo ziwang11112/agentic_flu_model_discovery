@@ -1,0 +1,7 @@
+series_name,v1_num_candidates_evaluated,v0_num_candidates_evaluated,nonllm_num_candidates_evaluated,v1_best_score,v0_best_score,nonllm_best_score,candidate_efficiency_note,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,7,2,24.0,0.34867590467588694,0.3468847515837221,0.3448182161266474,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False
+18-49 yr,7,2,23.8,0.26060194102686973,0.250176895671526,0.2606024740068135,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False
+5-17 yr,13,2,24.6,0.322741082676521,0.335852284924599,0.2733136392656782,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False
+50-64 yr,7,2,21.0,0.2222143655002109,0.2222077379497093,0.22220934557003297,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False
+>= 65 yr,7,2,27.0,0.568660507469542,0.5368324415196509,0.49365991637931683,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False
+Overall,7,2,25.2,0.3179169862989722,0.3179184604759294,0.31791772257146256,Budgets not matched; do not interpret as an efficiency claim.,mock,True,False

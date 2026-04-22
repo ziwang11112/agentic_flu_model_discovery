@@ -1,0 +1,19 @@
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "provider": "mock",
+  "provider_is_mock": true,
+  "rate_scale": "high",
+  "scientific_claim_allowed": false,
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}

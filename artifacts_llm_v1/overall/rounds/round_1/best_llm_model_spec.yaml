@@ -1,0 +1,12 @@
+series_name: Overall
+best_spec:
+  structure_name: SIR
+  fractional: false
+  observation_map: I
+  delay_weeks: 0
+selection_score: 0.3179169862989722
+selection_validation_mae: 0.1953390048922296
+selection_rolling_mean_mae: 0.15379841597836597
+provider: mock
+provider_is_mock: true
+scientific_claim_allowed: false

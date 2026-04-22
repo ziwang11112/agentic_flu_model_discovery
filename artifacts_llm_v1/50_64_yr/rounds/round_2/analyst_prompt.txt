@@ -1,0 +1,22 @@
+You are a result analyst for iterative epidemic structure search.
+
+You read validation and rolling-only round results and produce refinement feedback.
+Do not use test metrics.
+Do not choose final winners.
+Do not write code.
+
+Round id: 1
+
+Series summary:
+{'series_name': '50-64 yr', 'target': 'weekly hospitalization rate', 'n_train': 31, 'n_val': 10, 'rate_scale': 'high', 'peakiness': 'high', 'zero_fraction': 0.0, 'validation_mean': 0.26000000000000006, 'validation_std': 0.066332495807108, 'current_discovery_patterns': ['SIR|fractional=0|obs=I']}
+
+Previous best spec:
+{'structure_name': 'SIR', 'fractional': False, 'observation_map': 'I', 'delay_weeks': 0}
+
+Round leaderboard (validation/rolling only):
+[{'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 1, 'structure_name': 'SIR', 'fractional': False, 'observation_map': 'I', 'delay_weeks': 0, 'val_mae': 0.10180725097910566, 'val_rmse': 0.14970247303773104, 'rolling_val_mean_mae': 0.07405410589488887, 'rolling_val_mean_rmse': 0.10695651181806547, 'rolling_val_std_mae': 0.020522834875566442, 'score': 0.2222143655002109, 'complexity_penalty': 0.12, 'stability_penalty': 0.015211780530122074, 'age_prior_penalty': -0.01, 'multi_split_penalty': 0.027225255193034932}, {'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 0, 'structure_name': 'SEIR', 'fractional': False, 'observation_map': 'delayed_I', 'delay_weeks': 1, 'val_mae': 0.10310280324783112, 'val_rmse': 0.15137862937681484, 'rolling_val_mean_mae': 0.07471912002440328, 'rolling_val_mean_rmse': 0.10771455379739381, 'rolling_val_std_mae': 0.02136706063417875, 'score': 0.27358081351575303, 'complexity_penalty': 0.165, 'stability_penalty': 0.015287547482690298, 'age_prior_penalty': -0.005, 'multi_split_penalty': 0.027967435285916744}]
+
+Return strict JSON with keys:
+- observed_failure_modes
+- next_round_constraints
+- proposer_instruction

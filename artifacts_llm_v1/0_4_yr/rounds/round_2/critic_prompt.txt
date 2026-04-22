@@ -1,0 +1,116 @@
+You are a critic for epidemic model structure proposals.
+
+Your job is to review candidate structures before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- biological plausibility
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag infections, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May fail to improve if the previous round already saturated the local neighborhood.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Carry forward the previous best structure as the local anchor.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May overfit if fractional memory is unnecessary.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Toggle fractional memory as a bounded one-step refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May move the observation lag away from the effective admission timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adjust delayed_I by one week as a bounded temporal refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May move the observation lag away from the effective admission timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adjust delayed_I by one week as a bounded temporal refinement.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May trade structural fit for parsimony or vice versa.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Move one step along the SIR/SEIR/SEIRS chain while preserving the current observation hypothesis.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "0-4 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

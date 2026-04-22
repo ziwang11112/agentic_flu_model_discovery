@@ -1,0 +1,7 @@
+series_name,target_semantics,proposed_observation_maps,v1_selected_observation_map,nonllm_selected_observation_map,semantic_alignment_flag,notes,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,hospitalization_rate,I;delayed_I,delayed_I,I,True,Mock provider engineering smoke test only.,mock,True,False
+18-49 yr,hospitalization_rate,I;delayed_I,I,I,True,Mock provider engineering smoke test only.,mock,True,False
+5-17 yr,hospitalization_rate,H;I;delayed_I,I,I,True,Mock provider engineering smoke test only.,mock,True,False
+50-64 yr,hospitalization_rate,I;delayed_I,I,I,True,Mock provider engineering smoke test only.,mock,True,False
+>= 65 yr,hospitalization_rate,I;delayed_I,delayed_I,delayed_I,True,Mock provider engineering smoke test only.,mock,True,False
+Overall,hospitalization_rate,I;delayed_I,I,I,True,Mock provider engineering smoke test only.,mock,True,False

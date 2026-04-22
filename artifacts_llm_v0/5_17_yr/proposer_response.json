@@ -1,0 +1,24 @@
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May underperform validation or rolling stability.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Mock provider engineering smoke-test proposal.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May underperform validation or rolling stability.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Mock provider engineering smoke-test proposal.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false,
+  "series_name": "5-17 yr"
+}

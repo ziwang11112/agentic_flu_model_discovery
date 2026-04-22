@@ -1,0 +1,20 @@
+{
+  "accepted": [
+    {
+      "priority": "high",
+      "proposal_index": 0,
+      "reason": "Mock critic review for >= 65 yr."
+    },
+    {
+      "priority": "medium",
+      "proposal_index": 1,
+      "reason": "Mock critic review for >= 65 yr."
+    }
+  ],
+  "provider": "mock",
+  "provider_is_mock": true,
+  "rejected": [],
+  "scientific_claim_allowed": false,
+  "series_name": ">= 65 yr",
+  "suggested_edits": []
+}

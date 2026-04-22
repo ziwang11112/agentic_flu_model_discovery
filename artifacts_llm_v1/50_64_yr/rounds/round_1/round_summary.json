@@ -1,0 +1,20 @@
+{
+  "num_evaluated": 2,
+  "num_hard_valid": 2,
+  "num_raw_proposals": 2,
+  "num_schema_valid": 2,
+  "provider": "mock",
+  "provider_is_mock": true,
+  "round_best_rolling_mean_mae": 0.07405410589488887,
+  "round_best_score": 0.2222143655002109,
+  "round_best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SIR"
+  },
+  "round_best_validation_mae": 0.10180725097910566,
+  "round_id": 1,
+  "scientific_claim_allowed": false,
+  "series_name": "50-64 yr"
+}

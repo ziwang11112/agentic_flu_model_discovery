@@ -1,0 +1,16 @@
+[
+  {
+    "delay_weeks": 2,
+    "fractional": true,
+    "observation_map": "delayed_I",
+    "spec_key": "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "structure_name": "SEIRS"
+  },
+  {
+    "delay_weeks": 0,
+    "fractional": true,
+    "observation_map": "I",
+    "spec_key": "SEIRS|fractional=1|obs=I",
+    "structure_name": "SEIRS"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SIR"
+  },
+  "provider": "mock",
+  "provider_is_mock": true,
+  "scientific_claim_allowed": false,
+  "selection_rolling_mean_mae": 0.11097813191770418,
+  "selection_score": 0.250176895671526,
+  "selection_validation_mae": 0.14963294995862442,
+  "series_name": "18-49 yr"
+}
