@@ -228,7 +228,7 @@ The main outputs are:
 
 LLM-V1 adds iterative refinement on top of the LLM-V0 proposal-only layer.
 It still does not fit parameters, does not write Python equations, and does not change the existing non-LLM benchmark.
-V1 remains mock-only in this repository state, and mock-provider outputs are engineering smoke tests rather than scientific evidence.
+The repository now supports both `provider=mock` and `provider=openai` for LLM-V1 runs, but the currently frozen repository artifacts are still mock-provider engineering validations rather than live-provider scientific evaluations.
 
 Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality.
 
@@ -256,13 +256,22 @@ Run all series in V1 mock mode:
 python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --all-series --provider mock --log-level INFO
 ```
 
-Environment setup for future live-provider support:
+Environment setup:
 
 ```bash
 cp .env.example .env
 ```
 
-Then fill in `OPENAI_API_KEY` in `.env`. At the current repository state, the LLM stack is still mock-only, so this environment file is preparatory and does not yet enable live OpenAI calls.
+Then fill in `OPENAI_API_KEY` in `.env`.
+
+Run a one-series live-provider smoke test:
+
+```bash
+python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --series "5-17 yr" --provider openai --log-level INFO
+python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --series ">= 65 yr" --provider openai --log-level INFO
+```
+
+Live-provider runs should still be treated as controlled evaluation runs rather than automatic scientific claims. The current frozen artifact set in this repository remains mock-provider only until live-provider outputs are explicitly rerun, validated, and frozen under the same protocol.
 
 Rebuild the V1 markdown report from existing artifacts:
 

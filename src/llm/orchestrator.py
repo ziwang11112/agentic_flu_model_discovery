@@ -145,12 +145,12 @@ def _run_llm_round(
     if analyst_prompt_text is not None:
         (round_dir / "analyst_prompt.txt").write_text(analyst_prompt_text, encoding="utf-8")
     if analyst_feedback_payload is not None:
-        write_json({**analyst_feedback_payload, **proposal_batch.provider_metadata}, round_dir / "analyst_feedback.json")
+        write_json(analyst_feedback_payload, round_dir / "analyst_feedback.json")
 
     (round_dir / "proposer_prompt.txt").write_text(proposal_batch.prompt_text, encoding="utf-8")
-    write_json({**proposal_batch.response_payload, **proposal_batch.provider_metadata}, round_dir / "proposer_response.json")
+    write_json(proposal_batch.response_payload, round_dir / "proposer_response.json")
     (round_dir / "critic_prompt.txt").write_text(critic_decision.prompt_text, encoding="utf-8")
-    write_json({**critic_decision.response_payload, **proposal_batch.provider_metadata}, round_dir / "critic_response.json")
+    write_json(critic_decision.response_payload, round_dir / "critic_response.json")
 
     proposal_audit, validated_specs, invalid_specs, proposal_metadata = _audit_and_validate_proposals(
         series_name=series_name,
@@ -273,9 +273,9 @@ def run_llm_structure_search(
     )
 
     (artifact_dir / "proposer_prompt.txt").write_text(proposal_batch.prompt_text, encoding="utf-8")
-    write_json({**proposal_batch.response_payload, **proposal_batch.provider_metadata}, artifact_dir / "proposer_response.json")
+    write_json(proposal_batch.response_payload, artifact_dir / "proposer_response.json")
     (artifact_dir / "critic_prompt.txt").write_text(critic_decision.prompt_text, encoding="utf-8")
-    write_json({**critic_decision.response_payload, **proposal_batch.provider_metadata}, artifact_dir / "critic_response.json")
+    write_json(critic_decision.response_payload, artifact_dir / "critic_response.json")
     write_json({**prompt_safe_summary.to_prompt_dict(), **proposal_batch.provider_metadata}, artifact_dir / "series_summary.json")
     write_json({**semantics_summary.to_dict(), **proposal_batch.provider_metadata}, artifact_dir / "semantics_summary.json")
 
@@ -396,7 +396,10 @@ def run_llm_iterative_refinement(
                 round_leaderboard=previous_round["llm_leaderboard"],
             )
             analyst_prompt_text = analyst_decision.prompt_text
-            analyst_feedback_payload = analyst_decision.feedback.to_dict()
+            analyst_feedback_payload = {
+                "feedback": analyst_decision.feedback.to_dict(),
+                "provider_response": analyst_decision.response_payload,
+            }
             analyst_feedback_summary = analyst_decision.feedback.proposer_instruction
             previous_feedback_context = {
                 "analyst_feedback": analyst_decision.feedback.to_dict(),

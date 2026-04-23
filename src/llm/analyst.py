@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.llm.config import LLMConfig
 from src.llm.prompts import assert_no_banned_terms
-from src.llm.provider import MockLLMProvider
+from src.llm.provider import JSONProvider
 from src.llm.summary import PromptSafeSeriesSummary
 
 
@@ -89,7 +89,7 @@ def parse_analyst_feedback(payload: dict[str, Any]) -> AnalystFeedback:
 def run_analyst(
     series_summary: PromptSafeSeriesSummary,
     llm_config: LLMConfig,
-    provider: MockLLMProvider,
+    provider: JSONProvider,
     round_id: int,
     previous_best_spec: dict[str, Any],
     round_leaderboard: pd.DataFrame,
@@ -115,4 +115,4 @@ def run_analyst(
         },
     )
     feedback = parse_analyst_feedback(response.payload)
-    return AnalystDecision(prompt_text=prompt_text, response_payload=response.payload, feedback=feedback)
+    return AnalystDecision(prompt_text=prompt_text, response_payload=response.to_record(), feedback=feedback)

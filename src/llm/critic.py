@@ -5,7 +5,7 @@ from typing import Any
 
 from src.llm.config import LLMConfig
 from src.llm.prompts import build_critic_prompt
-from src.llm.provider import MockLLMProvider
+from src.llm.provider import JSONProvider
 from src.llm.schema import LLMStructureProposal
 from src.llm.summary import PromptSafeSeriesSummary
 
@@ -23,7 +23,7 @@ def run_critic(
     semantics_summary: dict[str, Any],
     proposals: list[LLMStructureProposal],
     llm_config: LLMConfig,
-    provider: MockLLMProvider,
+    provider: JSONProvider,
 ) -> CriticDecision:
     prompt_text = build_critic_prompt(series_summary, semantics_summary, proposals, llm_config)
     response = provider.generate_json(
@@ -48,7 +48,7 @@ def run_critic(
         annotations.setdefault(index, {"critic_priority": "medium", "critic_risk_flags": ""})
     return CriticDecision(
         prompt_text=prompt_text,
-        response_payload=payload,
+        response_payload=response.to_record(),
         annotations=annotations,
         rejected_ids={int(item["proposal_index"]) for item in payload.get("rejected", [])},
     )

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import logging
 from pathlib import Path
 import sys
@@ -105,8 +106,8 @@ def main() -> None:
     config_path = repo_root / args.config
     config = _load_yaml(config_path)
     llm_config = load_llm_config(config_path)
-    if args.provider is not None and args.provider != llm_config.provider:
-        raise NotImplementedError("LLM-V0 only implements provider=mock in this PR.")
+    if args.provider is not None:
+        llm_config = replace(llm_config, provider=args.provider)
 
     if not args.series and not args.all_series:
         raise ValueError("Specify either --series or --all-series.")

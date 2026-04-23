@@ -9,10 +9,11 @@ The non-LLM control is the observation-aware constrained structure-discovery ben
 
 The current repository state supports:
 - `provider=mock` for engineering validation
+- `provider=openai` for controlled live-provider smoke or evaluation runs
 - V0 proposal-only comparison
 - V1 iterative refinement comparison
 
-It does not yet support scientific claims about LLM reasoning quality, because live-provider evaluation has not been frozen under the same protocol.
+It does not yet support frozen scientific claims about LLM reasoning quality, because live-provider evaluation has not yet been validated and frozen under the same protocol as the current repository artifacts.
 
 ## Comparison Design
 
@@ -115,11 +116,13 @@ Mock-provider outputs may be used to confirm that the orchestration works end-to
 
 ### Live provider
 
-A future `provider=live` or external API-backed configuration is the **scientific evaluation** setting.
+An external API-backed configuration such as `provider=openai` is the **scientific evaluation** setting.
 Only that setting should be used for claims about:
 - whether LLM reasoning improves proposal quality,
 - whether iterative refinement improves candidate selection,
 - whether semantic proposal quality is meaningfully better than non-LLM search under matched conditions.
+
+However, live-provider results should not be treated as frozen scientific evidence until the run is validated, its artifacts are checked, and the exact provider/model configuration is recorded alongside the benchmark outputs.
 
 ## Reporting Language
 
