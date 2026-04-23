@@ -198,20 +198,73 @@ too coverage-gap-driven, and v3 provides the best current compromise. This is
 why the repository now treats benchmark-level conformal v3 as the default
 uncertainty postprocessor while keeping point-forecast selection separate.
 
+\subsection{LLM engineering validation status}
+
+The repository has now moved beyond the non-LLM-only phase and contains both
+LLM-V0 and LLM-V1 engineering runs. Their interpretation must remain narrow:
+the current frozen artifacts are mock-provider runs designed to validate the
+agentic protocol rather than to establish scientific claims about LLM reasoning
+quality.
+
+These LLM engineering runs sit on top of a non-LLM benchmark that is already
+substantially hardened: it now includes fair hospitalization-aware manual
+baselines, observation-aware discovery grammar, five-seed robustness analysis,
+no-age-prior ablations with identical aggregate outcomes, and a fixed
+benchmark-level conformal postprocessor.
+
+\paragraph{LLM-V0.}
+The one-round proposal-only layer successfully exercises the full pipeline:
+prompt-safe summary construction, proposer JSON output, critic annotation, hard
+validation, numerical execution, and structured comparison against the non-LLM
+reference discovery artifacts. This establishes that the LLM layer can be
+inserted without changing the benchmark executor or contaminating it with test
+information.
+
+\paragraph{LLM-V1.}
+The iterative refinement layer also runs end-to-end in mock mode. Across the
+six series, round-aware artifacts are produced for each proposer/critic round,
+including proposal audits, validation/rolling leaderboards, analyst feedback,
+and refinement traces. In the current mock runs, only \texttt{5--17 yr}
+exhibits a material round-two improvement in the validation-selected score,
+improving from approximately \num{0.335852} in V0-like one-shot behavior to
+\num{0.322741} after refinement. The remaining series either plateau at round
+one or stop after a negligible score change, which is the intended early-stop
+behavior for a validation-driven loop.
+
+\paragraph{Protocol validation.}
+The LLM-V1 artifact validator and reproducibility snapshot provide a stronger
+engineering check than the earlier non-LLM-only phase. The validator confirms
+that the current \texttt{artifacts\_llm\_v1/} tree contains the required global
+and per-round files, that round-level prompts and traces do not contain banned
+test-derived terms, that round-level leaderboards exclude test columns, and
+that the report contains the required mock-provider disclaimer.
+
+\paragraph{Interpretation boundary.}
+These mock results should not be described as evidence that LLM-V1 outperforms
+non-LLM discovery. The correct interpretation is narrower: the repository now
+supports validation-feedback-driven structure refinement under hard mechanistic
+constraints, and this orchestration can be audited through structured artifacts
+and leakage checks.
+
 \subsection{Implications for the next phase}
 
-These experiments tighten the non-LLM story substantially. We now have:
+The next phase should therefore not return to micro-tuning the non-LLM search
+space. That groundwork is already strong. The more valuable next step is a
+controlled live-provider evaluation that preserves the same no-test-leakage and
+artifact-validation rules.
+
+The practical order is:
 \begin{enumerate}[leftmargin=1.5em]
-\item fair hospitalization-aware manual baselines,
-\item observation-aware discovery grammar,
-\item five-seed robustness analysis,
-\item no-age-prior ablation showing the same aggregate result, and
-\item a fixed benchmark-level conformal postprocessor.
+\item run live-provider LLM-V1 on the two most informative series,
+\texttt{5--17 yr} and \texttt{$\geq$65 yr};
+\item validate and freeze those artifacts under the same protocol;
+\item then expand live-provider evaluation to all six series; and
+\item only after that compare V0, V1, and non-LLM discovery as scientific
+forecasting methods.
 \end{enumerate}
 
-This means the next phase should not continue to micro-tune non-LLM search.
-Instead, the most valuable next step is an \textbf{LLM-V0} experiment in which
-the LLM only proposes and critiques candidate structures while the existing
-Python pipeline continues to enforce validity, perform fitting, and evaluate
-validation-time performance. The current observation-aware non-LLM benchmark is
-now strong enough to serve as a credible control condition for that study.
+In other words, the current contribution is already enough to support the
+agentic claim at the engineering-method level:
+\emph{validation-feedback-driven structure refinement under hard mechanistic
+constraints}. The remaining work is to evaluate that loop with a live provider
+under the same reproducibility standards used for the non-LLM benchmark.

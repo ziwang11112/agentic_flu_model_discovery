@@ -141,3 +141,88 @@ width is five, the maximum number of rounds is twenty, and search uses both
 validation MAE and rolling-origin stability criteria. The codebase is fully
 tested, with plain \texttt{pytest -q} supported via a repository-level
 \texttt{pytest.ini}.
+
+\subsection{LLM-guided comparison protocol}
+
+The repository now contains two LLM-facing layers that sit on top of the
+existing non-LLM benchmark rather than replacing it.
+
+\paragraph{LLM-V0.}
+LLM-V0 is a proposal-only layer. It constructs a prompt-safe series summary,
+adds a static hospitalization-semantics card, asks a proposer for JSON
+structure candidates, asks a critic for annotations, applies the same hard
+validator used by the non-LLM discovery pipeline, and then evaluates all
+hard-valid candidates with the existing numerical executor. It therefore tests
+whether proposal parsing, leakage guards, hard validation, and non-LLM
+executor reuse all work end-to-end.
+
+\paragraph{LLM-V1.}
+LLM-V1 adds iterative refinement. Round 1 matches V0:
+\[
+\texttt{summary} \rightarrow \texttt{semantics} \rightarrow
+\texttt{proposer} \rightarrow \texttt{critic} \rightarrow
+\texttt{hard validator} \rightarrow \texttt{executor}.
+\]
+For rounds $r \geq 2$, a result analyst reads only validation- and
+rolling-derived outputs from round $r-1$ and emits bounded feedback for the
+next proposer call. The proposer is then restricted to small edits around the
+previous best candidate, after which the critic, hard validator, and executor
+run again.
+
+\paragraph{Comparison design.}
+The intended LLM comparison is three-way:
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{LLM-V0}: one-shot proposal-only search;
+\item \textbf{LLM-V1}: iterative validation-feedback refinement; and
+\item \textbf{non-LLM constrained discovery}: the observation-aware discovery
+baseline already used throughout the repository.
+\end{enumerate}
+
+This comparison is not meant to ask only whether the LLM achieves a lower test
+MAE. Instead, it asks whether an agentic refinement loop improves proposal
+quality, semantic alignment, and validation-selected candidate quality under
+the same mechanistic constraints and executor.
+
+\paragraph{Prompt-safe inputs and no-test leakage.}
+All LLM-facing inputs are built from prompt-safe summaries. The proposer,
+critic, and analyst are not allowed to see:
+\begin{itemize}[leftmargin=1.5em]
+\item held-out test metrics such as \texttt{test\_mae}, \texttt{test\_rmse},
+or \texttt{test\_smape},
+\item best-test model identifiers,
+\item test-policy recommendations, and
+\item test-winner files such as \texttt{benchmark\_series\_winners}.
+\end{itemize}
+Allowed prompt content includes only series identity, training summary,
+validation summary, rolling validation summary, surveillance semantics, current
+non-test discovery structure modes, and previous-round validation/rolling
+feedback. Held-out test metrics are computed only after the final
+validation/rolling-selected candidate is fixed.
+
+\paragraph{Evaluation metrics.}
+The LLM protocol tracks six classes of outputs:
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{valid proposal rate}: fraction of raw proposals that become
+hard-valid candidates;
+\item \textbf{candidate efficiency}: number of evaluated candidates relative to
+the non-LLM reference search budget;
+\item \textbf{best validation score}: the best composite
+validation/rolling-oriented discovery score reached in the run;
+\item \textbf{rolling validation MAE}: the mean rolling-origin validation MAE
+of the selected candidate;
+\item \textbf{selected-candidate test MAE}: held-out test MAE computed only
+after the final validation-selected candidate is fixed; and
+\item \textbf{semantic alignment}: whether proposed observation maps are
+consistent with the hospitalization-rate target.
+\end{itemize}
+Efficiency claims are explicitly suppressed unless the LLM and non-LLM budgets
+are matched.
+
+\paragraph{Provider distinction.}
+The LLM stack now supports both \texttt{provider=mock} and
+\texttt{provider=openai}. The mock provider is used for engineering validation:
+schema enforcement, leakage guards, round-aware artifact generation, and
+executor reuse. Live-provider runs are the appropriate setting for scientific
+evaluation, but only after the resulting artifacts are validated and frozen
+under the same protocol. The currently frozen repository artifacts remain
+mock-provider engineering runs.
