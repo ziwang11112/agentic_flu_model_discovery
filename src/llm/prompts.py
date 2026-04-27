@@ -86,7 +86,7 @@ Return:
 def build_critic_prompt(
     series_summary: PromptSafeSeriesSummary,
     semantics_summary: dict[str, Any],
-    proposals: list[LLMStructureProposal],
+    proposals: list[LLMStructureProposal | dict[str, Any]],
     llm_config: LLMConfig,
 ) -> str:
     payload = {

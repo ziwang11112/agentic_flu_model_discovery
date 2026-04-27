@@ -87,5 +87,14 @@ def validate_llm_proposal_payload(payload: dict[str, Any]) -> ProposalValidation
     )
 
 
-def proposal_to_dict(proposal: LLMStructureProposal) -> dict[str, Any]:
+def proposal_to_dict(proposal: LLMStructureProposal | dict[str, Any]) -> dict[str, Any]:
+    if isinstance(proposal, dict):
+        return {
+            "structure_name": proposal.get("structure_name", ""),
+            "fractional": proposal.get("fractional", False),
+            "observation_map": proposal.get("observation_map", ""),
+            "delay_weeks": proposal.get("delay_weeks", 0),
+            "rationale": proposal.get("rationale", ""),
+            "expected_failure_mode": proposal.get("expected_failure_mode", ""),
+        }
     return asdict(proposal)

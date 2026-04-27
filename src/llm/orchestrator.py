@@ -67,6 +67,10 @@ def _audit_and_validate_proposals(
         payload = proposal_to_dict(proposal)
         validation = validate_llm_proposal_payload(payload)
         critic_annotation = critic_annotations.get(proposal_index, {})
+        try:
+            raw_delay_weeks: int | str = int(payload.get("delay_weeks", 0))
+        except (TypeError, ValueError):
+            raw_delay_weeks = str(payload.get("delay_weeks", ""))
         audit_row = {
             "series_name": series_name,
             "round_id": round_id,
@@ -77,7 +81,7 @@ def _audit_and_validate_proposals(
             "raw_structure_name": payload["structure_name"],
             "raw_fractional": payload["fractional"],
             "raw_observation_map": payload["observation_map"],
-            "raw_delay_weeks": int(payload["delay_weeks"]),
+            "raw_delay_weeks": raw_delay_weeks,
             "schema_valid": bool(validation.schema_valid),
             "hard_valid": bool(validation.hard_valid),
             "invalid_reason": validation.invalid_reason or "",

@@ -21,7 +21,7 @@ class CriticDecision:
 def run_critic(
     series_summary: PromptSafeSeriesSummary,
     semantics_summary: dict[str, Any],
-    proposals: list[LLMStructureProposal],
+    proposals: list[LLMStructureProposal | dict[str, Any]],
     llm_config: LLMConfig,
     provider: JSONProvider,
 ) -> CriticDecision:

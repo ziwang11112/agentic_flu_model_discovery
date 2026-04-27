@@ -64,6 +64,20 @@ def test_llm_schema_rejects_invalid_delay() -> None:
         raise AssertionError("Expected invalid delay to raise.")
 
 
+def test_llm_schema_marks_non_delayed_nonzero_delay_invalid() -> None:
+    result = validate_llm_proposal_payload(
+        {
+            "structure_name": "SIR",
+            "fractional": False,
+            "observation_map": "I",
+            "delay_weeks": 1,
+        }
+    )
+    assert result.schema_valid is False
+    assert result.hard_valid is False
+    assert result.invalid_reason == "non_delayed_observation_requires_zero_delay"
+
+
 def test_hard_validator_rejects_h_without_seihr() -> None:
     result = validate_llm_proposal_payload(
         {

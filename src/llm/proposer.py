@@ -6,7 +6,7 @@ from typing import Any
 from src.llm.config import LLMConfig
 from src.llm.prompts import build_proposer_prompt
 from src.llm.provider import JSONProvider, ProviderResponse
-from src.llm.schema import LLMStructureProposal, parse_structure_proposal
+from src.llm.schema import LLMStructureProposal
 from src.llm.summary import PromptSafeSeriesSummary
 
 
@@ -15,7 +15,7 @@ class ProposalBatch:
     prompt_text: str
     response_payload: dict[str, Any]
     provider_metadata: dict[str, Any]
-    proposals: list[LLMStructureProposal]
+    proposals: list[LLMStructureProposal | dict[str, Any]]
 
 
 def generate_proposals(
@@ -39,7 +39,7 @@ def generate_proposals(
         },
     )
     payload = provider_response.payload
-    proposals = [parse_structure_proposal(item) for item in payload.get("proposals", [])]
+    proposals = list(payload.get("proposals", []))
     return ProposalBatch(
         prompt_text=prompt_text,
         response_payload=provider_response.to_record(),
