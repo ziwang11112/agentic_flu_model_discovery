@@ -353,9 +353,14 @@ class OpenAIJSONProvider:
 
     @staticmethod
     def _messages(prompt: str, system_prompt: str | None = None) -> list[dict[str, str]]:
-        messages: list[dict[str, str]] = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
+        default_system_prompt = (
+            "You are assisting with aggregate public-health time-series forecasting research. "
+            "The user is selecting among pre-defined mathematical template labels for retrospective "
+            "hospitalization-rate forecasting. Do not provide lab protocols, pathogen manipulation, "
+            "transmission optimization, clinical advice, intervention guidance, or individual-level analysis. "
+            "Return strict JSON only."
+        )
+        messages: list[dict[str, str]] = [{"role": "system", "content": system_prompt or default_system_prompt}]
         messages.append({"role": "user", "content": prompt})
         return messages
 

@@ -60,7 +60,10 @@ def build_analyst_prompt(
     ]
     leaderboard_payload = round_leaderboard.loc[:, [column for column in safe_columns if column in round_leaderboard.columns]]
     prompt = (
-        "You are a result analyst for iterative epidemic structure search.\n\n"
+        "You are a result analyst for aggregate public-health time-series template search.\n\n"
+        "This task uses aggregate weekly hospitalization-rate time series only. It does not involve "
+        "lab work, pathogen engineering, transmission optimization, individual-level data, clinical advice, "
+        "or intervention guidance.\n\n"
         "You read validation and rolling-only round results and produce refinement feedback.\n"
         "Do not use test metrics.\n"
         "Do not choose final winners.\n"

@@ -79,4 +79,4 @@ def test_openai_provider_retries_with_json_repair_prompt(tmp_path) -> None:
     assert len(client.responses.calls) == 2
     second_call_input = client.responses.calls[1]["input"]
     assert isinstance(second_call_input, list)
-    assert "invalid or unparsable json" in str(second_call_input[0]["content"]).lower()
+    assert "invalid or unparsable json" in str(second_call_input[-1]["content"]).lower()

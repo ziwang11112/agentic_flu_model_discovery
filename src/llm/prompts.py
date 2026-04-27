@@ -27,9 +27,14 @@ def build_proposer_prompt(
     llm_config: LLMConfig,
     previous_feedback: dict[str, Any] | None = None,
 ) -> str:
-    prompt = f"""You are an epidemic model structure proposer.
+    prompt = f"""You are a public-health time-series model-template proposer.
 
-You must propose candidate mechanistic model structures for weekly influenza hospitalization-rate forecasting.
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
 
 You do not fit parameters.
 You do not write Python code.
@@ -47,7 +52,7 @@ Rules:
 - obs=I+H requires SEIHR
 - obs=delayed_I requires delay_weeks in {{1,2,3}}
 - non-delayed observations must use delay_weeks=0
-- keep proposals biologically plausible and parsimonious
+- keep proposals compatible with the DSL and parsimonious
 - return strict JSON only
 
 Series summary:
@@ -88,9 +93,13 @@ def build_critic_prompt(
         "series_name": series_summary.series_name,
         "proposals": [proposal_to_dict(proposal) for proposal in proposals],
     }
-    prompt = f"""You are a critic for epidemic model structure proposals.
+    prompt = f"""You are a critic for public-health time-series model-template proposals.
 
-Your job is to review candidate structures before numerical fitting.
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
 
 Do not use test metrics.
 Do not choose final winners.
@@ -98,7 +107,6 @@ Do not invent new structure types.
 Do not write code.
 
 Check:
-- biological plausibility
 - observation-target alignment
 - over-complexity
 - identifiability risk

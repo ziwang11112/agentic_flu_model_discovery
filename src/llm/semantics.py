@@ -19,6 +19,6 @@ def build_surveillance_semantics_summary() -> SurveillanceSemanticsSummary:
     return SurveillanceSemanticsSummary(
         target_semantics="hospitalization_rate",
         recommended_observation_maps=["delayed_I", "H", "I+H"],
-        mechanistic_note="Hospital admissions may lag infections, so delayed_I is a plausible observation structure.",
+        mechanistic_note="Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
         risk_note="An explicit H compartment may be weakly identifiable in short single-season series.",
     )
