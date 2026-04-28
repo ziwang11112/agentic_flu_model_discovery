@@ -1,0 +1,102 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true admission lag is closer to 0 weeks or varies over the season, forecasts may show residual timing bias (early/late peak) and instability around the peak.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Primary anchor spec per feedback: SEIRS with fractional dynamics to flexibly capture sharp, high-amplitude peaks while mapping hospitalizations as a 1-week-lagged infection proxy to reduce phase error without over-lagging.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If admissions systematically lag infections, removing delay can shift peaks earlier and degrade short-horizon forecasts during rapid rise/decline.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Small timing variant to test whether an explicit lag is necessary; keeps the same parsimonious SEIRS fractional backbone while removing delay to potentially improve peak alignment if admissions track infections more contemporaneously in this age group.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May underperform if hospitalization dynamics behave like a lagged proxy rather than direct I; can produce phase errors and mis-scaled peak height when mapping is too direct.",
+      "fractional": true,
+      "observation_map": "I",
+      "rationale": "Low-complexity comparator (no delay) to assess whether the delayed observation mapping is essential versus a direct infection-proxy observation; maintains fractional SEIRS to handle high peakiness with minimal structural change.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

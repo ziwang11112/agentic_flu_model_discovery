@@ -1,0 +1,15 @@
+{
+  "best_spec": {
+    "delay_weeks": 1,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "scientific_claim_allowed": true,
+  "selection_rolling_mean_mae": 0.05820057870324926,
+  "selection_score": 0.26587347278401896,
+  "selection_validation_mae": 0.24539955569538657,
+  "series_name": "5-17 yr"
+}

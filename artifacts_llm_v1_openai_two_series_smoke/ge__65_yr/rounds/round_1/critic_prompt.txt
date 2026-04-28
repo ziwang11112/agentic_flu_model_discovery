@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the true admission lag varies over time or is closer to 0\u20131 week, a fixed 2-week delay can shift peaks and degrade timing; SEIRS may also over-attribute multi-peak structure to waning rather than reporting artifacts.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "High peakiness and high rate scale suggest sharp epidemic waves; fractional SEIRS can flexibly capture heavy-tailed/heterogeneous mixing while SEIRS allows waning immunity across the 31-week training window. A 2-week delay aligns with the stated possibility that admissions lag an I-state proxy.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true lag is longer (e.g., ~2\u20133 weeks), forecasts may peak too early and under-represent the rise/decline asymmetry.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Same mechanistic motivation as delayed observation, but with a shorter lag to hedge against faster progression from infection to hospitalization in older adults and to reduce phase error when peaks are sharp.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If reinfection/waning materially affects late-season dynamics, SEIR may underfit tail behavior and miss secondary increases.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "A more parsimonious alternative to SEIRS when the series is effectively single-wave within the season; fractional SEIR can still accommodate sharp peaks without introducing waning-immunity dynamics that may be weakly supported by 31 training points.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H dynamics may be weakly identifiable and can absorb noise, leading to unstable inferred timing/scale; may overfit peak height or misrepresent the relationship between infections and admissions.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly maps the target semantics (hospitalization rate) to an explicit hospitalized compartment, avoiding reliance on an I-proxy. Kept non-fractional for identifiability given the note that H may be weakly identifiable in short series.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If the true observation is closer to pure admissions (H) rather than a mixture, I+H can blur peak timing and inflate baseline, reducing interpretability and potentially biasing forecasts upward.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "A compromise observation that can represent admissions influenced by both infectious prevalence and hospitalized census/flow, potentially stabilizing fits when H alone is noisy while still leveraging an explicit hospitalization compartment.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

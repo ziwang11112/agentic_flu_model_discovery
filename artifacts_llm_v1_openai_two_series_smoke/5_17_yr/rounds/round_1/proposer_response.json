@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If hospitalization dynamics are not well-approximated by a fixed lag from I (e.g., variable delay or changing severity), delayed_I may mis-time peaks and bias amplitude.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Matches prior discovery patterns and surveillance note that admissions can lag the infectious proxy; SEIRS allows waning immunity across the training window while remaining parsimonious for a single age-group weekly series.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Over-delaying can shift peaks too far right, degrading short-horizon forecasts and producing phase error during rapid rise/decline.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Alternative plausible lag consistent with surveillance semantics; can better align peak timing if admissions are systematically later than the I proxy in this age group.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable with 31 training weeks, leading to unstable separation of I vs H and overfitting of timing/scale.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly maps the target (hospitalization rate) to an explicit hospitalization compartment, aligning with recommended observation maps while keeping the observation model simple (no delay).",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If the reported series corresponds strictly to incident admissions rather than a combined burden proxy, I+H can inflate levels and distort peak width.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Uses combined burden (infectious plus hospitalized) as the observed proxy, which can be more robust when H alone is noisy/weakly identified yet admissions reflect both current infections and ongoing hospital census-like dynamics.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If reinfection/waning materially affects late-season dynamics, SEIR may under-represent tail behavior and mis-estimate decline or secondary bumps.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "More parsimonious alternative to SEIRS when waning immunity is negligible over the modeled window; retains the key lagged-observation mechanism suggested by surveillance semantics.",
+        "structure_name": "SEIR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777350686,
+          "created_at": 1777350677.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0bfed0552abfee370069f038154dd4819d8f7365eca5d66e2b",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery patterns and surveillance note that admissions can lag the infectious proxy; SEIRS allows waning immunity across the training window while remaining parsimonious for a single age-group weekly series.\",\"expected_failure_mode\":\"If hospitalization dynamics are not well-approximated by a fixed lag from I (e.g., variable delay or changing severity), delayed_I may mis-time peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative plausible lag consistent with surveillance semantics; can better align peak timing if admissions are systematically later than the I proxy in this age group.\",\"expected_failure_mode\":\"Over-delaying can shift peaks too far right, degrading short-horizon forecasts and producing phase error during rapid rise/decline.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target (hospitalization rate) to an explicit hospitalization compartment, aligning with recommended observation maps while keeping the observation model simple (no delay).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with 31 training weeks, leading to unstable separation of I vs H and overfitting of timing/scale.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses combined burden (infectious plus hospitalized) as the observed proxy, which can be more robust when H alone is noisy/weakly identified yet admissions reflect both current infections and ongoing hospital census-like dynamics.\",\"expected_failure_mode\":\"If the reported series corresponds strictly to incident admissions rather than a combined burden proxy, I+H can inflate levels and distort peak width.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"More parsimonious alternative to SEIRS when waning immunity is negligible over the modeled window; retains the key lagged-observation mechanism suggested by surveillance semantics.\",\"expected_failure_mode\":\"If reinfection/waning materially affects late-season dynamics, SEIR may under-represent tail behavior and mis-estimate decline or secondary bumps.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0bfed0552abfee370069f03815f1c4819d827678681e91c4bf",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 720,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 506,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1226
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery patterns and surveillance note that admissions can lag the infectious proxy; SEIRS allows waning immunity across the training window while remaining parsimonious for a single age-group weekly series.\",\"expected_failure_mode\":\"If hospitalization dynamics are not well-approximated by a fixed lag from I (e.g., variable delay or changing severity), delayed_I may mis-time peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative plausible lag consistent with surveillance semantics; can better align peak timing if admissions are systematically later than the I proxy in this age group.\",\"expected_failure_mode\":\"Over-delaying can shift peaks too far right, degrading short-horizon forecasts and producing phase error during rapid rise/decline.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target (hospitalization rate) to an explicit hospitalization compartment, aligning with recommended observation maps while keeping the observation model simple (no delay).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with 31 training weeks, leading to unstable separation of I vs H and overfitting of timing/scale.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses combined burden (infectious plus hospitalized) as the observed proxy, which can be more robust when H alone is noisy/weakly identified yet admissions reflect both current infections and ongoing hospital census-like dynamics.\",\"expected_failure_mode\":\"If the reported series corresponds strictly to incident admissions rather than a combined burden proxy, I+H can inflate levels and distort peak width.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"More parsimonious alternative to SEIRS when waning immunity is negligible over the modeled window; retains the key lagged-observation mechanism suggested by surveillance semantics.\",\"expected_failure_mode\":\"If reinfection/waning materially affects late-season dynamics, SEIR may under-represent tail behavior and mis-estimate decline or secondary bumps.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery patterns and surveillance note that admissions can lag the infectious proxy; SEIRS allows waning immunity across the training window while remaining parsimonious for a single age-group weekly series.\",\"expected_failure_mode\":\"If hospitalization dynamics are not well-approximated by a fixed lag from I (e.g., variable delay or changing severity), delayed_I may mis-time peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative plausible lag consistent with surveillance semantics; can better align peak timing if admissions are systematically later than the I proxy in this age group.\",\"expected_failure_mode\":\"Over-delaying can shift peaks too far right, degrading short-horizon forecasts and producing phase error during rapid rise/decline.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target (hospitalization rate) to an explicit hospitalization compartment, aligning with recommended observation maps while keeping the observation model simple (no delay).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with 31 training weeks, leading to unstable separation of I vs H and overfitting of timing/scale.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses combined burden (infectious plus hospitalized) as the observed proxy, which can be more robust when H alone is noisy/weakly identified yet admissions reflect both current infections and ongoing hospital census-like dynamics.\",\"expected_failure_mode\":\"If the reported series corresponds strictly to incident admissions rather than a combined burden proxy, I+H can inflate levels and distort peak width.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"More parsimonious alternative to SEIRS when waning immunity is negligible over the modeled window; retains the key lagged-observation mechanism suggested by surveillance semantics.\",\"expected_failure_mode\":\"If reinfection/waning materially affects late-season dynamics, SEIR may under-represent tail behavior and mis-estimate decline or secondary bumps.\"}]}",
+  "scientific_claim_allowed": true
+}

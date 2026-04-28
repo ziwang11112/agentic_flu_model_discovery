@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+>= 65 yr,1,0,openai,False,True,SEIRS,True,delayed_I,2,True,True,,medium,,True
+>= 65 yr,1,1,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,"Compared with the 2-week delay options and the series’ existing discovered pattern, a fixed 1-week delay is more likely to introduce phase error for hospitalization-rate targets (often lagging infection proxies). With sharp peaks, mis-specified delay can dominate fit/forecast timing; keeping both fractional memory and SEIRS further compounds flexibility.",True
+>= 65 yr,1,2,openai,False,True,SEIR,True,delayed_I,2,True,True,,high,,True
+>= 65 yr,1,3,openai,False,True,SEIHR,False,H,0,True,True,,low,,True
+>= 65 yr,1,4,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"I+H observation is poorly aligned to a hospitalization-rate target unless there is a clear measurement rationale; it risks conflating infection prevalence with admissions/census and inflating baseline. With an explicit H compartment already weakly identifiable in short series, adding a mixed observation map increases non-identifiability and interpretability issues.",True

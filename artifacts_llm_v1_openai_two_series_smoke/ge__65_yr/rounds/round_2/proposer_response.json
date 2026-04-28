@@ -1,0 +1,187 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true admission lag is closer to 0 weeks or varies over the season, forecasts may show residual timing bias (early/late peak) and instability around the peak.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Primary anchor spec per feedback: SEIRS with fractional dynamics to flexibly capture sharp, high-amplitude peaks while mapping hospitalizations as a 1-week-lagged infection proxy to reduce phase error without over-lagging.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If admissions systematically lag infections, removing delay can shift peaks earlier and degrade short-horizon forecasts during rapid rise/decline.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Small timing variant to test whether an explicit lag is necessary; keeps the same parsimonious SEIRS fractional backbone while removing delay to potentially improve peak alignment if admissions track infections more contemporaneously in this age group.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "May underperform if hospitalization dynamics behave like a lagged proxy rather than direct I; can produce phase errors and mis-scaled peak height when mapping is too direct.",
+        "fractional": true,
+        "observation_map": "I",
+        "rationale": "Low-complexity comparator (no delay) to assess whether the delayed observation mapping is essential versus a direct infection-proxy observation; maintains fractional SEIRS to handle high peakiness with minimal structural change.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": ">= 65 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777351376,
+          "created_at": 1777351370.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_09bb2bb0bfd4e92b0069f03acab59c81948a5028e2c9b0d8d8",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary anchor spec per feedback: SEIRS with fractional dynamics to flexibly capture sharp, high-amplitude peaks while mapping hospitalizations as a 1-week-lagged infection proxy to reduce phase error without over-lagging.\",\"expected_failure_mode\":\"If the true admission lag is closer to 0 weeks or varies over the season, forecasts may show residual timing bias (early/late peak) and instability around the peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Small timing variant to test whether an explicit lag is necessary; keeps the same parsimonious SEIRS fractional backbone while removing delay to potentially improve peak alignment if admissions track infections more contemporaneously in this age group.\",\"expected_failure_mode\":\"If admissions systematically lag infections, removing delay can shift peaks earlier and degrade short-horizon forecasts during rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Low-complexity comparator (no delay) to assess whether the delayed observation mapping is essential versus a direct infection-proxy observation; maintains fractional SEIRS to handle high peakiness with minimal structural change.\",\"expected_failure_mode\":\"May underperform if hospitalization dynamics behave like a lagged proxy rather than direct I; can produce phase errors and mis-scaled peak height when mapping is too direct.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_09bb2bb0bfd4e92b0069f03acb6fb48194beb581a403fd541a",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1167,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 341,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1508
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary anchor spec per feedback: SEIRS with fractional dynamics to flexibly capture sharp, high-amplitude peaks while mapping hospitalizations as a 1-week-lagged infection proxy to reduce phase error without over-lagging.\",\"expected_failure_mode\":\"If the true admission lag is closer to 0 weeks or varies over the season, forecasts may show residual timing bias (early/late peak) and instability around the peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Small timing variant to test whether an explicit lag is necessary; keeps the same parsimonious SEIRS fractional backbone while removing delay to potentially improve peak alignment if admissions track infections more contemporaneously in this age group.\",\"expected_failure_mode\":\"If admissions systematically lag infections, removing delay can shift peaks earlier and degrade short-horizon forecasts during rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Low-complexity comparator (no delay) to assess whether the delayed observation mapping is essential versus a direct infection-proxy observation; maintains fractional SEIRS to handle high peakiness with minimal structural change.\",\"expected_failure_mode\":\"May underperform if hospitalization dynamics behave like a lagged proxy rather than direct I; can produce phase errors and mis-scaled peak height when mapping is too direct.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary anchor spec per feedback: SEIRS with fractional dynamics to flexibly capture sharp, high-amplitude peaks while mapping hospitalizations as a 1-week-lagged infection proxy to reduce phase error without over-lagging.\",\"expected_failure_mode\":\"If the true admission lag is closer to 0 weeks or varies over the season, forecasts may show residual timing bias (early/late peak) and instability around the peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Small timing variant to test whether an explicit lag is necessary; keeps the same parsimonious SEIRS fractional backbone while removing delay to potentially improve peak alignment if admissions track infections more contemporaneously in this age group.\",\"expected_failure_mode\":\"If admissions systematically lag infections, removing delay can shift peaks earlier and degrade short-horizon forecasts during rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Low-complexity comparator (no delay) to assess whether the delayed observation mapping is essential versus a direct infection-proxy observation; maintains fractional SEIRS to handle high peakiness with minimal structural change.\",\"expected_failure_mode\":\"May underperform if hospitalization dynamics behave like a lagged proxy rather than direct I; can produce phase errors and mis-scaled peak height when mapping is too direct.\"}]}",
+  "scientific_claim_allowed": true
+}

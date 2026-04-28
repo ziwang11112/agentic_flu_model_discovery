@@ -1,0 +1,211 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "May shift peaks too early relative to observed hospitalizations, leading to systematic lead bias if true lag is closer to 3 weeks.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Primary local-search candidate around the current best; keeps SEIRS (waning/reinfection) while testing a slightly shorter reporting/admission lag to reduce sensitivity to a single timing alignment.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Can overfit to a particular validation-window timing; rolling splits may show instability if the effective lag varies across the season.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Anchor specification matching the previous best; serves as a stable baseline for comparing nearby delay adjustments without changing compartment complexity.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If hospitalization reporting is meaningfully delayed, forecasts will be phase-advanced and may miss the observed peak timing.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Adds a nearer-lag alternative to test robustness when admissions track incidence more tightly (e.g., faster care-seeking/reporting), potentially reducing delay-fragility by not relying on a longer fixed lag.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Likely timing misalignment (predicted peaks too early) if admissions lag incidence; may degrade fit around turning points.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "No-delay mapping as a stress test for whether the lag is being used to compensate for model-shape mismatch; if competitive, it suggests dynamics (not delay) drive alignment.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "May under-capture multi-wave or prolonged tail behavior over the training horizon, yielding biased late-season levels.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Secondary check on whether the SIRS loop is truly required versus delay-driven alignment; keeps observation structure identical to the best while simplifying dynamics.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Weak identifiability in short series can cause unstable decomposition between I and H, leading to over-parameterized dynamics and poorer generalization.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Minority inclusion to test whether an explicit hospitalization pathway improves timing alignment without relying on a fixed delay; I+H can soften identifiability issues versus H-only by allowing the observed rate to reflect combined infectious burden and admissions.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777350829,
+          "created_at": 1777350815.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_074d66c294715d550069f0389fee94819ebe8514500ff75d04",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Primary local-search candidate around the current best; keeps SEIRS (waning/reinfection) while testing a slightly shorter reporting/admission lag to reduce sensitivity to a single timing alignment.\",\n      \"expected_failure_mode\": \"May shift peaks too early relative to observed hospitalizations, leading to systematic lead bias if true lag is closer to 3 weeks.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Anchor specification matching the previous best; serves as a stable baseline for comparing nearby delay adjustments without changing compartment complexity.\",\n      \"expected_failure_mode\": \"Can overfit to a particular validation-window timing; rolling splits may show instability if the effective lag varies across the season.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Adds a nearer-lag alternative to test robustness when admissions track incidence more tightly (e.g., faster care-seeking/reporting), potentially reducing delay-fragility by not relying on a longer fixed lag.\",\n      \"expected_failure_mode\": \"If hospitalization reporting is meaningfully delayed, forecasts will be phase-advanced and may miss the observed peak timing.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"No-delay mapping as a stress test for whether the lag is being used to compensate for model-shape mismatch; if competitive, it suggests dynamics (not delay) drive alignment.\",\n      \"expected_failure_mode\": \"Likely timing misalignment (predicted peaks too early) if admissions lag incidence; may degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIR\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Secondary check on whether the SIRS loop is truly required versus delay-driven alignment; keeps observation structure identical to the best while simplifying dynamics.\",\n      \"expected_failure_mode\": \"May under-capture multi-wave or prolonged tail behavior over the training horizon, yielding biased late-season levels.\"\n    },\n    {\n      \"structure_name\": \"SEIHR\",\n      \"fractional\": false,\n      \"observation_map\": \"I+H\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minority inclusion to test whether an explicit hospitalization pathway improves timing alignment without relying on a fixed delay; I+H can soften identifiability issues versus H-only by allowing the observed rate to reflect combined infectious burden and admissions.\",\n      \"expected_failure_mode\": \"Weak identifiability in short series can cause unstable decomposition between I and H, leading to over-parameterized dynamics and poorer generalization.\"\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_074d66c294715d550069f038a094f4819ea82142f9da46892a",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1283,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 700,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1983
+          },
+          "user": null
+        },
+        "raw_response_text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Primary local-search candidate around the current best; keeps SEIRS (waning/reinfection) while testing a slightly shorter reporting/admission lag to reduce sensitivity to a single timing alignment.\",\n      \"expected_failure_mode\": \"May shift peaks too early relative to observed hospitalizations, leading to systematic lead bias if true lag is closer to 3 weeks.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Anchor specification matching the previous best; serves as a stable baseline for comparing nearby delay adjustments without changing compartment complexity.\",\n      \"expected_failure_mode\": \"Can overfit to a particular validation-window timing; rolling splits may show instability if the effective lag varies across the season.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Adds a nearer-lag alternative to test robustness when admissions track incidence more tightly (e.g., faster care-seeking/reporting), potentially reducing delay-fragility by not relying on a longer fixed lag.\",\n      \"expected_failure_mode\": \"If hospitalization reporting is meaningfully delayed, forecasts will be phase-advanced and may miss the observed peak timing.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"No-delay mapping as a stress test for whether the lag is being used to compensate for model-shape mismatch; if competitive, it suggests dynamics (not delay) drive alignment.\",\n      \"expected_failure_mode\": \"Likely timing misalignment (predicted peaks too early) if admissions lag incidence; may degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIR\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Secondary check on whether the SIRS loop is truly required versus delay-driven alignment; keeps observation structure identical to the best while simplifying dynamics.\",\n      \"expected_failure_mode\": \"May under-capture multi-wave or prolonged tail behavior over the training horizon, yielding biased late-season levels.\"\n    },\n    {\n      \"structure_name\": \"SEIHR\",\n      \"fractional\": false,\n      \"observation_map\": \"I+H\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minority inclusion to test whether an explicit hospitalization pathway improves timing alignment without relying on a fixed delay; I+H can soften identifiability issues versus H-only by allowing the observed rate to reflect combined infectious burden and admissions.\",\n      \"expected_failure_mode\": \"Weak identifiability in short series can cause unstable decomposition between I and H, leading to over-parameterized dynamics and poorer generalization.\"\n    }\n  ]\n}"
+      }
+    ]
+  },
+  "raw_response_text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Primary local-search candidate around the current best; keeps SEIRS (waning/reinfection) while testing a slightly shorter reporting/admission lag to reduce sensitivity to a single timing alignment.\",\n      \"expected_failure_mode\": \"May shift peaks too early relative to observed hospitalizations, leading to systematic lead bias if true lag is closer to 3 weeks.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Anchor specification matching the previous best; serves as a stable baseline for comparing nearby delay adjustments without changing compartment complexity.\",\n      \"expected_failure_mode\": \"Can overfit to a particular validation-window timing; rolling splits may show instability if the effective lag varies across the season.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Adds a nearer-lag alternative to test robustness when admissions track incidence more tightly (e.g., faster care-seeking/reporting), potentially reducing delay-fragility by not relying on a longer fixed lag.\",\n      \"expected_failure_mode\": \"If hospitalization reporting is meaningfully delayed, forecasts will be phase-advanced and may miss the observed peak timing.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"No-delay mapping as a stress test for whether the lag is being used to compensate for model-shape mismatch; if competitive, it suggests dynamics (not delay) drive alignment.\",\n      \"expected_failure_mode\": \"Likely timing misalignment (predicted peaks too early) if admissions lag incidence; may degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIR\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 3,\n      \"rationale\": \"Secondary check on whether the SIRS loop is truly required versus delay-driven alignment; keeps observation structure identical to the best while simplifying dynamics.\",\n      \"expected_failure_mode\": \"May under-capture multi-wave or prolonged tail behavior over the training horizon, yielding biased late-season levels.\"\n    },\n    {\n      \"structure_name\": \"SEIHR\",\n      \"fractional\": false,\n      \"observation_map\": \"I+H\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minority inclusion to test whether an explicit hospitalization pathway improves timing alignment without relying on a fixed delay; I+H can soften identifiability issues versus H-only by allowing the observed rate to reflect combined infectious burden and admissions.\",\n      \"expected_failure_mode\": \"Weak identifiability in short series can cause unstable decomposition between I and H, leading to over-parameterized dynamics and poorer generalization.\"\n    }\n  ]\n}",
+  "scientific_claim_allowed": true
+}

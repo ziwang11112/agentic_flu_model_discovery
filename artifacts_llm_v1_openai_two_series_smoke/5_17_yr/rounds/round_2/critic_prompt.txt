@@ -1,0 +1,127 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May shift peaks too early relative to observed hospitalizations, leading to systematic lead bias if true lag is closer to 3 weeks.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Primary local-search candidate around the current best; keeps SEIRS (waning/reinfection) while testing a slightly shorter reporting/admission lag to reduce sensitivity to a single timing alignment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Can overfit to a particular validation-window timing; rolling splits may show instability if the effective lag varies across the season.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor specification matching the previous best; serves as a stable baseline for comparing nearby delay adjustments without changing compartment complexity.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If hospitalization reporting is meaningfully delayed, forecasts will be phase-advanced and may miss the observed peak timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adds a nearer-lag alternative to test robustness when admissions track incidence more tightly (e.g., faster care-seeking/reporting), potentially reducing delay-fragility by not relying on a longer fixed lag.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Likely timing misalignment (predicted peaks too early) if admissions lag incidence; may degrade fit around turning points.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "No-delay mapping as a stress test for whether the lag is being used to compensate for model-shape mismatch; if competitive, it suggests dynamics (not delay) drive alignment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May under-capture multi-wave or prolonged tail behavior over the training horizon, yielding biased late-season levels.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Secondary check on whether the SIRS loop is truly required versus delay-driven alignment; keeps observation structure identical to the best while simplifying dynamics.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Weak identifiability in short series can cause unstable decomposition between I and H, leading to over-parameterized dynamics and poorer generalization.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Minority inclusion to test whether an explicit hospitalization pathway improves timing alignment without relying on a fixed delay; I+H can soften identifiability issues versus H-only by allowing the observed rate to reflect combined infectious burden and admissions.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

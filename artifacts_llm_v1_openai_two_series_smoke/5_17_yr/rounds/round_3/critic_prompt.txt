@@ -1,0 +1,111 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true lag varies across weeks/splits (nonstationary delay), a fixed 1-week delay can misalign peaks and cause phase errors in rolling windows.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Primary anchored template: SEIRS supports waning immunity/seasonal recycling while keeping structure minimal; a 1-week delayed_I aligns with the consistent short reporting/admission lag signal and has shown best rolling robustness.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Often reacts too quickly, producing premature rise/peak timing and degraded rolling generalization when a systematic 1-week lag is present.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Ablation to confirm delay sensitivity: same parsimonious SEIRS backbone but no observation lag, testing whether the series occasionally behaves like near-contemporaneous I-proxy reporting.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Can overshift/oversmooth dynamics, delaying peaks and underestimating early growth, which tends to hurt rolling performance when the true lag is closer to 1 week.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Neighbor ablation around the preferred delay: tests whether a slightly longer lag better matches admission timing in some splits without changing transmission structure.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Systematic phase mismatch if hospitalizations lag infections; may fit amplitude but miss peak timing and degrade under rolling splits.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Minimal non-delayed baseline within the same structure family to assess whether the delayed observation mapping is essential versus SEIRS alone capturing timing adequately.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

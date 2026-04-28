@@ -1,0 +1,195 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true lag varies across weeks/splits (nonstationary delay), a fixed 1-week delay can misalign peaks and cause phase errors in rolling windows.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Primary anchored template: SEIRS supports waning immunity/seasonal recycling while keeping structure minimal; a 1-week delayed_I aligns with the consistent short reporting/admission lag signal and has shown best rolling robustness.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Often reacts too quickly, producing premature rise/peak timing and degraded rolling generalization when a systematic 1-week lag is present.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Ablation to confirm delay sensitivity: same parsimonious SEIRS backbone but no observation lag, testing whether the series occasionally behaves like near-contemporaneous I-proxy reporting.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Can overshift/oversmooth dynamics, delaying peaks and underestimating early growth, which tends to hurt rolling performance when the true lag is closer to 1 week.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Neighbor ablation around the preferred delay: tests whether a slightly longer lag better matches admission timing in some splits without changing transmission structure.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Systematic phase mismatch if hospitalizations lag infections; may fit amplitude but miss peak timing and degrade under rolling splits.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Minimal non-delayed baseline within the same structure family to assess whether the delayed observation mapping is essential versus SEIRS alone capturing timing adequately.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777350989,
+          "created_at": 1777350980.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0255b347a8b502310069f03944d1ac81a1879c39b70b72ae87",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Primary anchored template: SEIRS supports waning immunity/seasonal recycling while keeping structure minimal; a 1-week delayed_I aligns with the consistent short reporting/admission lag signal and has shown best rolling robustness.\",\n      \"expected_failure_mode\": \"If the true lag varies across weeks/splits (nonstationary delay), a fixed 1-week delay can misalign peaks and cause phase errors in rolling windows.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Ablation to confirm delay sensitivity: same parsimonious SEIRS backbone but no observation lag, testing whether the series occasionally behaves like near-contemporaneous I-proxy reporting.\",\n      \"expected_failure_mode\": \"Often reacts too quickly, producing premature rise/peak timing and degraded rolling generalization when a systematic 1-week lag is present.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Neighbor ablation around the preferred delay: tests whether a slightly longer lag better matches admission timing in some splits without changing transmission structure.\",\n      \"expected_failure_mode\": \"Can overshift/oversmooth dynamics, delaying peaks and underestimating early growth, which tends to hurt rolling performance when the true lag is closer to 1 week.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minimal non-delayed baseline within the same structure family to assess whether the delayed observation mapping is essential versus SEIRS alone capturing timing adequately.\",\n      \"expected_failure_mode\": \"Systematic phase mismatch if hospitalizations lag infections; may fit amplitude but miss peak timing and degrade under rolling splits.\"\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0255b347a8b502310069f0394570c481a1ba9b1db5ee1b6473",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1272,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 487,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1759
+          },
+          "user": null
+        },
+        "raw_response_text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Primary anchored template: SEIRS supports waning immunity/seasonal recycling while keeping structure minimal; a 1-week delayed_I aligns with the consistent short reporting/admission lag signal and has shown best rolling robustness.\",\n      \"expected_failure_mode\": \"If the true lag varies across weeks/splits (nonstationary delay), a fixed 1-week delay can misalign peaks and cause phase errors in rolling windows.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Ablation to confirm delay sensitivity: same parsimonious SEIRS backbone but no observation lag, testing whether the series occasionally behaves like near-contemporaneous I-proxy reporting.\",\n      \"expected_failure_mode\": \"Often reacts too quickly, producing premature rise/peak timing and degraded rolling generalization when a systematic 1-week lag is present.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Neighbor ablation around the preferred delay: tests whether a slightly longer lag better matches admission timing in some splits without changing transmission structure.\",\n      \"expected_failure_mode\": \"Can overshift/oversmooth dynamics, delaying peaks and underestimating early growth, which tends to hurt rolling performance when the true lag is closer to 1 week.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minimal non-delayed baseline within the same structure family to assess whether the delayed observation mapping is essential versus SEIRS alone capturing timing adequately.\",\n      \"expected_failure_mode\": \"Systematic phase mismatch if hospitalizations lag infections; may fit amplitude but miss peak timing and degrade under rolling splits.\"\n    }\n  ]\n}"
+      }
+    ]
+  },
+  "raw_response_text": "{\n  \"series_name\": \"5-17 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Primary anchored template: SEIRS supports waning immunity/seasonal recycling while keeping structure minimal; a 1-week delayed_I aligns with the consistent short reporting/admission lag signal and has shown best rolling robustness.\",\n      \"expected_failure_mode\": \"If the true lag varies across weeks/splits (nonstationary delay), a fixed 1-week delay can misalign peaks and cause phase errors in rolling windows.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Ablation to confirm delay sensitivity: same parsimonious SEIRS backbone but no observation lag, testing whether the series occasionally behaves like near-contemporaneous I-proxy reporting.\",\n      \"expected_failure_mode\": \"Often reacts too quickly, producing premature rise/peak timing and degraded rolling generalization when a systematic 1-week lag is present.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Neighbor ablation around the preferred delay: tests whether a slightly longer lag better matches admission timing in some splits without changing transmission structure.\",\n      \"expected_failure_mode\": \"Can overshift/oversmooth dynamics, delaying peaks and underestimating early growth, which tends to hurt rolling performance when the true lag is closer to 1 week.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Minimal non-delayed baseline within the same structure family to assess whether the delayed observation mapping is essential versus SEIRS alone capturing timing adequately.\",\n      \"expected_failure_mode\": \"Systematic phase mismatch if hospitalizations lag infections; may fit amplitude but miss peak timing and degrade under rolling splits.\"\n    }\n  ]\n}",
+  "scientific_claim_allowed": true
+}

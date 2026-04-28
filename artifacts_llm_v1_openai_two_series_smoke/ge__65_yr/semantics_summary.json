@@ -1,0 +1,10 @@
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}

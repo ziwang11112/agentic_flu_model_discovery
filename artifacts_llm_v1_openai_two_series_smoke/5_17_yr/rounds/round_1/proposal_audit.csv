@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+5-17 yr,1,1,openai,False,True,SEIRS,False,delayed_I,3,True,True,,high,,True
+5-17 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H aligns semantically with hospitalization rate, adding an explicit H compartment (SEIHR) increases complexity and raises identifiability risk in a short single-season series; surveillance note explicitly flags H as potentially weakly identifiable here. Also, mapping weekly admissions to an H stock-like compartment can be a mismatch unless H is clearly defined as incident admissions.",True
+5-17 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,I+H observation map risks semantic mismatch for a hospitalization-rate target (admissions) and can blur distinct processes (infection prevalence vs hospitalization burden). It also inherits H identifiability concerns from SEIHR and may over-flexibly fit level/width without clear justification in this short series.,True
+5-17 yr,1,4,openai,False,True,SEIR,False,delayed_I,2,True,True,,medium,,True
