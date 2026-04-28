@@ -1,0 +1,2 @@
+series_name,selected_round_id,structure_name,fractional,observation_map,delay_weeks,test_mae,test_rmse,test_smape,provider,provider_is_mock,scientific_claim_allowed
+>= 65 yr,2,SEIRS,True,delayed_I,2,0.22197322071383976,0.2417396590937938,1.3681383029712062,openai,False,True

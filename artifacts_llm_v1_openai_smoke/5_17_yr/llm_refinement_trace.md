@@ -1,0 +1,34 @@
+# LLM V1 Refinement Trace
+
+## Round 1
+
+- previous_best_spec: `None`
+- previous_best_score: `None`
+- analyst_feedback_summary:
+- new_specs: `SEIHR|fractional=0|obs=H; SEIHR|fractional=0|obs=I+H; SEIRS|fractional=0|obs=delayed_I|delay=2; SEIRS|fractional=0|obs=delayed_I|delay=3; SEIR|fractional=0|obs=delayed_I|delay=2`
+- round_best_spec: `SEIR|fractional=0|obs=delayed_I|delay=2`
+- round_best_score: `0.3544279881385839`
+- score_improvement: `None`
+- early_stop: `False`
+
+## Round 2
+
+- previous_best_spec: `SEIR|fractional=0|obs=delayed_I|delay=2`
+- previous_best_score: `0.3544279881385839`
+- analyst_feedback_summary: Focus the next proposals on disentangling observation lag vs compartment choice. Submit a small set of templates that systematically vary only one factor at a time: (A) SEIR with delayed_I at delays 1/2/3; (B) SEIRS with delayed_I at delays 1/2/3; (C) SEIHR with observation_map=H (no delay). Avoid I+H and avoid adding new compartments or fractional dynamics. Prefer configurations expected to be robust across rolling splits (stable timing/shape) rather than those that can sharply match one segment via a specific delay.
+- new_specs: `SEIR|fractional=0|obs=delayed_I|delay=1; SEIR|fractional=0|obs=delayed_I|delay=2; SEIR|fractional=0|obs=delayed_I|delay=3; SEIRS|fractional=0|obs=delayed_I|delay=1; SEIRS|fractional=0|obs=delayed_I|delay=2; SEIRS|fractional=0|obs=delayed_I|delay=3; SEIHR|fractional=0|obs=H`
+- round_best_spec: `SEIRS|fractional=0|obs=delayed_I|delay=3`
+- round_best_score: `0.33139736240640444`
+- score_improvement: `0.023030625732179455`
+- early_stop: `False`
+
+## Round 3
+
+- previous_best_spec: `SEIRS|fractional=0|obs=delayed_I|delay=3`
+- previous_best_score: `0.33139736240640444`
+- analyst_feedback_summary: For the next round, focus proposals on (A) SEIHR with observation_map=H and delay=0 as the anchor, and (B) SEIR with observation_map=delayed_I using delay_weeks in {1,2}. De-emphasize SEIRS unless you can justify it with a clear robustness rationale, and do not propose delay=3 again for this series. The goal is to improve temporal alignment and reduce rolling-split sensitivity rather than adding complexity.
+- new_specs: `SEIHR|fractional=0|obs=H; SEIHR|fractional=0|obs=I+H; SEIR|fractional=0|obs=delayed_I|delay=1; SEIR|fractional=0|obs=delayed_I|delay=2`
+- round_best_spec: `SEIR|fractional=0|obs=delayed_I|delay=1`
+- round_best_score: `0.344736072307095`
+- score_improvement: `-0.013338709900690582`
+- early_stop: `True`

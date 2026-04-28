@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable in a short series; H may absorb reporting/ascertainment effects and misattribute timing vs magnitude.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Target is weekly hospitalization rate; mapping observations directly to an explicit H compartment aligns with surveillance semantics while keeping dynamics simple (single hospitalization state).",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Conflates infectious prevalence and hospitalization burden; may over-smooth peaks or inflate inferred infectious burden when admissions dominate.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "If reported hospitalization rate reflects a mixture of severe incident infections and admissions (or coding that partially tracks infectious burden), observing I+H can provide robustness to timing mismatch between infection and admission processes.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Delay may be season- or age-specific; fixed 2-week lag can misalign peak timing and distort amplitude if true lag varies over time.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Parsimonious template consistent with discovered patterns; a 2-week delay captures plausible lag from infection to hospitalization without introducing an explicit H state that may be hard to identify.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Over-long delay can shift peaks too late and force compensatory parameter behavior (e.g., faster transmission) to match observed timing.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Alternative lag choice to cover longer infection-to-admission delays; retains SEIRS parsimony while matching recommended delayed observation semantics.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If reinfection/waning immunity matters within-season, SEIR may underfit tail behavior and misrepresent post-peak persistence.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Simpler than SEIRS when waning immunity is not strongly expressed within the training window; delayed_I addresses hospitalization lag while minimizing compartments.",
+        "structure_name": "SEIR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777329908,
+          "created_at": 1777329901.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0b4c4d267e5524c00069efe6ed0d788190bc1daf04bb75004c",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Target is weekly hospitalization rate; mapping observations directly to an explicit H compartment aligns with surveillance semantics while keeping dynamics simple (single hospitalization state).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; H may absorb reporting/ascertainment effects and misattribute timing vs magnitude.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rate reflects a mixture of severe incident infections and admissions (or coding that partially tracks infectious burden), observing I+H can provide robustness to timing mismatch between infection and admission processes.\",\"expected_failure_mode\":\"Conflates infectious prevalence and hospitalization burden; may over-smooth peaks or inflate inferred infectious burden when admissions dominate.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Parsimonious template consistent with discovered patterns; a 2-week delay captures plausible lag from infection to hospitalization without introducing an explicit H state that may be hard to identify.\",\"expected_failure_mode\":\"Delay may be season- or age-specific; fixed 2-week lag can misalign peak timing and distort amplitude if true lag varies over time.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative lag choice to cover longer infection-to-admission delays; retains SEIRS parsimony while matching recommended delayed observation semantics.\",\"expected_failure_mode\":\"Over-long delay can shift peaks too late and force compensatory parameter behavior (e.g., faster transmission) to match observed timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Simpler than SEIRS when waning immunity is not strongly expressed within the training window; delayed_I addresses hospitalization lag while minimizing compartments.\",\"expected_failure_mode\":\"If reinfection/waning immunity matters within-season, SEIR may underfit tail behavior and misrepresent post-peak persistence.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0b4c4d267e5524c00069efe6eda4f08190b0be3e75edf8d986",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 720,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 472,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1192
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Target is weekly hospitalization rate; mapping observations directly to an explicit H compartment aligns with surveillance semantics while keeping dynamics simple (single hospitalization state).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; H may absorb reporting/ascertainment effects and misattribute timing vs magnitude.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rate reflects a mixture of severe incident infections and admissions (or coding that partially tracks infectious burden), observing I+H can provide robustness to timing mismatch between infection and admission processes.\",\"expected_failure_mode\":\"Conflates infectious prevalence and hospitalization burden; may over-smooth peaks or inflate inferred infectious burden when admissions dominate.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Parsimonious template consistent with discovered patterns; a 2-week delay captures plausible lag from infection to hospitalization without introducing an explicit H state that may be hard to identify.\",\"expected_failure_mode\":\"Delay may be season- or age-specific; fixed 2-week lag can misalign peak timing and distort amplitude if true lag varies over time.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative lag choice to cover longer infection-to-admission delays; retains SEIRS parsimony while matching recommended delayed observation semantics.\",\"expected_failure_mode\":\"Over-long delay can shift peaks too late and force compensatory parameter behavior (e.g., faster transmission) to match observed timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Simpler than SEIRS when waning immunity is not strongly expressed within the training window; delayed_I addresses hospitalization lag while minimizing compartments.\",\"expected_failure_mode\":\"If reinfection/waning immunity matters within-season, SEIR may underfit tail behavior and misrepresent post-peak persistence.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Target is weekly hospitalization rate; mapping observations directly to an explicit H compartment aligns with surveillance semantics while keeping dynamics simple (single hospitalization state).\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; H may absorb reporting/ascertainment effects and misattribute timing vs magnitude.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rate reflects a mixture of severe incident infections and admissions (or coding that partially tracks infectious burden), observing I+H can provide robustness to timing mismatch between infection and admission processes.\",\"expected_failure_mode\":\"Conflates infectious prevalence and hospitalization burden; may over-smooth peaks or inflate inferred infectious burden when admissions dominate.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Parsimonious template consistent with discovered patterns; a 2-week delay captures plausible lag from infection to hospitalization without introducing an explicit H state that may be hard to identify.\",\"expected_failure_mode\":\"Delay may be season- or age-specific; fixed 2-week lag can misalign peak timing and distort amplitude if true lag varies over time.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative lag choice to cover longer infection-to-admission delays; retains SEIRS parsimony while matching recommended delayed observation semantics.\",\"expected_failure_mode\":\"Over-long delay can shift peaks too late and force compensatory parameter behavior (e.g., faster transmission) to match observed timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Simpler than SEIRS when waning immunity is not strongly expressed within the training window; delayed_I addresses hospitalization lag while minimizing compartments.\",\"expected_failure_mode\":\"If reinfection/waning immunity matters within-season, SEIR may underfit tail behavior and misrepresent post-peak persistence.\"}]}",
+  "scientific_claim_allowed": true
+}

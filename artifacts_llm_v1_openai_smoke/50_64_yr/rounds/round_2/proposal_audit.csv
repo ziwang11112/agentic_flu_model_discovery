@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+50-64 yr,2,0,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+50-64 yr,2,1,openai,False,True,SEIR,False,delayed_I,1,True,True,,medium,,True
+50-64 yr,2,2,openai,False,True,SEIR,False,delayed_I,3,True,True,,medium,,True
+50-64 yr,2,3,openai,False,True,SEIR,False,I,0,True,True,,low,"Observation-target misalignment risk: using contemporaneous I for a hospitalization-rate target contradicts the stated surveillance semantics that admissions may lag I. With high peakiness, even small phase errors can dominate, so this control is likely to be systematically biased in timing rather than informative.",True

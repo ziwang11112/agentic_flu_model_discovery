@@ -123,6 +123,7 @@ REQUIRED_TRACE_KEYS = {
 MOCK_DISCLAIMER = (
     "Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality."
 )
+LIVE_PROVIDER_NOTE = "Live-provider results are preliminary single-run outputs."
 
 
 def _relative(path: Path) -> str:
@@ -154,6 +155,14 @@ def _append_missing(missing: list[str], path: Path) -> None:
 
 def _load_csv_columns(path: Path) -> set[str]:
     return set(pd.read_csv(path, nrows=0).columns)
+
+
+def _parse_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
 def _validate_trace_file(
@@ -212,7 +221,7 @@ def _write_report(
             "Regenerate `llm_refinement_trace.jsonl` after fixing trace serialization and rerun V1 artifact generation."
         )
     if not recommendations:
-        recommendations.append("Artifacts satisfy the LLM-V1 validation protocol for the current mock run.")
+        recommendations.append("Artifacts satisfy the LLM-V1 validation protocol for the current run.")
 
     lines = [
         "# LLM V1 Artifact Validation Report",
@@ -265,10 +274,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Validate LLM-V1 artifact protocol compliance.")
     parser.add_argument("--artifact-root", default="artifacts_llm_v1")
     parser.add_argument("--report", default="reports/llm_v1_artifact_validation_report.md")
+    parser.add_argument("--iterative-report", default="reports/llm_v1_iterative_report.md")
     args = parser.parse_args()
 
     artifact_root = (REPO_ROOT / args.artifact_root).resolve()
     report_path = (REPO_ROOT / args.report).resolve()
+    iterative_report = (REPO_ROOT / args.iterative_report).resolve()
 
     missing_files: list[str] = []
     leakage_failures: list[str] = []
@@ -287,12 +298,22 @@ def main() -> None:
         else:
             _append_missing(missing_files, path)
 
-    iterative_report = REPO_ROOT / "reports" / "llm_v1_iterative_report.md"
+    provider_is_mock = True
+    summary_path = artifact_root / "llm_v1_vs_v0_vs_nonllm_summary.csv"
+    if summary_path.exists():
+        try:
+            summary_head = pd.read_csv(summary_path, usecols=["provider_is_mock"])
+            if not summary_head.empty:
+                provider_is_mock = bool(summary_head["provider_is_mock"].map(_parse_bool).all())
+        except (ValueError, TypeError):
+            provider_is_mock = True
     if iterative_report.exists():
         files_checked += 1
         report_text = _read_text(iterative_report)
-        if MOCK_DISCLAIMER not in report_text:
+        if provider_is_mock and MOCK_DISCLAIMER not in report_text:
             leakage_failures.append(f"{_relative(iterative_report)} is missing the required mock disclaimer")
+        if not provider_is_mock and LIVE_PROVIDER_NOTE not in report_text:
+            leakage_failures.append(f"{_relative(iterative_report)} is missing the required live-provider note")
     else:
         _append_missing(missing_files, iterative_report)
 

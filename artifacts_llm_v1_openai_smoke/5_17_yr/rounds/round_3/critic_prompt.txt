@@ -1,0 +1,111 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable in a short series; can trade off with I-to-H transition and recovery rates, potentially yielding similar fits with different internal trajectories and some split-to-split variability.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Anchor template: directly maps the target (weekly hospitalization rate) to an explicit hospitalization compartment, reducing phase/lag sensitivity versus delayed infection proxies and aligning with surveillance semantics. Keeps delay at 0 for robustness across rolling splits and avoids extra SEIRS complexity.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May blur interpretation by attributing hospitalization-rate signal partly to I, risking amplitude bias (over/under-shooting peaks) if the series is primarily admissions-driven rather than combined burden.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Alternative hospitalization-linked mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; may reduce sensitivity when H alone is noisy or under-identified while still keeping delay=0.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Residual phase mismatch if true lag varies over time; may compensate via parameter tradeoffs (incubation vs infectious duration), causing instability across rolling splits.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Secondary comparison branch: simpler than SEIRS and uses a short 1-week observation lag to capture plausible admission delay without over-lagging moderate peaks; intended to improve temporal alignment while limiting instability seen with longer delays.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Can still over-lag around moderate peaks in some splits, leading to systematic timing errors and increased sensitivity to initialization/parameter coupling.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Short-lag alternative to test whether a 2-week delay better matches admissions timing for this age group while still respecting the constraint to avoid delay=3; maintains parsimony and avoids SEIRS reinfection dynamics.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

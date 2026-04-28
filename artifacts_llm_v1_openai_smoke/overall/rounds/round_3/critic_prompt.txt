@@ -1,0 +1,93 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "Overall",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.25,
+  "validation_std": 0.0670820393249937,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "SEIRS can still be weakly identifiable on 31 training weeks; the added waning parameter may induce split-to-split variability or over-flexibility, potentially shifting peak timing/width without improving generalization.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Anchor template per feedback: SEIRS captures potential waning immunity/reinfection effects that may help on a short, high-peaked influenza hospitalization-rate series, while keeping observation mapping simple and stable (direct I proxy, no delay). This is an incremental change from prior SIR/SEIR discoveries and avoids adding extra compartments.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Prior feedback indicates 1-week delay degraded performance for this series; this variant may misalign peak timing (forecast peak too late) and amplify instability/identifiability issues by coupling delay with waning dynamics.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Single carefully controlled alternative: retain SEIRS structure but allow a minimal 1-week reporting/admission lag via delayed_I, consistent with surveillance semantics, while respecting the constraint to explore only {0,1} week delays. This isolates whether a small lag improves alignment without changing compartments.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "Overall"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

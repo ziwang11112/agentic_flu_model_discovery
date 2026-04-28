@@ -1,0 +1,30 @@
+[
+  {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "H",
+    "spec_key": "SEIHR|fractional=0|obs=H",
+    "structure_name": "SEIHR"
+  },
+  {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I+H",
+    "spec_key": "SEIHR|fractional=0|obs=I+H",
+    "structure_name": "SEIHR"
+  },
+  {
+    "delay_weeks": 1,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "spec_key": "SEIR|fractional=0|obs=delayed_I|delay=1",
+    "structure_name": "SEIR"
+  },
+  {
+    "delay_weeks": 2,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "spec_key": "SEIR|fractional=0|obs=delayed_I|delay=2",
+    "structure_name": "SEIR"
+  }
+]

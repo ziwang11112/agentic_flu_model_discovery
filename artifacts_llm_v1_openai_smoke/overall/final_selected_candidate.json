@@ -1,0 +1,16 @@
+{
+  "best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIR"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "scientific_claim_allowed": true,
+  "selected_round_id": 2,
+  "selection_rolling_mean_mae": 0.1580471415282797,
+  "selection_score": 0.3673635354884154,
+  "selection_validation_mae": 0.19937718865941437,
+  "series_name": "Overall"
+}

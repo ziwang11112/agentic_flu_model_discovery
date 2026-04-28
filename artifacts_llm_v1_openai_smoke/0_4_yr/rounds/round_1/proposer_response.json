@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If admissions timing varies over the season or differs by age, a fixed 2-week delay may misalign peaks and bias amplitude.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Matches hospitalization-rate semantics via a lagged incidence proxy while keeping the template parsimonious; SEIRS can accommodate moderate peakiness and potential short-term immunity effects within a season.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Fractional memory may over-smooth turning points, underestimating sharp week-to-week changes near the peak.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Fractional dynamics can flexibly capture slower-than-exponential rise/decay often seen in aggregate pediatric hospitalization series; a short delay reflects admissions lag without adding an H compartment.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Without waning immunity (no S<-R), late-season tail behavior may be misfit, especially if there is sustained transmission or changing susceptibility.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Simplest latent-incidence template with an explicit exposed stage and a short reporting/admission lag; suitable when the series is single-season and identifiability is limited.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H-state parameters may be weakly identifiable in a short series, leading to unstable forecasts or confounding between I->H and H outflow rates.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly maps the target to a hospitalization compartment, aligning with surveillance semantics; retains mechanistic interpretability for admissions as a distinct state.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If the true observation is closer to admissions-only, mixing I and H can inflate early-season levels and shift the inferred peak timing.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Allows the observed hospitalization rate to reflect a mixture of infectious burden and admissions/occupancy proxy, which can be more robust when H alone is noisy or partially observed.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "0-4 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777329325,
+          "created_at": 1777329317.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0fde8d33178bea830069efe4a5d9c48197a9e421ce9a1a0923",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches hospitalization-rate semantics via a lagged incidence proxy while keeping the template parsimonious; SEIRS can accommodate moderate peakiness and potential short-term immunity effects within a season.\",\"expected_failure_mode\":\"If admissions timing varies over the season or differs by age, a fixed 2-week delay may misalign peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Fractional dynamics can flexibly capture slower-than-exponential rise/decay often seen in aggregate pediatric hospitalization series; a short delay reflects admissions lag without adding an H compartment.\",\"expected_failure_mode\":\"Fractional memory may over-smooth turning points, underestimating sharp week-to-week changes near the peak.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Simplest latent-incidence template with an explicit exposed stage and a short reporting/admission lag; suitable when the series is single-season and identifiability is limited.\",\"expected_failure_mode\":\"Without waning immunity (no S<-R), late-season tail behavior may be misfit, especially if there is sustained transmission or changing susceptibility.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target to a hospitalization compartment, aligning with surveillance semantics; retains mechanistic interpretability for admissions as a distinct state.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, leading to unstable forecasts or confounding between I->H and H outflow rates.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows the observed hospitalization rate to reflect a mixture of infectious burden and admissions/occupancy proxy, which can be more robust when H alone is noisy or partially observed.\",\"expected_failure_mode\":\"If the true observation is closer to admissions-only, mixing I and H can inflate early-season levels and shift the inferred peak timing.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0fde8d33178bea830069efe4a65b088197aebfe13cc7099223",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 725,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 484,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1209
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches hospitalization-rate semantics via a lagged incidence proxy while keeping the template parsimonious; SEIRS can accommodate moderate peakiness and potential short-term immunity effects within a season.\",\"expected_failure_mode\":\"If admissions timing varies over the season or differs by age, a fixed 2-week delay may misalign peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Fractional dynamics can flexibly capture slower-than-exponential rise/decay often seen in aggregate pediatric hospitalization series; a short delay reflects admissions lag without adding an H compartment.\",\"expected_failure_mode\":\"Fractional memory may over-smooth turning points, underestimating sharp week-to-week changes near the peak.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Simplest latent-incidence template with an explicit exposed stage and a short reporting/admission lag; suitable when the series is single-season and identifiability is limited.\",\"expected_failure_mode\":\"Without waning immunity (no S<-R), late-season tail behavior may be misfit, especially if there is sustained transmission or changing susceptibility.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target to a hospitalization compartment, aligning with surveillance semantics; retains mechanistic interpretability for admissions as a distinct state.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, leading to unstable forecasts or confounding between I->H and H outflow rates.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows the observed hospitalization rate to reflect a mixture of infectious burden and admissions/occupancy proxy, which can be more robust when H alone is noisy or partially observed.\",\"expected_failure_mode\":\"If the true observation is closer to admissions-only, mixing I and H can inflate early-season levels and shift the inferred peak timing.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches hospitalization-rate semantics via a lagged incidence proxy while keeping the template parsimonious; SEIRS can accommodate moderate peakiness and potential short-term immunity effects within a season.\",\"expected_failure_mode\":\"If admissions timing varies over the season or differs by age, a fixed 2-week delay may misalign peaks and bias amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Fractional dynamics can flexibly capture slower-than-exponential rise/decay often seen in aggregate pediatric hospitalization series; a short delay reflects admissions lag without adding an H compartment.\",\"expected_failure_mode\":\"Fractional memory may over-smooth turning points, underestimating sharp week-to-week changes near the peak.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Simplest latent-incidence template with an explicit exposed stage and a short reporting/admission lag; suitable when the series is single-season and identifiability is limited.\",\"expected_failure_mode\":\"Without waning immunity (no S<-R), late-season tail behavior may be misfit, especially if there is sustained transmission or changing susceptibility.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly maps the target to a hospitalization compartment, aligning with surveillance semantics; retains mechanistic interpretability for admissions as a distinct state.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, leading to unstable forecasts or confounding between I->H and H outflow rates.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows the observed hospitalization rate to reflect a mixture of infectious burden and admissions/occupancy proxy, which can be more robust when H alone is noisy or partially observed.\",\"expected_failure_mode\":\"If the true observation is closer to admissions-only, mixing I and H can inflate early-season levels and shift the inferred peak timing.\"}]}",
+  "scientific_claim_allowed": true
+}

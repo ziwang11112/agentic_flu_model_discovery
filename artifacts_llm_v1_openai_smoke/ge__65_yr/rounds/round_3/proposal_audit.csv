@@ -1,0 +1,9 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+>= 65 yr,3,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+>= 65 yr,3,1,openai,False,True,SEIRS,True,delayed_I,2,True,True,,low,"Fractional memory adds flexibility/parameters that are hard to justify with short single-season data and high peakiness; elevated overfitting risk and identifiability concerns relative to the non-fractional anchor, especially when delayed_I already captures the main semantic lag.",True
+>= 65 yr,3,2,openai,False,True,SEIRS,False,delayed_I,1,True,True,,medium,,True
+>= 65 yr,3,3,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,Combines two flexibility sources (fractional memory + altered delay) that can confound timing vs persistence; higher identifiability risk and likely overfitting for n_train=31 without clear justification beyond exploratory pairing.,True
+>= 65 yr,3,4,openai,False,True,SEIRS,False,delayed_I,3,True,True,,medium,,True
+>= 65 yr,3,5,openai,False,True,SEIRS,True,delayed_I,3,True,True,,low,"Highest over-complexity among options (fractional + longest delay), increasing risk of phase distortions and overfitting idiosyncratic tail behavior; not well-justified for a single-season hospitalization-rate series.",True
+>= 65 yr,3,6,openai,False,True,SEIRS,False,I,0,True,True,,low,,True
+>= 65 yr,3,7,openai,False,True,SEIRS,True,I,0,True,True,,low,Fractional memory used to mimic lag/persistence while observation map is I with zero delay; this is misaligned with hospitalization semantics and adds overfitting risk without addressing the primary timing mismatch directly.,True

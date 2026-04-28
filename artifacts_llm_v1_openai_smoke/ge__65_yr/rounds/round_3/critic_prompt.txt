@@ -1,0 +1,142 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May under-capture long-memory or prolonged tail behavior, leading to sharper-than-observed post-peak declines and potential underestimation during extended elevated periods.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor configuration: SEIRS with delayed_I at 2 weeks matches the hypothesized admissions lag while keeping dynamics non-fractional for maximum parsimony and stability; serves as the direct comparator to the prior best fractional spec under identical delay/obs.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Can trade stability for flexibility: may over-smooth or introduce phase distortions around sharp peaks, occasionally overshooting/undershooting if memory compensates for timing mismatch.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matched pair to isolate the effect of fractional dynamics at the same (anchor) 2-week delay; fractional memory may better accommodate high peakiness with smoother persistence without changing observation timing.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true lag is nearer 2 weeks, may shift forecasts earlier (phase lead), producing premature peak timing and misaligned rise/decline segments.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Shorter-lag sensitivity check around the 2-week anchor while keeping non-fractional dynamics; tests whether admissions are closer to I-proxy with reduced phase shift, potentially improving peak alignment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Risk of confounding timing and memory: may fit rise/peak well but degrade rolling stability, with inconsistent peak height due to extra flexibility.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matched fractional/non-fractional pair at delay=1 to separate timing vs memory effects; fractional dynamics may compensate for residual lag mismatch while preserving the shorter observation delay.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Known delay sensitivity: may induce phase lag (late peaks) and amplify errors around sharp changes, especially in high-peakiness series.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Longer-lag sensitivity check around the 2-week anchor with non-fractional dynamics; evaluates robustness to potential longer admissions delay without adding compartments.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Highest risk of instability/over-flexibility: longer delay plus fractional memory can overfit idiosyncratic segments, causing rolling-split variability and peak timing drift.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matched pair at delay=3 to isolate fractional effect under the most timing-shifted option; tests whether memory helps stabilize forecasts when observation delay is longer.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If hospitalization truly lags infections, this will systematically lead the target (phase lead), misplacing peaks and degrading calibration during rapid transitions.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Minimal baseline comparator without delay: tests whether explicit lag is necessary at all for this series when using the simplest SEIRS observation mapping; paired with fractional toggle only.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May partially mimic lag via smoothing but still mis-time peaks; can also over-smooth sharp changes, reducing peak amplitude fidelity in high-peakiness periods.",
+      "fractional": true,
+      "observation_map": "I",
+      "rationale": "Baseline fractional comparator without delay to disentangle whether fractional memory alone can mimic the effective lag/persistence seen in hospitalization rates without an explicit delay.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

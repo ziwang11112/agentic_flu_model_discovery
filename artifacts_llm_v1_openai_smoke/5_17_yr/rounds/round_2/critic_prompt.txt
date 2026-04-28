@@ -1,0 +1,135 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true hospitalization lag is closer to 2\u20133 weeks, forecasts may peak too early and under-represent the right-tail decline, increasing timing error across splits.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Systematically vary only observation lag around the current best (delay=2) while keeping the simpler SEIR core; a 1-week lag can reduce split-to-split sensitivity if the effective admission lag is shorter or more variable than 2\u20133 weeks.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the effective lag shifts over time (nonstationary reporting/admission delay), this fixed 2-week delay can yield unstable peak timing across rolling splits.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor template matching the previous best spec; serves as the stability baseline for disentangling whether improvements come from lag choice vs adding waning immunity or hospitalization compartment.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May over-smooth and shift peaks late; can degrade short-horizon responsiveness and amplify split-to-split variability if the true lag is shorter.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Completes the narrow lag neighborhood sweep (1/2/3) under the same SEIR dynamics to test whether a longer, smoother lag mapping yields more robust rolling behavior for moderate-peak series.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "With only ~31 training weeks, waning immunity may be weakly identified and can introduce compensatory dynamics (S replenishment) that mimic timing shifts, increasing variability.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Hold observation mapping constant (delayed_I) while adding waning immunity to test whether SEIRS reduces structural ambiguity and improves rolling stability without adding extra observed compartments; 1-week delay emphasizes near-term alignment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If waning is not supported in a single-season window, SEIRS may behave like an over-parameterized SEIR surrogate, leading to penalty-dominated ranking and potential overfit to timing idiosyncrasies.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Direct comparison to SEIR delayed_I(2): isolates the effect of waning immunity under the same lag that previously performed best, aiming for more stable mid-season dynamics if susceptibility replenishment matters.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Double-smoothing (waning + long delay) can push peaks late and flatten amplitude, harming responsiveness and potentially worsening split-to-split timing stability.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Tests whether combining waning immunity with a longer observation lag yields smoother, more stable rolling forecasts for high-scale hospitalization-rate series with moderate peakiness.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H may be weakly identifiable in short series; parameter tradeoffs between I\u2192H and H outflow can create unstable timing/amplitude across rolling splits despite matching aggregate levels.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Explicitly map the target to a hospitalization compartment (H) to disentangle observation-lag explanations from mechanistic hospitalization dynamics; kept parsimonious by using direct H observation with no delay.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

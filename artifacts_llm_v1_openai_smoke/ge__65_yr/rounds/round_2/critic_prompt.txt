@@ -1,0 +1,102 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the true admission lag shifts within-season or differs from 2 weeks, forecasts can become phase-shifted (peak timing error) and amplitude may be biased.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Baseline anchored to prior best and analyst constraint: SEIRS provides needed waning/reinfection flexibility for high-peak, high-scale dynamics; delayed_I with 2-week lag matches hospitalization-rate reporting semantics and previously showed strongest performance.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "If the true lag is closer to 2 weeks, a 3-week delay can over-shift the curve, producing late peaks and degraded short-horizon tracking.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Minimal bracketing test around the 2-week anchor to assess sensitivity to slightly longer hospitalization lag while keeping the same SEIRS fractional dynamics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May be less flexible in capturing sharp peaks/long tails; can underfit peakiness or misrepresent decay, leading to systematic under/over-shoot around the peak.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Controlled ablation to isolate the effect of fractional vs non-fractional dynamics while holding structure and observation/lag fixed at the best-known configuration.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

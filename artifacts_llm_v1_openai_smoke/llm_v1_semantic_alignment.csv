@@ -1,0 +1,7 @@
+series_name,target_semantics,proposed_observation_maps,v1_selected_observation_map,nonllm_selected_observation_map,semantic_alignment_flag,notes,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,hospitalization_rate,H;I+H;delayed_I,delayed_I,I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True
+18-49 yr,hospitalization_rate,H;I+H;delayed_I,delayed_I,I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True
+5-17 yr,hospitalization_rate,H;I+H;delayed_I,delayed_I,I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True
+50-64 yr,hospitalization_rate,H;I;I+H;delayed_I,delayed_I,I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True
+>= 65 yr,hospitalization_rate,H;I;I+H;delayed_I,delayed_I,delayed_I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True
+Overall,hospitalization_rate,H;I;I+H;delayed_I,delayed_I,I,True,Live provider run; interpret semantic alignment with leakage guards and budget caveats.,openai,False,True

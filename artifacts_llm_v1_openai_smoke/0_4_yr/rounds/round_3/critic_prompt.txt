@@ -1,0 +1,111 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true admissions lag is closer to 2 weeks (or varies over time), forecasts may show phase error (peak timing off by ~1 week) and reduced stability across rolling splits due to misalignment.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Baseline stable choice aligned with prior best spec and analyst constraint to stay within SEIRS + delayed_I. A 1-week lag is mechanistically plausible for admissions vs. underlying infectious proxy and tends to be less delay-sensitive than longer lags in short (n_train=31) series.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Risk of over-lagging for this age group/series, producing smeared or late peaks and higher split-to-split variability if the effective lag is shorter or changes across the season.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Alternative lag within the allowed {1,2} to address observed delay sensitivity without adding complexity. Useful when hospitalization timing is systematically more delayed relative to I-proxy, potentially improving peak alignment while remaining parsimonious.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Fractional dynamics may be fragile/weakly identified in short training windows, leading to parameter drift across rolling splits and occasional over-smoothing or exaggerated persistence in forecasts.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Single complexity toggle (fractional dynamics) paired with the more stable 1-week delay to capture moderate peakiness and high rate scale while prioritizing rolling stability. Fractional SEIRS can flexibly represent memory/heterogeneity effects without changing observation semantics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Compounded sensitivity: if either fractional memory or the 2-week lag is mis-specified, errors can amplify (late peaks + overly persistent tails), increasing rolling instability relative to the fractional+delay=1 option.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Fractional candidate with 2-week delay to cover the plausible longer admissions lag while still respecting the constraint of only varying (fractional, delay). This can help if both memory effects and a longer reporting/admission lag are present.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "0-4 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

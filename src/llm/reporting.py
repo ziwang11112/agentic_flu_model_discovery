@@ -10,6 +10,22 @@ from src.utils.io import ensure_dir
 
 
 MOCK_DISCLAIMER = "Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality."
+LIVE_PROVIDER_NOTE = (
+    "Live-provider results are preliminary single-run outputs. Candidate budgets are not matched unless explicitly stated, "
+    "and test metrics are reported only after validation/rolling-based candidate selection."
+)
+
+
+def _provider_run_note(llm_config: LLMConfig) -> str:
+    metadata = provider_metadata(llm_config)
+    return MOCK_DISCLAIMER if metadata["provider_is_mock"] else LIVE_PROVIDER_NOTE
+
+
+def _semantic_alignment_note(llm_config: LLMConfig) -> str:
+    metadata = provider_metadata(llm_config)
+    if metadata["provider_is_mock"]:
+        return "Mock provider engineering smoke test only."
+    return "Live provider run; interpret semantic alignment with leakage guards and budget caveats."
 
 
 def load_reference_inputs(llm_config: LLMConfig) -> dict[str, pd.DataFrame]:
@@ -337,7 +353,7 @@ def build_llm_v1_semantic_alignment_table(
                 "v1_selected_observation_map": item["final_selected_candidate"]["best_spec"]["observation_map"],
                 "nonllm_selected_observation_map": nonllm_selected_observation_map,
                 "semantic_alignment_flag": bool("delayed_I" in proposed_maps or "H" in proposed_maps or "I+H" in proposed_maps),
-                "notes": "Mock provider engineering smoke test only.",
+                "notes": _semantic_alignment_note(llm_config),
                 **provider_metadata(llm_config),
             }
         )
@@ -371,7 +387,7 @@ def build_semantic_alignment_table(
                 "proposed_observation_maps": ";".join(proposed_maps),
                 "nonllm_selected_observation_map": nonllm_selected_observation_map,
                 "semantic_alignment_flag": bool("delayed_I" in proposed_maps or "H" in proposed_maps or "I+H" in proposed_maps),
-                "notes": "Mock provider engineering smoke test only.",
+                "notes": _semantic_alignment_note(llm_config),
                 **provider_metadata(llm_config),
             }
         )
@@ -380,15 +396,20 @@ def build_semantic_alignment_table(
 
 def write_llm_v0_report(summary: pd.DataFrame, report_path: Path, llm_config: LLMConfig) -> None:
     objective_policy = load_reference_inputs(llm_config)["objective_policy"]
+    provider_is_mock = provider_metadata(llm_config)["provider_is_mock"]
     lines = [
         "# LLM-V0 Report",
         "",
         "LLM-V0 is a proposal-only layer.",
         "It does not perform iterative refinement.",
-        "It does not make final scientific claims from mock-provider results.",
+        (
+            "It does not make final scientific claims from mock-provider results."
+            if provider_is_mock
+            else "It reports live-provider proposal behavior under the same no-test-leakage protocol."
+        ),
         "It is intended to validate schema, leakage guards, hard validation, candidate execution, and comparison against non-LLM discovery.",
         "",
-        MOCK_DISCLAIMER,
+        _provider_run_note(llm_config),
         "",
         "## Series Summary",
         "",
@@ -421,13 +442,18 @@ def write_llm_v1_report(
     report_path: Path,
     llm_config: LLMConfig,
 ) -> None:
+    provider_is_mock = provider_metadata(llm_config)["provider_is_mock"]
     lines = [
         "# LLM-V1 Iterative Report",
         "",
-        "LLM-V1 adds iterative validation-feedback refinement on top of the mock-only LLM-V0 proposal layer.",
-        "It still does not make final scientific claims from mock-provider results.",
+        "LLM-V1 adds iterative validation-feedback refinement on top of the LLM-V0 proposal layer.",
+        (
+            "It still does not make final scientific claims from mock-provider results."
+            if provider_is_mock
+            else "This report summarizes a live-provider run with validation/rolling-only selection and post-selection test evaluation."
+        ),
         "",
-        MOCK_DISCLAIMER,
+        _provider_run_note(llm_config),
         "",
         "## Series Summary",
         "",

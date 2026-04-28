@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable with only 31 training weeks, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable forecasts.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Matches target semantics (hospitalization rate) via an explicit H compartment; SEIR core can capture sharp, high-peaked seasonal waves while mapping directly to admissions.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Over-attribution between I and H can inflate uncertainty and produce unrealistic decomposition, especially around the peak (identifiability issues).",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Allows observed hospitalization-rate signal to be represented as a mixture of infectious burden and hospitalization occupancy/admissions proxy, which can improve fit when the surveillance signal blends processes or reporting artifacts.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the hospitalization process has longer/variable delays or distinct dynamics (e.g., prolonged stays), a fixed 1-week delay may misalign peak timing and distort amplitude.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Parsimonious alternative that encodes a short lag from infections to hospital admissions without introducing an explicit H compartment; suitable when H is weakly identifiable but lag is important.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the true lag is shorter or changes over the season, a fixed 2-week delay can shift peaks too late and degrade short-horizon forecasts.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Captures a more realistic infection-to-admission lag for influenza in weekly data while keeping the model simple; can better align high peakiness with observed hospitalization timing.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Extra flexibility can overfit short series and create spurious secondary waves or overly persistent tails when the season is single-peaked.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Adds waning immunity to accommodate potential within-season susceptibility replenishment or multi-wave behavior while still using a lagged observation consistent with admissions timing.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "Overall"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777327642,
+          "created_at": 1777327634.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_05fbdc0c3739b6200069efde12a2a8819482c5949e6b8d82c2",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"Overall\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Matches target semantics (hospitalization rate) via an explicit H compartment; SEIR core can capture sharp, high-peaked seasonal waves while mapping directly to admissions.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with only 31 training weeks, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows observed hospitalization-rate signal to be represented as a mixture of infectious burden and hospitalization occupancy/admissions proxy, which can improve fit when the surveillance signal blends processes or reporting artifacts.\",\"expected_failure_mode\":\"Over-attribution between I and H can inflate uncertainty and produce unrealistic decomposition, especially around the peak (identifiability issues).\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Parsimonious alternative that encodes a short lag from infections to hospital admissions without introducing an explicit H compartment; suitable when H is weakly identifiable but lag is important.\",\"expected_failure_mode\":\"If the hospitalization process has longer/variable delays or distinct dynamics (e.g., prolonged stays), a fixed 1-week delay may misalign peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Captures a more realistic infection-to-admission lag for influenza in weekly data while keeping the model simple; can better align high peakiness with observed hospitalization timing.\",\"expected_failure_mode\":\"If the true lag is shorter or changes over the season, a fixed 2-week delay can shift peaks too late and degrade short-horizon forecasts.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity to accommodate potential within-season susceptibility replenishment or multi-wave behavior while still using a lagged observation consistent with admissions timing.\",\"expected_failure_mode\":\"Extra flexibility can overfit short series and create spurious secondary waves or overly persistent tails when the season is single-peaked.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_05fbdc0c3739b6200069efde1328bc8194ad91394dac1775d7",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 676,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 495,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1171
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"Overall\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Matches target semantics (hospitalization rate) via an explicit H compartment; SEIR core can capture sharp, high-peaked seasonal waves while mapping directly to admissions.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with only 31 training weeks, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows observed hospitalization-rate signal to be represented as a mixture of infectious burden and hospitalization occupancy/admissions proxy, which can improve fit when the surveillance signal blends processes or reporting artifacts.\",\"expected_failure_mode\":\"Over-attribution between I and H can inflate uncertainty and produce unrealistic decomposition, especially around the peak (identifiability issues).\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Parsimonious alternative that encodes a short lag from infections to hospital admissions without introducing an explicit H compartment; suitable when H is weakly identifiable but lag is important.\",\"expected_failure_mode\":\"If the hospitalization process has longer/variable delays or distinct dynamics (e.g., prolonged stays), a fixed 1-week delay may misalign peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Captures a more realistic infection-to-admission lag for influenza in weekly data while keeping the model simple; can better align high peakiness with observed hospitalization timing.\",\"expected_failure_mode\":\"If the true lag is shorter or changes over the season, a fixed 2-week delay can shift peaks too late and degrade short-horizon forecasts.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity to accommodate potential within-season susceptibility replenishment or multi-wave behavior while still using a lagged observation consistent with admissions timing.\",\"expected_failure_mode\":\"Extra flexibility can overfit short series and create spurious secondary waves or overly persistent tails when the season is single-peaked.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"Overall\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Matches target semantics (hospitalization rate) via an explicit H compartment; SEIR core can capture sharp, high-peaked seasonal waves while mapping directly to admissions.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with only 31 training weeks, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Allows observed hospitalization-rate signal to be represented as a mixture of infectious burden and hospitalization occupancy/admissions proxy, which can improve fit when the surveillance signal blends processes or reporting artifacts.\",\"expected_failure_mode\":\"Over-attribution between I and H can inflate uncertainty and produce unrealistic decomposition, especially around the peak (identifiability issues).\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Parsimonious alternative that encodes a short lag from infections to hospital admissions without introducing an explicit H compartment; suitable when H is weakly identifiable but lag is important.\",\"expected_failure_mode\":\"If the hospitalization process has longer/variable delays or distinct dynamics (e.g., prolonged stays), a fixed 1-week delay may misalign peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Captures a more realistic infection-to-admission lag for influenza in weekly data while keeping the model simple; can better align high peakiness with observed hospitalization timing.\",\"expected_failure_mode\":\"If the true lag is shorter or changes over the season, a fixed 2-week delay can shift peaks too late and degrade short-horizon forecasts.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity to accommodate potential within-season susceptibility replenishment or multi-wave behavior while still using a lagged observation consistent with admissions timing.\",\"expected_failure_mode\":\"Extra flexibility can overfit short series and create spurious secondary waves or overly persistent tails when the season is single-peaked.\"}]}",
+  "scientific_claim_allowed": true
+}

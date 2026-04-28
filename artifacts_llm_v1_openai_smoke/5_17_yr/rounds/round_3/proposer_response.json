@@ -1,0 +1,195 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable in a short series; can trade off with I-to-H transition and recovery rates, potentially yielding similar fits with different internal trajectories and some split-to-split variability.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Anchor template: directly maps the target (weekly hospitalization rate) to an explicit hospitalization compartment, reducing phase/lag sensitivity versus delayed infection proxies and aligning with surveillance semantics. Keeps delay at 0 for robustness across rolling splits and avoids extra SEIRS complexity.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "May blur interpretation by attributing hospitalization-rate signal partly to I, risking amplitude bias (over/under-shooting peaks) if the series is primarily admissions-driven rather than combined burden.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Alternative hospitalization-linked mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; may reduce sensitivity when H alone is noisy or under-identified while still keeping delay=0.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Residual phase mismatch if true lag varies over time; may compensate via parameter tradeoffs (incubation vs infectious duration), causing instability across rolling splits.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Secondary comparison branch: simpler than SEIRS and uses a short 1-week observation lag to capture plausible admission delay without over-lagging moderate peaks; intended to improve temporal alignment while limiting instability seen with longer delays.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Can still over-lag around moderate peaks in some splits, leading to systematic timing errors and increased sensitivity to initialization/parameter coupling.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Short-lag alternative to test whether a 2-week delay better matches admissions timing for this age group while still respecting the constraint to avoid delay=3; maintains parsimony and avoids SEIRS reinfection dynamics.",
+        "structure_name": "SEIR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777330325,
+          "created_at": 1777330317.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0b8159e3c890a93b0069efe88dd1848196bacd85f57282b0b5",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Anchor template: directly maps the target (weekly hospitalization rate) to an explicit hospitalization compartment, reducing phase/lag sensitivity versus delayed infection proxies and aligning with surveillance semantics. Keeps delay at 0 for robustness across rolling splits and avoids extra SEIRS complexity.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; can trade off with I-to-H transition and recovery rates, potentially yielding similar fits with different internal trajectories and some split-to-split variability.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-linked mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; may reduce sensitivity when H alone is noisy or under-identified while still keeping delay=0.\",\"expected_failure_mode\":\"May blur interpretation by attributing hospitalization-rate signal partly to I, risking amplitude bias (over/under-shooting peaks) if the series is primarily admissions-driven rather than combined burden.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Secondary comparison branch: simpler than SEIRS and uses a short 1-week observation lag to capture plausible admission delay without over-lagging moderate peaks; intended to improve temporal alignment while limiting instability seen with longer delays.\",\"expected_failure_mode\":\"Residual phase mismatch if true lag varies over time; may compensate via parameter tradeoffs (incubation vs infectious duration), causing instability across rolling splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Short-lag alternative to test whether a 2-week delay better matches admissions timing for this age group while still respecting the constraint to avoid delay=3; maintains parsimony and avoids SEIRS reinfection dynamics.\",\"expected_failure_mode\":\"Can still over-lag around moderate peaks in some splits, leading to systematic timing errors and increased sensitivity to initialization/parameter coupling.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0b8159e3c890a93b0069efe88e688881968190bf7f0889e6db",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1218,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 467,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1685
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Anchor template: directly maps the target (weekly hospitalization rate) to an explicit hospitalization compartment, reducing phase/lag sensitivity versus delayed infection proxies and aligning with surveillance semantics. Keeps delay at 0 for robustness across rolling splits and avoids extra SEIRS complexity.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; can trade off with I-to-H transition and recovery rates, potentially yielding similar fits with different internal trajectories and some split-to-split variability.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-linked mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; may reduce sensitivity when H alone is noisy or under-identified while still keeping delay=0.\",\"expected_failure_mode\":\"May blur interpretation by attributing hospitalization-rate signal partly to I, risking amplitude bias (over/under-shooting peaks) if the series is primarily admissions-driven rather than combined burden.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Secondary comparison branch: simpler than SEIRS and uses a short 1-week observation lag to capture plausible admission delay without over-lagging moderate peaks; intended to improve temporal alignment while limiting instability seen with longer delays.\",\"expected_failure_mode\":\"Residual phase mismatch if true lag varies over time; may compensate via parameter tradeoffs (incubation vs infectious duration), causing instability across rolling splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Short-lag alternative to test whether a 2-week delay better matches admissions timing for this age group while still respecting the constraint to avoid delay=3; maintains parsimony and avoids SEIRS reinfection dynamics.\",\"expected_failure_mode\":\"Can still over-lag around moderate peaks in some splits, leading to systematic timing errors and increased sensitivity to initialization/parameter coupling.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Anchor template: directly maps the target (weekly hospitalization rate) to an explicit hospitalization compartment, reducing phase/lag sensitivity versus delayed infection proxies and aligning with surveillance semantics. Keeps delay at 0 for robustness across rolling splits and avoids extra SEIRS complexity.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short series; can trade off with I-to-H transition and recovery rates, potentially yielding similar fits with different internal trajectories and some split-to-split variability.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-linked mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; may reduce sensitivity when H alone is noisy or under-identified while still keeping delay=0.\",\"expected_failure_mode\":\"May blur interpretation by attributing hospitalization-rate signal partly to I, risking amplitude bias (over/under-shooting peaks) if the series is primarily admissions-driven rather than combined burden.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Secondary comparison branch: simpler than SEIRS and uses a short 1-week observation lag to capture plausible admission delay without over-lagging moderate peaks; intended to improve temporal alignment while limiting instability seen with longer delays.\",\"expected_failure_mode\":\"Residual phase mismatch if true lag varies over time; may compensate via parameter tradeoffs (incubation vs infectious duration), causing instability across rolling splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Short-lag alternative to test whether a 2-week delay better matches admissions timing for this age group while still respecting the constraint to avoid delay=3; maintains parsimony and avoids SEIRS reinfection dynamics.\",\"expected_failure_mode\":\"Can still over-lag around moderate peaks in some splits, leading to systematic timing errors and increased sensitivity to initialization/parameter coupling.\"}]}",
+  "scientific_claim_allowed": true
+}

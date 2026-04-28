@@ -1,0 +1,98 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep observation_map within {delayed_I, H} only; avoid composite I+H for this series in the next round to reduce identifiability/penalty burden.",
+      "Explore delay_weeks in a narrow neighborhood around the current best patterns: {1,2,3}; do not introduce larger delays.",
+      "Limit to non-fractional models (fractional=0) for the next round; prioritize stability over adding flexibility.",
+      "Cap structural complexity: restrict to SEIR, SEIRS, SEIHR only; do not add additional compartments beyond these in the next round.",
+      "Require proposals to target improved rolling-only stability (lower split-to-split variability) rather than optimizing a single validation segment."
+    ],
+    "observed_failure_modes": [
+      "Delay sensitivity: delayed_I with 2 vs 3 weeks yields materially different behavior across splits, suggesting the effective reporting/realization lag is not stable over the validation window.",
+      "Structure ambiguity: SEIR/SEIRS/SEIHR families all appear competitive under rolling-only evaluation, indicating the current search is not discriminating mechanism vs observation mapping; multiple templates can mimic the same short-term dynamics.",
+      "Potential overfit to a single validation segment: one configuration shows very strong single validation performance but noticeably worse rolling-average performance and higher rolling variability, consistent with fitting idiosyncratic timing rather than stable dynamics.",
+      "Penalty-driven ranking: differences in overall score are strongly influenced by complexity/stability penalties rather than clear separation in rolling-only fit, so small template tweaks may be dominated by penalty effects rather than genuine predictive improvement."
+    ],
+    "proposer_instruction": "Focus the next proposals on disentangling observation lag vs compartment choice. Submit a small set of templates that systematically vary only one factor at a time: (A) SEIR with delayed_I at delays 1/2/3; (B) SEIRS with delayed_I at delays 1/2/3; (C) SEIHR with observation_map=H (no delay). Avoid I+H and avoid adding new compartments or fractional dynamics. Prefer configurations expected to be robust across rolling splits (stable timing/shape) rather than those that can sharply match one segment via a specific delay."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 2,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIR"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

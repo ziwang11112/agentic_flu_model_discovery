@@ -1,0 +1,109 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "50-64 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.26000000000000006,
+  "validation_std": 0.066332495807108,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the effective lag varies over the season (e.g., changes near peak), a fixed 2-week delay can misalign shoulders or peak timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Baseline consistent with prior best spec; directly targets the dominant error source (phase/lag between infections proxy and hospital admissions) while keeping dynamics parsimonious for short, high-peakiness series.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May shift predicted peak too early and overfit early growth, degrading fit on decline/late-season weeks.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Tests slightly shorter infectious-to-hospitalization reporting/admission lag while retaining the same SEIR dynamics; useful if this age group\u2019s admissions respond faster than the 2-week baseline.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May delay the peak excessively and underpredict early-season rise, especially in high-peakiness seasons.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Tests slightly longer lag to accommodate slower progression-to-admission or reporting delays; still minimal complexity and centered near the empirically favored neighborhood around 2 weeks.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Likely systematic phase error (peak timing mismatch) if admissions lag infections, leading to biased forecasts around the peak.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "No-lag single-state observation as a control to detect whether the series is effectively contemporaneous with the infectious proxy; keeps structure minimal and avoids added compartments.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "50-64 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

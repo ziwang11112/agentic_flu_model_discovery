@@ -1,0 +1,4 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+50-64 yr,3,0,openai,False,True,SEIR,False,I,0,True,True,,high,,True
+50-64 yr,3,1,openai,False,True,SIR,False,delayed_I,1,True,True,,medium,,True
+50-64 yr,3,2,openai,False,True,SEIAR,False,I,0,True,True,,low,Over-complex for a single observed hospitalization-rate series when still mapping observations to I: adding an asymptomatic compartment (A) increases parameterization and introduces substantial identifiability risk (I vs A tradeoffs) without improving observation-target alignment (hospitalizations are not directly I). Likely to be unstable across splits for short single-season data.,True

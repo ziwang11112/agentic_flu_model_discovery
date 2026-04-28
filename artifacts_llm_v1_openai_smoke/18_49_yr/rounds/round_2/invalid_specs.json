@@ -1,0 +1,22 @@
+[
+  {
+    "delay_weeks": 1,
+    "expected_failure_mode": "Delay can introduce sensitivity in peak timing; if true lag is near 0, a 1-week delay may systematically shift forecasts late.",
+    "fractional": false,
+    "invalid_reason": "non_delayed_observation_requires_zero_delay",
+    "observation_map": "H",
+    "proposal_id": 2,
+    "rationale": "Keeps explicit hospitalization state while allowing a minimal 1-week reporting/aggregation lag consistent with surveillance semantics; avoids the brittleness seen at longer delays and remains closely aligned to the target.",
+    "structure_name": "SEIHR"
+  },
+  {
+    "delay_weeks": 1,
+    "expected_failure_mode": "Compounded flexibility (fractional + delay) may create identifiability issues, yielding similar fits with different implied dynamics and unstable extrapolation near the peak.",
+    "fractional": true,
+    "invalid_reason": "non_delayed_observation_requires_zero_delay",
+    "observation_map": "H",
+    "proposal_id": 3,
+    "rationale": "Combines explicit H targeting with a minimal lag and fractional smoothing to reduce rolling-split instability under high peakiness while staying within a simple template family.",
+    "structure_name": "SEIHR"
+  }
+]

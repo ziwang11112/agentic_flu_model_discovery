@@ -1,0 +1,187 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "May still struggle with very sharp/asymmetric peaks (rise vs fall) and can be sensitive to peak timing across rolling splits when only I is observed.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Baseline anchor matching the previous best spec; SEIR can represent a sharper epidemic wave than SIR via an exposed stage while keeping parameterization parsimonious for a single-season, high-peaked series.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true dynamics require an incubation/latent period, SIR may misplace peak timing or distort wave width; the 1-week delay may be weakly supported and can introduce identifiability/sensitivity issues.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Structurally different (drops E) while adding only a minimal 1-week reporting/admission lag; can yield a more abrupt rise/fall in the observed proxy without stacking multiple complexity increases, aligning with the note that hospital admissions may lag infections.",
+        "structure_name": "SIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Extra compartment can be weakly identifiable from a single observed series (I only), leading to parameter tradeoffs (I vs A) and instability across splits if the data do not support the added pathway.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Adds an asymptomatic (A) pathway to allow more flexible effective generation/clearance dynamics and potentially sharper or more asymmetric observed I trajectories without introducing an explicit hospitalization compartment that may be weakly identifiable in short series.",
+        "structure_name": "SEIAR"
+      }
+    ],
+    "series_name": "50-64 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777331317,
+          "created_at": 1777331310.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_08026f59a6f9c2f40069efec6ed8648190b0acfc47915c080d",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline anchor matching the previous best spec; SEIR can represent a sharper epidemic wave than SIR via an exposed stage while keeping parameterization parsimonious for a single-season, high-peaked series.\",\"expected_failure_mode\":\"May still struggle with very sharp/asymmetric peaks (rise vs fall) and can be sensitive to peak timing across rolling splits when only I is observed.\"},{\"structure_name\":\"SIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Structurally different (drops E) while adding only a minimal 1-week reporting/admission lag; can yield a more abrupt rise/fall in the observed proxy without stacking multiple complexity increases, aligning with the note that hospital admissions may lag infections.\",\"expected_failure_mode\":\"If the true dynamics require an incubation/latent period, SIR may misplace peak timing or distort wave width; the 1-week delay may be weakly supported and can introduce identifiability/sensitivity issues.\"},{\"structure_name\":\"SEIAR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds an asymptomatic (A) pathway to allow more flexible effective generation/clearance dynamics and potentially sharper or more asymmetric observed I trajectories without introducing an explicit hospitalization compartment that may be weakly identifiable in short series.\",\"expected_failure_mode\":\"Extra compartment can be weakly identifiable from a single observed series (I only), leading to parameter tradeoffs (I vs A) and instability across splits if the data do not support the added pathway.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_08026f59a6f9c2f40069efec6f76cc8190a19a6c90b35319df",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1081,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 365,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1446
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline anchor matching the previous best spec; SEIR can represent a sharper epidemic wave than SIR via an exposed stage while keeping parameterization parsimonious for a single-season, high-peaked series.\",\"expected_failure_mode\":\"May still struggle with very sharp/asymmetric peaks (rise vs fall) and can be sensitive to peak timing across rolling splits when only I is observed.\"},{\"structure_name\":\"SIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Structurally different (drops E) while adding only a minimal 1-week reporting/admission lag; can yield a more abrupt rise/fall in the observed proxy without stacking multiple complexity increases, aligning with the note that hospital admissions may lag infections.\",\"expected_failure_mode\":\"If the true dynamics require an incubation/latent period, SIR may misplace peak timing or distort wave width; the 1-week delay may be weakly supported and can introduce identifiability/sensitivity issues.\"},{\"structure_name\":\"SEIAR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds an asymptomatic (A) pathway to allow more flexible effective generation/clearance dynamics and potentially sharper or more asymmetric observed I trajectories without introducing an explicit hospitalization compartment that may be weakly identifiable in short series.\",\"expected_failure_mode\":\"Extra compartment can be weakly identifiable from a single observed series (I only), leading to parameter tradeoffs (I vs A) and instability across splits if the data do not support the added pathway.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline anchor matching the previous best spec; SEIR can represent a sharper epidemic wave than SIR via an exposed stage while keeping parameterization parsimonious for a single-season, high-peaked series.\",\"expected_failure_mode\":\"May still struggle with very sharp/asymmetric peaks (rise vs fall) and can be sensitive to peak timing across rolling splits when only I is observed.\"},{\"structure_name\":\"SIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Structurally different (drops E) while adding only a minimal 1-week reporting/admission lag; can yield a more abrupt rise/fall in the observed proxy without stacking multiple complexity increases, aligning with the note that hospital admissions may lag infections.\",\"expected_failure_mode\":\"If the true dynamics require an incubation/latent period, SIR may misplace peak timing or distort wave width; the 1-week delay may be weakly supported and can introduce identifiability/sensitivity issues.\"},{\"structure_name\":\"SEIAR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds an asymptomatic (A) pathway to allow more flexible effective generation/clearance dynamics and potentially sharper or more asymmetric observed I trajectories without introducing an explicit hospitalization compartment that may be weakly identifiable in short series.\",\"expected_failure_mode\":\"Extra compartment can be weakly identifiable from a single observed series (I only), leading to parameter tradeoffs (I vs A) and instability across splits if the data do not support the added pathway.\"}]}",
+  "scientific_claim_allowed": true
+}

@@ -1,0 +1,119 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If true lag is closer to 1 week (or varies over time), the fixed 2-week delay can shift the peak and degrade short-horizon timing in validation.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor candidate per prior feedback: SEIRS with a 2-week observation lag to reflect admissions lagging infections while keeping dynamics simple (non-fractional) for stability with 31 training weeks.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the earlier validation sensitivity was driven by boundary effects rather than fractional flexibility, this may still show split-dependent performance (especially near end-of-train).",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Direct test of whether the previously best delay=1 can be stabilized by turning fractional dynamics off, isolating delay choice from added flexibility.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Over-lagging can smear/late-shift the inferred infection proxy, leading to underprediction around the rise and delayed peak relative to observed hospitalizations.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Robustness check one step beyond 2 weeks to cover plausible longer admission/reporting lags without changing structure family or adding complexity.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If admissions lag infections materially, delay=0 will tend to predict peaks too early and may misrepresent the ascent/decline symmetry.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "No-lag comparator to test whether the series behaves like a near-contemporaneous proxy of I despite hospitalization semantics; helps diagnose whether delay is truly identifiable in this age group.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May overfit short training windows and exhibit poorer extrapolation/validation instability (regime-shift sensitivity), repeating the over-flexibility risk noted previously.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Controlled reintroduction of fractional dynamics at the anchored delay=2 to see if added flexibility helps capture moderate peakiness at high rate scale without changing observation mapping.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "0-4 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

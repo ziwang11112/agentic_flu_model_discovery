@@ -1,0 +1,8 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,2,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+5-17 yr,2,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+5-17 yr,2,2,openai,False,True,SEIR,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,2,3,openai,False,True,SEIRS,False,delayed_I,1,True,True,,low,"Adds waning immunity (SEIRS) while also shifting to a shorter delay=1; with only ~31 training weeks this compounds identifiability/timing tradeoffs (waning can mimic lag/timing shifts), increasing overfitting risk relative to cleaner SEIR lag sweep or SEIRS at the established delay=2.",True
+5-17 yr,2,4,openai,False,True,SEIRS,False,delayed_I,2,True,True,,medium,,True
+5-17 yr,2,5,openai,False,True,SEIRS,False,delayed_I,3,True,True,,low,"Combines two smoothing/timing mechanisms (SEIRS + delay=3) in a short single-season series, raising over-complexity and identifiability risk; likely to confound peak timing and amplitude without clear observational support.",True
+5-17 yr,2,6,openai,False,True,SEIHR,False,H,0,True,True,,low,"Observation-target alignment is conceptually good (H for hospitalizations), but explicit H compartment is flagged as weakly identifiable for short single-season data; parameter tradeoffs (I→H vs H outflow) can create unstable fits/forecasts, making delayed_I more plausible here.",True

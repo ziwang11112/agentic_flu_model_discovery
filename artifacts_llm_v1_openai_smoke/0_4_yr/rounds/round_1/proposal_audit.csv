@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,1,1,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,"Fractional memory adds flexibility that is hard to justify with only 31 training points and moderate peakiness; it increases overfitting risk and can create identifiability issues (fractional order confounding with transmission/waning timescales). Given the stated risk, fractional dynamics are not clearly warranted here compared with non-fractional delayed_I options.",True
+0-4 yr,1,2,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+0-4 yr,1,3,openai,False,True,SEIHR,False,H,0,True,True,,medium,,True
+0-4 yr,1,4,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"I+H observation map is less well-aligned to a hospitalization-rate target (admissions) and introduces additional confounding between infectious prevalence and hospitalization dynamics. With short single-season data, mixing I and H can reduce identifiability and blur peak timing without a clear semantic justification beyond robustness.",True

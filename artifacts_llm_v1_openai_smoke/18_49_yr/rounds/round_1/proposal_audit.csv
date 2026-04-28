@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+18-49 yr,1,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+18-49 yr,1,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,medium,,True
+18-49 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Observation-target alignment is superficially strong (observe H for hospitalization rate), but explicit H dynamics (I→H rate and H duration) are likely weakly identifiable with only ~31 training weeks and a single season. This increases parameter tradeoffs and forecast instability relative to delayed_I, which is explicitly noted as plausible in the surveillance semantics.",True
+18-49 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,,True
+18-49 yr,1,4,openai,False,True,SEIRS,False,delayed_I,1,True,True,,low,"Adds waning immunity (SEIRS) which is unlikely to be identifiable in a short single-season window and risks over-flexing tails/rebounds. For a high-peaked single-season hospitalization series, the extra degree of freedom is more likely to overfit than to capture a reliably estimable mechanism.",True

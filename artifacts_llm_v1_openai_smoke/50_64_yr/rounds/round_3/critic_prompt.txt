@@ -1,0 +1,101 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "50-64 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.26000000000000006,
+  "validation_std": 0.066332495807108,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May still struggle with very sharp/asymmetric peaks (rise vs fall) and can be sensitive to peak timing across rolling splits when only I is observed.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Baseline anchor matching the previous best spec; SEIR can represent a sharper epidemic wave than SIR via an exposed stage while keeping parameterization parsimonious for a single-season, high-peaked series.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true dynamics require an incubation/latent period, SIR may misplace peak timing or distort wave width; the 1-week delay may be weakly supported and can introduce identifiability/sensitivity issues.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Structurally different (drops E) while adding only a minimal 1-week reporting/admission lag; can yield a more abrupt rise/fall in the observed proxy without stacking multiple complexity increases, aligning with the note that hospital admissions may lag infections.",
+      "structure_name": "SIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Extra compartment can be weakly identifiable from a single observed series (I only), leading to parameter tradeoffs (I vs A) and instability across splits if the data do not support the added pathway.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Adds an asymptomatic (A) pathway to allow more flexible effective generation/clearance dynamics and potentially sharper or more asymmetric observed I trajectories without introducing an explicit hospitalization compartment that may be weakly identifiable in short series.",
+      "structure_name": "SEIAR"
+    }
+  ],
+  "series_name": "50-64 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

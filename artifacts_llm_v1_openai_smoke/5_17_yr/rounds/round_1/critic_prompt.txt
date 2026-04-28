@@ -1,0 +1,119 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable in a short series; H may absorb reporting/ascertainment effects and misattribute timing vs magnitude.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Target is weekly hospitalization rate; mapping observations directly to an explicit H compartment aligns with surveillance semantics while keeping dynamics simple (single hospitalization state).",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Conflates infectious prevalence and hospitalization burden; may over-smooth peaks or inflate inferred infectious burden when admissions dominate.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "If reported hospitalization rate reflects a mixture of severe incident infections and admissions (or coding that partially tracks infectious burden), observing I+H can provide robustness to timing mismatch between infection and admission processes.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Delay may be season- or age-specific; fixed 2-week lag can misalign peak timing and distort amplitude if true lag varies over time.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Parsimonious template consistent with discovered patterns; a 2-week delay captures plausible lag from infection to hospitalization without introducing an explicit H state that may be hard to identify.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Over-long delay can shift peaks too late and force compensatory parameter behavior (e.g., faster transmission) to match observed timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Alternative lag choice to cover longer infection-to-admission delays; retains SEIRS parsimony while matching recommended delayed observation semantics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If reinfection/waning immunity matters within-season, SEIR may underfit tail behavior and misrepresent post-peak persistence.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Simpler than SEIRS when waning immunity is not strongly expressed within the training window; delayed_I addresses hospitalization lag while minimizing compartments.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

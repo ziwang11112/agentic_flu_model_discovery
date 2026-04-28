@@ -1,0 +1,117 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "Overall",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.25,
+  "validation_std": 0.0670820393249937,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable with only 31 training weeks, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable forecasts.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Matches target semantics (hospitalization rate) via an explicit H compartment; SEIR core can capture sharp, high-peaked seasonal waves while mapping directly to admissions.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Over-attribution between I and H can inflate uncertainty and produce unrealistic decomposition, especially around the peak (identifiability issues).",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Allows observed hospitalization-rate signal to be represented as a mixture of infectious burden and hospitalization occupancy/admissions proxy, which can improve fit when the surveillance signal blends processes or reporting artifacts.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the hospitalization process has longer/variable delays or distinct dynamics (e.g., prolonged stays), a fixed 1-week delay may misalign peak timing and distort amplitude.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Parsimonious alternative that encodes a short lag from infections to hospital admissions without introducing an explicit H compartment; suitable when H is weakly identifiable but lag is important.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the true lag is shorter or changes over the season, a fixed 2-week delay can shift peaks too late and degrade short-horizon forecasts.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Captures a more realistic infection-to-admission lag for influenza in weekly data while keeping the model simple; can better align high peakiness with observed hospitalization timing.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Extra flexibility can overfit short series and create spurious secondary waves or overly persistent tails when the season is single-peaked.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adds waning immunity to accommodate potential within-season susceptibility replenishment or multi-wave behavior while still using a lagged observation consistent with admissions timing.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "Overall"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

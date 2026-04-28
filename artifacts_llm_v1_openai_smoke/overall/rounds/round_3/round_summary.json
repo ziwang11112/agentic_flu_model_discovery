@@ -1,0 +1,20 @@
+{
+  "num_evaluated": 2,
+  "num_hard_valid": 2,
+  "num_raw_proposals": 2,
+  "num_schema_valid": 2,
+  "provider": "openai",
+  "provider_is_mock": false,
+  "round_best_rolling_mean_mae": 0.15916392728605103,
+  "round_best_score": 0.3735856354579164,
+  "round_best_spec": {
+    "delay_weeks": 1,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  },
+  "round_best_validation_mae": 0.14529270843395453,
+  "round_id": 3,
+  "scientific_claim_allowed": true,
+  "series_name": "Overall"
+}

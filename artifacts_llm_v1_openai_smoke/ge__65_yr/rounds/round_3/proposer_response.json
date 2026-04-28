@@ -1,0 +1,227 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "May under-capture long-memory or prolonged tail behavior, leading to sharper-than-observed post-peak declines and potential underestimation during extended elevated periods.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Anchor configuration: SEIRS with delayed_I at 2 weeks matches the hypothesized admissions lag while keeping dynamics non-fractional for maximum parsimony and stability; serves as the direct comparator to the prior best fractional spec under identical delay/obs.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Can trade stability for flexibility: may over-smooth or introduce phase distortions around sharp peaks, occasionally overshooting/undershooting if memory compensates for timing mismatch.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Matched pair to isolate the effect of fractional dynamics at the same (anchor) 2-week delay; fractional memory may better accommodate high peakiness with smoother persistence without changing observation timing.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If true lag is nearer 2 weeks, may shift forecasts earlier (phase lead), producing premature peak timing and misaligned rise/decline segments.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Shorter-lag sensitivity check around the 2-week anchor while keeping non-fractional dynamics; tests whether admissions are closer to I-proxy with reduced phase shift, potentially improving peak alignment.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Risk of confounding timing and memory: may fit rise/peak well but degrade rolling stability, with inconsistent peak height due to extra flexibility.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Matched fractional/non-fractional pair at delay=1 to separate timing vs memory effects; fractional dynamics may compensate for residual lag mismatch while preserving the shorter observation delay.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Known delay sensitivity: may induce phase lag (late peaks) and amplify errors around sharp changes, especially in high-peakiness series.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Longer-lag sensitivity check around the 2-week anchor with non-fractional dynamics; evaluates robustness to potential longer admissions delay without adding compartments.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Highest risk of instability/over-flexibility: longer delay plus fractional memory can overfit idiosyncratic segments, causing rolling-split variability and peak timing drift.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Matched pair at delay=3 to isolate fractional effect under the most timing-shifted option; tests whether memory helps stabilize forecasts when observation delay is longer.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If hospitalization truly lags infections, this will systematically lead the target (phase lead), misplacing peaks and degrading calibration during rapid transitions.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Minimal baseline comparator without delay: tests whether explicit lag is necessary at all for this series when using the simplest SEIRS observation mapping; paired with fractional toggle only.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "May partially mimic lag via smoothing but still mis-time peaks; can also over-smooth sharp changes, reducing peak amplitude fidelity in high-peakiness periods.",
+        "fractional": true,
+        "observation_map": "I",
+        "rationale": "Baseline fractional comparator without delay to disentangle whether fractional memory alone can mimic the effective lag/persistence seen in hospitalization rates without an explicit delay.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": ">= 65 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777331974,
+          "created_at": 1777331962.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0b1828ee623e4ec80069efeefa238c81a387337d61080a64c6",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor configuration: SEIRS with delayed_I at 2 weeks matches the hypothesized admissions lag while keeping dynamics non-fractional for maximum parsimony and stability; serves as the direct comparator to the prior best fractional spec under identical delay/obs.\",\"expected_failure_mode\":\"May under-capture long-memory or prolonged tail behavior, leading to sharper-than-observed post-peak declines and potential underestimation during extended elevated periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matched pair to isolate the effect of fractional dynamics at the same (anchor) 2-week delay; fractional memory may better accommodate high peakiness with smoother persistence without changing observation timing.\",\"expected_failure_mode\":\"Can trade stability for flexibility: may over-smooth or introduce phase distortions around sharp peaks, occasionally overshooting/undershooting if memory compensates for timing mismatch.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Shorter-lag sensitivity check around the 2-week anchor while keeping non-fractional dynamics; tests whether admissions are closer to I-proxy with reduced phase shift, potentially improving peak alignment.\",\"expected_failure_mode\":\"If true lag is nearer 2 weeks, may shift forecasts earlier (phase lead), producing premature peak timing and misaligned rise/decline segments.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matched fractional/non-fractional pair at delay=1 to separate timing vs memory effects; fractional dynamics may compensate for residual lag mismatch while preserving the shorter observation delay.\",\"expected_failure_mode\":\"Risk of confounding timing and memory: may fit rise/peak well but degrade rolling stability, with inconsistent peak height due to extra flexibility.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer-lag sensitivity check around the 2-week anchor with non-fractional dynamics; evaluates robustness to potential longer admissions delay without adding compartments.\",\"expected_failure_mode\":\"Known delay sensitivity: may induce phase lag (late peaks) and amplify errors around sharp changes, especially in high-peakiness series.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Matched pair at delay=3 to isolate fractional effect under the most timing-shifted option; tests whether memory helps stabilize forecasts when observation delay is longer.\",\"expected_failure_mode\":\"Highest risk of instability/over-flexibility: longer delay plus fractional memory can overfit idiosyncratic segments, causing rolling-split variability and peak timing drift.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Minimal baseline comparator without delay: tests whether explicit lag is necessary at all for this series when using the simplest SEIRS observation mapping; paired with fractional toggle only.\",\"expected_failure_mode\":\"If hospitalization truly lags infections, this will systematically lead the target (phase lead), misplacing peaks and degrading calibration during rapid transitions.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline fractional comparator without delay to disentangle whether fractional memory alone can mimic the effective lag/persistence seen in hospitalization rates without an explicit delay.\",\"expected_failure_mode\":\"May partially mimic lag via smoothing but still mis-time peaks; can also over-smooth sharp changes, reducing peak amplitude fidelity in high-peakiness periods.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0b1828ee623e4ec80069efeefa86c881a3948e98d6beeecd20",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1152,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 804,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1956
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor configuration: SEIRS with delayed_I at 2 weeks matches the hypothesized admissions lag while keeping dynamics non-fractional for maximum parsimony and stability; serves as the direct comparator to the prior best fractional spec under identical delay/obs.\",\"expected_failure_mode\":\"May under-capture long-memory or prolonged tail behavior, leading to sharper-than-observed post-peak declines and potential underestimation during extended elevated periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matched pair to isolate the effect of fractional dynamics at the same (anchor) 2-week delay; fractional memory may better accommodate high peakiness with smoother persistence without changing observation timing.\",\"expected_failure_mode\":\"Can trade stability for flexibility: may over-smooth or introduce phase distortions around sharp peaks, occasionally overshooting/undershooting if memory compensates for timing mismatch.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Shorter-lag sensitivity check around the 2-week anchor while keeping non-fractional dynamics; tests whether admissions are closer to I-proxy with reduced phase shift, potentially improving peak alignment.\",\"expected_failure_mode\":\"If true lag is nearer 2 weeks, may shift forecasts earlier (phase lead), producing premature peak timing and misaligned rise/decline segments.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matched fractional/non-fractional pair at delay=1 to separate timing vs memory effects; fractional dynamics may compensate for residual lag mismatch while preserving the shorter observation delay.\",\"expected_failure_mode\":\"Risk of confounding timing and memory: may fit rise/peak well but degrade rolling stability, with inconsistent peak height due to extra flexibility.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer-lag sensitivity check around the 2-week anchor with non-fractional dynamics; evaluates robustness to potential longer admissions delay without adding compartments.\",\"expected_failure_mode\":\"Known delay sensitivity: may induce phase lag (late peaks) and amplify errors around sharp changes, especially in high-peakiness series.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Matched pair at delay=3 to isolate fractional effect under the most timing-shifted option; tests whether memory helps stabilize forecasts when observation delay is longer.\",\"expected_failure_mode\":\"Highest risk of instability/over-flexibility: longer delay plus fractional memory can overfit idiosyncratic segments, causing rolling-split variability and peak timing drift.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Minimal baseline comparator without delay: tests whether explicit lag is necessary at all for this series when using the simplest SEIRS observation mapping; paired with fractional toggle only.\",\"expected_failure_mode\":\"If hospitalization truly lags infections, this will systematically lead the target (phase lead), misplacing peaks and degrading calibration during rapid transitions.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline fractional comparator without delay to disentangle whether fractional memory alone can mimic the effective lag/persistence seen in hospitalization rates without an explicit delay.\",\"expected_failure_mode\":\"May partially mimic lag via smoothing but still mis-time peaks; can also over-smooth sharp changes, reducing peak amplitude fidelity in high-peakiness periods.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor configuration: SEIRS with delayed_I at 2 weeks matches the hypothesized admissions lag while keeping dynamics non-fractional for maximum parsimony and stability; serves as the direct comparator to the prior best fractional spec under identical delay/obs.\",\"expected_failure_mode\":\"May under-capture long-memory or prolonged tail behavior, leading to sharper-than-observed post-peak declines and potential underestimation during extended elevated periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matched pair to isolate the effect of fractional dynamics at the same (anchor) 2-week delay; fractional memory may better accommodate high peakiness with smoother persistence without changing observation timing.\",\"expected_failure_mode\":\"Can trade stability for flexibility: may over-smooth or introduce phase distortions around sharp peaks, occasionally overshooting/undershooting if memory compensates for timing mismatch.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Shorter-lag sensitivity check around the 2-week anchor while keeping non-fractional dynamics; tests whether admissions are closer to I-proxy with reduced phase shift, potentially improving peak alignment.\",\"expected_failure_mode\":\"If true lag is nearer 2 weeks, may shift forecasts earlier (phase lead), producing premature peak timing and misaligned rise/decline segments.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matched fractional/non-fractional pair at delay=1 to separate timing vs memory effects; fractional dynamics may compensate for residual lag mismatch while preserving the shorter observation delay.\",\"expected_failure_mode\":\"Risk of confounding timing and memory: may fit rise/peak well but degrade rolling stability, with inconsistent peak height due to extra flexibility.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer-lag sensitivity check around the 2-week anchor with non-fractional dynamics; evaluates robustness to potential longer admissions delay without adding compartments.\",\"expected_failure_mode\":\"Known delay sensitivity: may induce phase lag (late peaks) and amplify errors around sharp changes, especially in high-peakiness series.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Matched pair at delay=3 to isolate fractional effect under the most timing-shifted option; tests whether memory helps stabilize forecasts when observation delay is longer.\",\"expected_failure_mode\":\"Highest risk of instability/over-flexibility: longer delay plus fractional memory can overfit idiosyncratic segments, causing rolling-split variability and peak timing drift.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Minimal baseline comparator without delay: tests whether explicit lag is necessary at all for this series when using the simplest SEIRS observation mapping; paired with fractional toggle only.\",\"expected_failure_mode\":\"If hospitalization truly lags infections, this will systematically lead the target (phase lead), misplacing peaks and degrading calibration during rapid transitions.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline fractional comparator without delay to disentangle whether fractional memory alone can mimic the effective lag/persistence seen in hospitalization rates without an explicit delay.\",\"expected_failure_mode\":\"May partially mimic lag via smoothing but still mis-time peaks; can also over-smooth sharp changes, reducing peak amplitude fidelity in high-peakiness periods.\"}]}",
+  "scientific_claim_allowed": true
+}

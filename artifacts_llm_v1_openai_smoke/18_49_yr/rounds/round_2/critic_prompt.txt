@@ -1,0 +1,117 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "18-49 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.04,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I->H vs H outflow) and unstable peak height/width.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Aligns observation directly to the hospitalization-rate target via an explicit H compartment; adds only one extra state beyond SEIR to capture admission dynamics without relying on delay tuning. Suitable for high peakiness where a dedicated H state can absorb sharp admission pulses.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Fractional order can over-smooth or distort timing, potentially underestimating peak amplitude or shifting peak week if memory effects dominate.",
+      "fractional": true,
+      "observation_map": "H",
+      "rationale": "Same target-aligned H observation, with fractional dynamics as a parsimonious way to add memory/heavy-tail effects that can stabilize sharp peaks and high-rate scaling without introducing additional compartments.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Delay can introduce sensitivity in peak timing; if true lag is near 0, a 1-week delay may systematically shift forecasts late.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Keeps explicit hospitalization state while allowing a minimal 1-week reporting/aggregation lag consistent with surveillance semantics; avoids the brittleness seen at longer delays and remains closely aligned to the target.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Compounded flexibility (fractional + delay) may create identifiability issues, yielding similar fits with different implied dynamics and unstable extrapolation near the peak.",
+      "fractional": true,
+      "observation_map": "H",
+      "rationale": "Combines explicit H targeting with a minimal lag and fractional smoothing to reduce rolling-split instability under high peakiness while staying within a simple template family.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Observation mismatch to hospitalization-rate target can persist (I proxy not proportional to admissions), leading to biased amplitude and poorer peak calibration versus H-observed SEIHR.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Retains the previously best-performing baseline as a comparator while using the least brittle delay choice (1 week) suggested by prior sensitivity; included sparingly as a non-H fallback template.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "18-49 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

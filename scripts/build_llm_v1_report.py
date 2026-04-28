@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 from pathlib import Path
 import sys
 
@@ -23,6 +24,9 @@ def main() -> None:
 
     llm_config = load_llm_config(REPO_ROOT / args.config)
     summary = pd.read_csv(REPO_ROOT / args.artifact_root / "llm_v1_vs_v0_vs_nonllm_summary.csv")
+    artifact_providers = sorted(set(summary.get("provider", pd.Series(dtype=str)).dropna().astype(str)))
+    if len(artifact_providers) == 1 and artifact_providers[0] != llm_config.provider:
+        llm_config = replace(llm_config, provider=artifact_providers[0])
     improvement = pd.read_csv(REPO_ROOT / args.artifact_root / "llm_v1_refinement_improvement.csv")
     write_llm_v1_report(summary, improvement, REPO_ROOT / args.output, llm_config)
 

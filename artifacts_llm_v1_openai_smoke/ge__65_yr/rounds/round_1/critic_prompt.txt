@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the hospitalization process has dynamics not well-approximated by a fixed lag (e.g., variable lag or admission-duration effects), delayed_I may misalign peak timing and distort amplitude.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "High peakiness and high rate scale suggest sharp seasonal waves; SEIRS supports waning immunity/seasonal recurrence while fractional dynamics can flexibly capture heavy-tailed rise/decay. delayed_I with 2-week lag matches the stated hospitalization-lag semantics without adding an explicit H compartment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true lag is longer (or varies over the season), a 1-week delay can shift peaks early and bias inferred growth/decline shape.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "A more parsimonious alternative lag for admissions; keeps the same flexible SEIRS fractional backbone while allowing earlier alignment if the observed hospitalization peak is closer to infection incidence in this age group.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If reinfection/waning immunity materially affects late-season dynamics, SEIR may underfit secondary bumps or prolonged tails.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "If the 31-week training window largely covers a single dominant wave, SEIR can be sufficient and more identifiable than SEIRS while still allowing fractional dynamics for sharp peaks; delayed_I encodes the admissions lag.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H-related parameters (admission rate, length of stay/exit) may be weakly identifiable in a short single-season series, leading to unstable forecasts or compensatory parameter tradeoffs.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly maps the target semantics (hospitalization rate) to an explicit H compartment, avoiding reliance on a fixed lag proxy. Non-fractional keeps the template parsimonious given short series and identifiability concerns.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If the surveillance signal is closer to pure admissions (H only) or pure incidence proxy (I), the mixed observation can blur peak sharpness and misattribute dynamics between I and H.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "If reported hospitalization rates reflect a mixture of incident admissions and ongoing hospitalized burden (or coding/reporting blends), observing I+H can be a robust compromise while retaining mechanistic hospitalization structure.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

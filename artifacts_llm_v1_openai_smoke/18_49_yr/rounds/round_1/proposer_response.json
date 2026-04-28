@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true admission lag is longer/variable or if reporting artifacts dominate, a fixed 1-week delayed_I may misalign the peak timing and distort amplitude.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Adds an exposed (E) stage to better capture sharp, high-peaked influenza dynamics while mapping hospitalizations to a 1-week lagged infectious proxy, consistent with admissions lagging infection onset.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the true lag is closer to 0\u20131 weeks, a 2-week delay can shift forecasts late and underfit early growth.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Same parsimony as SEIR but allows a longer infection-to-admission delay, which can better align hospitalization-rate peaks when admissions occur after symptom progression.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H rate vs. duration in H) and unstable forecasts.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly models hospitalizations via an explicit H compartment, matching the target semantics (hospitalization rate) and allowing separation between infectious prevalence and admissions.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If the observed series is primarily admissions (not a combined burden proxy), I+H can blur interpretation and mis-scale peaks, especially when H is small relative to I.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Uses SEIHR but observes a combined burden proxy (I+H) to reduce identifiability pressure on H alone while still allowing hospitalization dynamics to influence the observed signal.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "With only ~31 training weeks, waning-immunity effects may be unidentifiable and can over-flex the trajectory, producing unrealistic rebounds or tail behavior.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Allows waning immunity (S\u2194R) which can accommodate sharper mid-season changes in effective susceptibility while retaining a 1-week admissions lag via delayed_I.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "18-49 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777330465,
+          "created_at": 1777330457.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_02c0b56b2e91cf2a0069efe9199a8c8192a4dfd42b87e6774b",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds an exposed (E) stage to better capture sharp, high-peaked influenza dynamics while mapping hospitalizations to a 1-week lagged infectious proxy, consistent with admissions lagging infection onset.\",\"expected_failure_mode\":\"If the true admission lag is longer/variable or if reporting artifacts dominate, a fixed 1-week delayed_I may misalign the peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same parsimony as SEIR but allows a longer infection-to-admission delay, which can better align hospitalization-rate peaks when admissions occur after symptom progression.\",\"expected_failure_mode\":\"If the true lag is closer to 0\u20131 weeks, a 2-week delay can shift forecasts late and underfit early growth.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly models hospitalizations via an explicit H compartment, matching the target semantics (hospitalization rate) and allowing separation between infectious prevalence and admissions.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H rate vs. duration in H) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses SEIHR but observes a combined burden proxy (I+H) to reduce identifiability pressure on H alone while still allowing hospitalization dynamics to influence the observed signal.\",\"expected_failure_mode\":\"If the observed series is primarily admissions (not a combined burden proxy), I+H can blur interpretation and mis-scale peaks, especially when H is small relative to I.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity (S\u2194R) which can accommodate sharper mid-season changes in effective susceptibility while retaining a 1-week admissions lag via delayed_I.\",\"expected_failure_mode\":\"With only ~31 training weeks, waning-immunity effects may be unidentifiable and can over-flex the trajectory, producing unrealistic rebounds or tail behavior.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_02c0b56b2e91cf2a0069efe91a02048192bd4141e298884e26",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 674,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 515,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1189
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds an exposed (E) stage to better capture sharp, high-peaked influenza dynamics while mapping hospitalizations to a 1-week lagged infectious proxy, consistent with admissions lagging infection onset.\",\"expected_failure_mode\":\"If the true admission lag is longer/variable or if reporting artifacts dominate, a fixed 1-week delayed_I may misalign the peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same parsimony as SEIR but allows a longer infection-to-admission delay, which can better align hospitalization-rate peaks when admissions occur after symptom progression.\",\"expected_failure_mode\":\"If the true lag is closer to 0\u20131 weeks, a 2-week delay can shift forecasts late and underfit early growth.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly models hospitalizations via an explicit H compartment, matching the target semantics (hospitalization rate) and allowing separation between infectious prevalence and admissions.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H rate vs. duration in H) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses SEIHR but observes a combined burden proxy (I+H) to reduce identifiability pressure on H alone while still allowing hospitalization dynamics to influence the observed signal.\",\"expected_failure_mode\":\"If the observed series is primarily admissions (not a combined burden proxy), I+H can blur interpretation and mis-scale peaks, especially when H is small relative to I.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity (S\u2194R) which can accommodate sharper mid-season changes in effective susceptibility while retaining a 1-week admissions lag via delayed_I.\",\"expected_failure_mode\":\"With only ~31 training weeks, waning-immunity effects may be unidentifiable and can over-flex the trajectory, producing unrealistic rebounds or tail behavior.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds an exposed (E) stage to better capture sharp, high-peaked influenza dynamics while mapping hospitalizations to a 1-week lagged infectious proxy, consistent with admissions lagging infection onset.\",\"expected_failure_mode\":\"If the true admission lag is longer/variable or if reporting artifacts dominate, a fixed 1-week delayed_I may misalign the peak timing and distort amplitude.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same parsimony as SEIR but allows a longer infection-to-admission delay, which can better align hospitalization-rate peaks when admissions occur after symptom progression.\",\"expected_failure_mode\":\"If the true lag is closer to 0\u20131 weeks, a 2-week delay can shift forecasts late and underfit early growth.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly models hospitalizations via an explicit H compartment, matching the target semantics (hospitalization rate) and allowing separation between infectious prevalence and admissions.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H rate vs. duration in H) and unstable forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Uses SEIHR but observes a combined burden proxy (I+H) to reduce identifiability pressure on H alone while still allowing hospitalization dynamics to influence the observed signal.\",\"expected_failure_mode\":\"If the observed series is primarily admissions (not a combined burden proxy), I+H can blur interpretation and mis-scale peaks, especially when H is small relative to I.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity (S\u2194R) which can accommodate sharper mid-season changes in effective susceptibility while retaining a 1-week admissions lag via delayed_I.\",\"expected_failure_mode\":\"With only ~31 training weeks, waning-immunity effects may be unidentifiable and can over-flex the trajectory, producing unrealistic rebounds or tail behavior.\"}]}",
+  "scientific_claim_allowed": true
+}

@@ -1,0 +1,195 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the effective lag varies over the season (e.g., changes near peak), a fixed 2-week delay can misalign shoulders or peak timing.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Baseline consistent with prior best spec; directly targets the dominant error source (phase/lag between infections proxy and hospital admissions) while keeping dynamics parsimonious for short, high-peakiness series.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "May shift predicted peak too early and overfit early growth, degrading fit on decline/late-season weeks.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Tests slightly shorter infectious-to-hospitalization reporting/admission lag while retaining the same SEIR dynamics; useful if this age group\u2019s admissions respond faster than the 2-week baseline.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "May delay the peak excessively and underpredict early-season rise, especially in high-peakiness seasons.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Tests slightly longer lag to accommodate slower progression-to-admission or reporting delays; still minimal complexity and centered near the empirically favored neighborhood around 2 weeks.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Likely systematic phase error (peak timing mismatch) if admissions lag infections, leading to biased forecasts around the peak.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "No-lag single-state observation as a control to detect whether the series is effectively contemporaneous with the infectious proxy; keeps structure minimal and avoids added compartments.",
+        "structure_name": "SEIR"
+      }
+    ],
+    "series_name": "50-64 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777331171,
+          "created_at": 1777331165.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_03814a7760f1458f0069efebddfa7881a3bae42b583ba368ee",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Baseline consistent with prior best spec; directly targets the dominant error source (phase/lag between infections proxy and hospital admissions) while keeping dynamics parsimonious for short, high-peakiness series.\",\"expected_failure_mode\":\"If the effective lag varies over the season (e.g., changes near peak), a fixed 2-week delay can misalign shoulders or peak timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tests slightly shorter infectious-to-hospitalization reporting/admission lag while retaining the same SEIR dynamics; useful if this age group\u2019s admissions respond faster than the 2-week baseline.\",\"expected_failure_mode\":\"May shift predicted peak too early and overfit early growth, degrading fit on decline/late-season weeks.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Tests slightly longer lag to accommodate slower progression-to-admission or reporting delays; still minimal complexity and centered near the empirically favored neighborhood around 2 weeks.\",\"expected_failure_mode\":\"May delay the peak excessively and underpredict early-season rise, especially in high-peakiness seasons.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"No-lag single-state observation as a control to detect whether the series is effectively contemporaneous with the infectious proxy; keeps structure minimal and avoids added compartments.\",\"expected_failure_mode\":\"Likely systematic phase error (peak timing mismatch) if admissions lag infections, leading to biased forecasts around the peak.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_03814a7760f1458f0069efebdec44081a3be85e02d63806591",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1183,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 384,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1567
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Baseline consistent with prior best spec; directly targets the dominant error source (phase/lag between infections proxy and hospital admissions) while keeping dynamics parsimonious for short, high-peakiness series.\",\"expected_failure_mode\":\"If the effective lag varies over the season (e.g., changes near peak), a fixed 2-week delay can misalign shoulders or peak timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tests slightly shorter infectious-to-hospitalization reporting/admission lag while retaining the same SEIR dynamics; useful if this age group\u2019s admissions respond faster than the 2-week baseline.\",\"expected_failure_mode\":\"May shift predicted peak too early and overfit early growth, degrading fit on decline/late-season weeks.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Tests slightly longer lag to accommodate slower progression-to-admission or reporting delays; still minimal complexity and centered near the empirically favored neighborhood around 2 weeks.\",\"expected_failure_mode\":\"May delay the peak excessively and underpredict early-season rise, especially in high-peakiness seasons.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"No-lag single-state observation as a control to detect whether the series is effectively contemporaneous with the infectious proxy; keeps structure minimal and avoids added compartments.\",\"expected_failure_mode\":\"Likely systematic phase error (peak timing mismatch) if admissions lag infections, leading to biased forecasts around the peak.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Baseline consistent with prior best spec; directly targets the dominant error source (phase/lag between infections proxy and hospital admissions) while keeping dynamics parsimonious for short, high-peakiness series.\",\"expected_failure_mode\":\"If the effective lag varies over the season (e.g., changes near peak), a fixed 2-week delay can misalign shoulders or peak timing.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tests slightly shorter infectious-to-hospitalization reporting/admission lag while retaining the same SEIR dynamics; useful if this age group\u2019s admissions respond faster than the 2-week baseline.\",\"expected_failure_mode\":\"May shift predicted peak too early and overfit early growth, degrading fit on decline/late-season weeks.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Tests slightly longer lag to accommodate slower progression-to-admission or reporting delays; still minimal complexity and centered near the empirically favored neighborhood around 2 weeks.\",\"expected_failure_mode\":\"May delay the peak excessively and underpredict early-season rise, especially in high-peakiness seasons.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"No-lag single-state observation as a control to detect whether the series is effectively contemporaneous with the infectious proxy; keeps structure minimal and avoids added compartments.\",\"expected_failure_mode\":\"Likely systematic phase error (peak timing mismatch) if admissions lag infections, leading to biased forecasts around the peak.\"}]}",
+  "scientific_claim_allowed": true
+}

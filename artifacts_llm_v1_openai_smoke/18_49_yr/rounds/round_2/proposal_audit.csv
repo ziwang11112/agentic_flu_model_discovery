@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+18-49 yr,2,0,openai,False,True,SEIHR,False,H,0,True,True,,high,,True
+18-49 yr,2,1,openai,False,True,SEIHR,True,H,0,True,True,,low,"Fractional memory is not clearly justified by the provided series summary (single-season, high peakiness but no explicit long-memory evidence). Adding fractional order on top of an already weakly identifiable H compartment increases overfitting/identifiability risk without improving observation-target alignment beyond proposal 0.",True
+18-49 yr,2,2,openai,False,True,SEIHR,False,H,1,False,False,non_delayed_observation_requires_zero_delay,medium,,False
+18-49 yr,2,3,openai,False,True,SEIHR,True,H,1,False,False,non_delayed_observation_requires_zero_delay,low,"Compounded flexibility (fractional + delay + explicit H) is likely over-complex for 31 training points and a single season. High identifiability risk (tradeoffs among delay, fractional order, and H transition rates) and elevated chance of unstable peak timing/width in extrapolation.",False
+18-49 yr,2,4,openai,False,True,SEIR,False,delayed_I,1,True,True,,medium,,True

@@ -1,0 +1,20 @@
+{
+  "num_evaluated": 5,
+  "num_hard_valid": 5,
+  "num_raw_proposals": 5,
+  "num_schema_valid": 5,
+  "provider": "openai",
+  "provider_is_mock": false,
+  "round_best_rolling_mean_mae": 0.15346123786437096,
+  "round_best_score": 0.3775861221422007,
+  "round_best_spec": {
+    "delay_weeks": 2,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  },
+  "round_best_validation_mae": 0.14812753733602008,
+  "round_id": 2,
+  "scientific_claim_allowed": true,
+  "series_name": "0-4 yr"
+}

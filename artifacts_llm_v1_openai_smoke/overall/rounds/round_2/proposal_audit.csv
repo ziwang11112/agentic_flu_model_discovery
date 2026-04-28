@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+Overall,2,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+Overall,2,1,openai,False,True,SEIR,False,delayed_I,0,True,True,,medium,,True
+Overall,2,2,openai,False,True,SEIRS,False,delayed_I,1,True,True,,medium,,True
+Overall,2,3,openai,False,True,SEIRS,False,delayed_I,0,True,True,,low,Combines two potentially confounded flexibilities in short single-season data: allowing waning (SEIRS) while also removing the admission lag (0-week delayed_I). This increases identifiability risk (lag vs waning tradeoff) and can overfit late-season levels/tails without clear semantic support for zero lag in hospitalization-rate targets.,True
