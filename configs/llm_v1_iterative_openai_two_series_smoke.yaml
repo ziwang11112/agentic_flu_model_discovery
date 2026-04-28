@@ -1,0 +1,98 @@
+seed: 42
+
+data:
+  raw_csv: FluSurveillance_Custom_Download_Data.csv
+  include_age_robustness: true
+  age_groups:
+    - 5-17 yr
+    - ">= 65 yr"
+
+fitting:
+  n_restarts: 2
+  rolling_n_restarts: 0
+  maxiter: 80
+  negative_penalty: 10000.0
+  mass_penalty: 10000.0
+  prior_weight: 0.001
+  laplace_draws: 150
+  uncertainty_method: bootstrap
+  bootstrap_draws: 30
+  bootstrap_n_restarts: 0
+  calibrate_intervals: false
+  interval_calibration_method: conformal
+  calibration_draws: 12
+  calibration_scale_min: 0.25
+  calibration_scale_max: 1.25
+  calibration_scale_grid_size: 41
+
+evaluation:
+  horizons:
+    - 1
+    - 2
+    - 4
+
+discovery:
+  beam_width: 5
+  max_rounds: 20
+  patience: 5
+  rolling_horizons:
+    - 1
+    - 2
+    - 4
+  multi_split_blocks: 3
+  score_param_weight: 0.01
+  score_compartment_weight: 0.02
+  score_fractional_weight: 0.015
+  score_observation_weight: 0.005
+  score_delay_weight: 0.005
+  score_h_observation_weight: 0.005
+  score_recurrence_weight: 0.01
+  score_stability_weight: 0.2
+  score_multi_split_std_weight: 0.5
+  raw_l2_weight: 0.0005
+  seasonality_l2_weight: 0.005
+  rho_l2_weight: 0.002
+  init_l2_weight: 0.002
+  fractional_alpha_weight: 0.002
+  use_age_prior: true
+  age_prior_simple_bonus: 0.01
+  age_prior_recurrence_bonus: 0.01
+  age_prior_fractional_bonus: 0.005
+
+llm:
+  enabled: true
+  method_name: llm_iterative_refinement
+  provider: mock
+  model: gpt-5.2
+  cheap_model: gpt-5-mini
+  temperature: 0.0
+  max_candidate_specs: 8
+  use_critic: true
+  use_semantics_agent: true
+  max_rounds: 3
+  allow_test_metrics: false
+  output_root: artifacts_llm_v1_openai_two_series_smoke
+  compare_against: constrained_structure_discovery
+  critic_hard_filter: false
+  early_stop_patience: 1
+  min_score_improvement: 1.0e-4
+  feedback_metric: score
+  nonllm_reference_root: artifacts_multiseed_age_robustness_observation
+  nonllm_reference_method: constrained_structure_discovery
+  v0_reference_root: artifacts_llm_v0
+  objective_policy_path: artifacts_multiseed_age_robustness_observation/multiseed_objective_policy.csv
+  structure_frequency_path: artifacts_multiseed_age_robustness_observation/multiseed_discovery_structure_frequency.csv
+  allowed_structures: ["SIR", "SEIR", "SEIRS", "SEIHR", "SEIAR"]
+  allowed_observation_maps: ["I", "H", "I+H", "delayed_I"]
+  allowed_delay_weeks: [0, 1, 2, 3]
+  leakage_guard:
+    banned_prompt_terms:
+      - test_policy_model
+      - best_test_model
+      - test_mae
+      - test_rmse
+      - test_smape
+      - test coverage
+      - benchmark_series_winners
+      - final test winner
+      - held-out test winner

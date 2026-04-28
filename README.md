@@ -264,11 +264,29 @@ cp .env.example .env
 
 Then fill in `OPENAI_API_KEY` in `.env`.
 
-Run a one-series live-provider smoke test:
+Run the two-series live-provider smoke test in a separate artifact root:
 
 ```bash
-python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --series "5-17 yr" --provider openai --log-level INFO
-python scripts/run_llm_iterative_refinement.py --config configs/llm_v1_iterative.yaml --series ">= 65 yr" --provider openai --log-level INFO
+python scripts/run_llm_iterative_refinement.py \
+  --config configs/llm_v1_iterative_openai_two_series_smoke.yaml \
+  --series "5-17 yr" \
+  --series ">= 65 yr" \
+  --provider openai \
+  --log-level INFO
+```
+
+Then rebuild and validate the live-provider smoke report:
+
+```bash
+python scripts/build_llm_v1_report.py \
+  --config configs/llm_v1_iterative_openai_two_series_smoke.yaml \
+  --artifact-root artifacts_llm_v1_openai_two_series_smoke \
+  --output reports/llm_v1_openai_two_series_smoke_report.md
+
+python scripts/validate_llm_v1_artifacts.py \
+  --artifact-root artifacts_llm_v1_openai_two_series_smoke \
+  --iterative-report reports/llm_v1_openai_two_series_smoke_report.md \
+  --report reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md
 ```
 
 Live-provider runs should still be treated as controlled evaluation runs rather than automatic scientific claims. The current frozen artifact set in this repository remains mock-provider only until live-provider outputs are explicitly rerun, validated, and frozen under the same protocol.
@@ -276,7 +294,10 @@ Live-provider runs should still be treated as controlled evaluation runs rather 
 Rebuild the V1 markdown report from existing artifacts:
 
 ```bash
-python scripts/build_llm_v1_report.py --artifact-root artifacts_llm_v1 --output reports/llm_v1_iterative_report.md
+python scripts/build_llm_v1_report.py \
+  --config configs/llm_v1_iterative.yaml \
+  --artifact-root artifacts_llm_v1 \
+  --output reports/llm_v1_iterative_report.md
 ```
 
 The main V1 outputs are:
@@ -485,7 +506,10 @@ The search space includes:
 with toggles for:
 
 - fractional on or off
-- observation map `rho*I` or `rho*(I+H)` when `H` exists
+- observation map `I`, `H`, `I+H`, or `delayed_I`
+- observation delay `delay_weeks in {1, 2, 3}` when `observation_map=delayed_I`
+
+Observation map and delay are first-class structural choices. They represent observation uncertainty: the hospitalization-rate target may align best with a latent infectious proxy, a hospitalization compartment, a combined infectious-plus-hospitalized proxy, or a lagged infectious proxy.
 
 Candidate structures are filtered through explicit validity rules such as:
 

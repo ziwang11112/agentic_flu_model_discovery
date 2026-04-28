@@ -1,6 +1,6 @@
 # LLM-V1 Iterative Report
 
-LLM-V1 adds iterative validation-feedback refinement on top of the mock-only LLM-V0 proposal layer.
+LLM-V1 adds iterative validation-feedback refinement on top of the LLM-V0 proposal layer.
 It still does not make final scientific claims from mock-provider results.
 
 Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality.
@@ -69,8 +69,8 @@ Mock provider results are engineering smoke tests and should not be interpreted 
 
 ## Refinement Improvement
 
-- `0-4 yr`: rounds `2`, initial `0.34867590467588694`, final `0.34867590467588694`, improved `False`, early_stop `True`
-- `18-49 yr`: rounds `2`, initial `0.26060194102686973`, final `0.26060194102686973`, improved `False`, early_stop `True`
+- `0-4 yr`: rounds `2`, initial `0.3486759046758869`, final `0.3486759046758869`, improved `False`, early_stop `True`
+- `18-49 yr`: rounds `2`, initial `0.2606019410268697`, final `0.2606019410268697`, improved `False`, early_stop `True`
 - `5-17 yr`: rounds `3`, initial `0.3358605016460927`, final `0.322741082676521`, improved `True`, early_stop `True`
 - `50-64 yr`: rounds `2`, initial `0.2222143655002109`, final `0.2222143655002109`, improved `False`, early_stop `True`
 - `>= 65 yr`: rounds `2`, initial `0.568660507469542`, final `0.568660507469542`, improved `False`, early_stop `True`

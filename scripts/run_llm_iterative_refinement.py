@@ -95,7 +95,13 @@ def _slugify(text: str) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run LLM-V1 iterative refinement.")
     parser.add_argument("--config", required=True)
-    parser.add_argument("--series", type=str, default=None)
+    parser.add_argument(
+        "--series",
+        type=str,
+        action="append",
+        default=None,
+        help="Series to run. May be repeated to run a small smoke set into one artifact root.",
+    )
     parser.add_argument("--all-series", action="store_true")
     parser.add_argument("--provider", type=str, default=None)
     parser.add_argument("--log-level", type=str, default="INFO")
@@ -109,13 +115,15 @@ def main() -> None:
         llm_config = replace(llm_config, provider=args.provider)
     if not args.series and not args.all_series:
         raise ValueError("Specify either --series or --all-series.")
+    if args.series and args.all_series:
+        raise ValueError("Specify either repeated --series values or --all-series, not both.")
 
     frame = load_flu_surv_data(REPO_ROOT / config["data"]["raw_csv"])
     fit_config = _fit_config(config)
     search_config = _search_config(config)
     output_root = ensure_dir(llm_config.output_root)
 
-    series_names = [args.series] if args.series else ["Overall", *config["data"].get("age_groups", ROBUSTNESS_AGE_GROUPS)]
+    series_names = args.series if args.series else ["Overall", *config["data"].get("age_groups", ROBUSTNESS_AGE_GROUPS)]
     series_outputs = []
     for offset, series_name in enumerate(series_names):
         logger.info("LLM-V1 start series=%s", series_name)

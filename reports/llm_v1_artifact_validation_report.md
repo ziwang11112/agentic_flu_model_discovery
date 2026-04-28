@@ -34,4 +34,4 @@
 
 ## Recommendations
 
-- Artifacts satisfy the LLM-V1 validation protocol for the current mock run.
+- Artifacts satisfy the LLM-V1 validation protocol for the current run.
