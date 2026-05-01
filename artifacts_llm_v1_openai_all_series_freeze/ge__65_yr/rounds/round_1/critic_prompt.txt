@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Delay and fractional effects can be confounded with transmission/waning, yielding unstable timing or overly sharp peaks when extrapolating beyond the observed season.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matches prior discovered pattern and aligns with hospitalization-rate semantics where admissions plausibly lag the infectious proxy; SEIRS supports sharp seasonal peaks via waning immunity while fractional dynamics can flexibly capture high peakiness with limited training length.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true admission lag is closer to 2\u20133 weeks, forecasts may peak too early and underrepresent the right-tail decline.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "A more parsimonious lag than 2 weeks to hedge against over-shifting peak timing; retains SEIRS+fractional flexibility for high peakiness while respecting recommended delayed observation semantics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable in a single short season, leading to parameter tradeoffs (I\u2192H vs recovery) and unstable amplitude forecasts.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly maps the target to an explicit hospitalization compartment, consistent with surveillance semantics; kept non-fractional to reduce degrees of freedom given short series and identifiability concerns.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May blur mechanistic interpretation and overestimate baseline levels by attributing too much signal to I, degrading peak height calibration for hospitalization-rate targets.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Uses combined burden (infectious plus hospitalized) as an observation proxy to reduce sensitivity to how cases split between I and H, potentially stabilizing fits when H alone is noisy or weakly identified.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Without waning immunity, may misrepresent post-peak dynamics (too slow/fast decline) and struggle if the series reflects within-season susceptibility replenishment effects.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "More parsimonious than SEIRS while still allowing a lagged infectious proxy for admissions; fractional dynamics can accommodate high peakiness without adding waning-immunity parameters.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

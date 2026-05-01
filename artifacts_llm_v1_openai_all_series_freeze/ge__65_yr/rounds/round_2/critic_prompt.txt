@@ -1,0 +1,134 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable in a short series, leading to unstable peak height/width across rolling windows.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Primary hospitalization-aligned branch: explicit H compartment matches target semantics and can better capture sharp peaks via an admission state without mixing incidence into the observation.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Over-flexibility from fractional dynamics can amplify rolling-split instability and distort peak timing/decay if parameters are weakly identified.",
+      "fractional": true,
+      "observation_map": "H",
+      "rationale": "Fractional counterpart to test whether heavy-tailed/slow-decay dynamics improve fit to high-peakiness hospitalization waves while keeping observation strictly hospitalization-aligned.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Observation-map mismatch (I proxy vs true admissions) may still bias amplitude/shape; delay may not be constant across the season.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Lag-focused control with reduced flexibility: keeps waning/reinfection for recurrent-wave shape while using a 2-week delay consistent with prior delay sensitivity and hospitalization lag semantics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Parameter non-identifiability can cause rolling variability; fractional terms may overfit local peak structure even with correct lag.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Direct continuation of the discovered family but shifting to the empirically favored lag; fractional dynamics may help match sharp peaks while maintaining the 2-week phase alignment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "If true lag is closer to 2 weeks, delay=3 will phase-shift peaks late and degrade short-horizon forecasts.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Explore longer clinical/reporting lag as a primary timing alternative for older-age hospitalization series; retains waning to support recurrent-wave dynamics.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Compounded flexibility (fractional + longer delay) may increase timing uncertainty and rolling instability, especially around peak weeks.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Longer-lag fractional variant to test whether added memory plus 3-week delay better matches steep rise and slower decline in high-rate older-age hospitalizations.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Likely phase misalignment (too-short lag) causing early-peaking forecasts and systematic timing error near the seasonal maximum.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Baseline/control lag per constraints: non-fractional version to isolate whether prior poor performance at delay=1 was driven by fractional over-flexibility versus true phase misalignment.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

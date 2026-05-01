@@ -1,0 +1,103 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the effective admission lag varies over time (e.g., early vs late season), a fixed 2-week delay can cause phase errors and rolling-split sensitivity around the peak.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor specification matching prior best: SEIRS captures waning immunity/reinfection dynamics while delayed_I with a 2-week lag aligns the latent infectious proxy to observed hospitalization-rate timing; expected to be robust for moderate peakiness and high rate scale.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Over-lagging can shift the predicted peak too late and smear the rise, degrading fit when the true lag is closer to ~2 weeks.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Neighborhood exploration around the anchor to hedge delay sensitivity: a 3-week lag may better match slower hospitalization timing in some splits while retaining the same SEIRS reinfection flexibility.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H may be weakly identifiable in a short series; I+H can blur interpretability and still misalign timing if the effective lag is strongly ~2\u20133 weeks, leading to biased peak timing or amplitude.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Introduce an explicit hospitalization compartment while avoiding pure instantaneous H-only observation: observing I+H can act as a mild smoothing/aggregation that partially absorbs timing mismatch and may improve robustness without requiring a separate delay parameter in the DSL.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

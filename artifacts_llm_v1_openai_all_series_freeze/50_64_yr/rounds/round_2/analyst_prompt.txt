@@ -1,0 +1,24 @@
+You are a result analyst for aggregate public-health time-series template search.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does not involve lab work, pathogen engineering, transmission optimization, individual-level data, clinical advice, or intervention guidance.
+
+You read validation and rolling-only round results and produce refinement feedback.
+Do not use test metrics.
+Do not choose final winners.
+Do not write code.
+
+Round id: 1
+
+Series summary:
+{'series_name': '50-64 yr', 'target': 'weekly hospitalization rate', 'n_train': 31, 'n_val': 10, 'rate_scale': 'high', 'peakiness': 'high', 'zero_fraction': 0.0, 'validation_mean': 0.26000000000000006, 'validation_std': 0.066332495807108, 'current_discovery_patterns': ['SIR|fractional=0|obs=I']}
+
+Previous best spec:
+{'structure_name': 'SEIR', 'fractional': False, 'observation_map': 'delayed_I', 'delay_weeks': 1}
+
+Round leaderboard (validation/rolling only):
+[{'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 0, 'structure_name': 'SEIR', 'fractional': False, 'observation_map': 'delayed_I', 'delay_weeks': 1, 'val_mae': 0.10283783946039889, 'val_rmse': 0.15103508420822484, 'rolling_val_mean_mae': 0.07506857035861271, 'rolling_val_mean_rmse': 0.10834909671186592, 'rolling_val_std_mae': 0.02090337309494355, 'score': 0.2739962889086243, 'complexity_penalty': 0.165, 'stability_penalty': 0.01540842933993819, 'age_prior_penalty': -0.005, 'multi_split_penalty': 0.027977122651846903}, {'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 1, 'structure_name': 'SEIR', 'fractional': False, 'observation_map': 'delayed_I', 'delay_weeks': 2, 'val_mae': 0.103516558585472, 'val_rmse': 0.15191680618394193, 'rolling_val_mean_mae': 0.12798285040541715, 'rolling_val_mean_rmse': 0.2331265711130602, 'rolling_val_std_mae': 0.04434348754982339, 'score': 0.3769618295090399, 'complexity_penalty': 0.17, 'stability_penalty': 0.038497856614180814, 'age_prior_penalty': -0.005, 'multi_split_penalty': 0.06050905113138197}, {'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 2, 'structure_name': 'SEIHR', 'fractional': False, 'observation_map': 'H', 'delay_weeks': 0, 'val_mae': 0.0993339506495858, 'val_rmse': 0.1465398660903747, 'rolling_val_mean_mae': 0.11075163770235652, 'rolling_val_mean_rmse': 0.18916838901035324, 'rolling_val_std_mae': 0.01351002491618547, 'score': 0.3903656025349576, 'complexity_penalty': 0.21500000000000002, 'stability_penalty': 0.0304894611784116, 'age_prior_penalty': 0.0, 'multi_split_penalty': 0.04460692878212769}, {'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 4, 'structure_name': 'SEIRS', 'fractional': False, 'observation_map': 'delayed_I', 'delay_weeks': 1, 'val_mae': 0.16556153718667624, 'val_rmse': 0.1688027051249321, 'rolling_val_mean_mae': 0.2052108192666128, 'rolling_val_mean_rmse': 0.23792902232331004, 'rolling_val_std_mae': 0.026023003379860854, 'score': 0.4415275166106385, 'complexity_penalty': 0.185, 'stability_penalty': 0.02050943865858904, 'age_prior_penalty': 0.01, 'multi_split_penalty': 0.0247171197058944}, {'series_name': '50-64 yr', 'round_id': 1, 'proposal_id': 3, 'structure_name': 'SEIHR', 'fractional': False, 'observation_map': 'I+H', 'delay_weeks': 0, 'val_mae': 0.110661316041929, 'val_rmse': 0.16148809236185221, 'rolling_val_mean_mae': 0.259343441444895, 'rolling_val_mean_rmse': 0.3094809004950024, 'rolling_val_std_mae': 0.025472722784831113, 'score': 0.5639359416842531, 'complexity_penalty': 0.21500000000000002, 'stability_penalty': 0.03361304560740557, 'age_prior_penalty': 0.0, 'multi_split_penalty': 0.06986304454192764}]
+
+Return strict JSON with keys:
+- observed_failure_modes
+- next_round_constraints
+- proposer_instruction

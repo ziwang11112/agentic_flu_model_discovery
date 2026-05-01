@@ -1,0 +1,4 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,3,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+5-17 yr,3,1,openai,False,True,SEIRS,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,3,2,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"Observation-target alignment is weaker: I+H is not a clear proxy for hospitalization rate timing and can dilute the intended lagged-admissions semantics. Adding an explicit H compartment in a short single-season series raises identifiability risk (especially with I+H observation blurring contributions), increasing over-parameterization risk relative to the delayed_I SEIRS options.",True

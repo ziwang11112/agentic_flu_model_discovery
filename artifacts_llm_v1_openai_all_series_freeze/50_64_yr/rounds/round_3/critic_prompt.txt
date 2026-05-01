@@ -1,0 +1,117 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "50-64 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.26000000000000006,
+  "validation_std": 0.066332495807108,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May underfit timing if admissions systematically lag infections; peak timing could be slightly early relative to hospitalization-rate target.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Baseline SEIR in the SEIR family with direct I observation to keep identifiability strong in a short, single-season series; can accommodate sharp peaks via implicit time-varying transmission/forcing without adding compartments.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Lag may be weakly identified and behave like a redundant degree of freedom; could drift across rolling splits if true lag varies within season.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Matches prior best spec and surveillance note that admissions may lag an I-state proxy; 1-week lag is a parsimonious way to align peak timing without adding compartments.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Risk of over-shifting peaks and degrading early-season fit; may compensate by distorting latent dynamics, reducing stability.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Explores modest lag uncertainty (0\u20132 weeks) while staying within SEIR; a 2-week delay can better align hospitalization peaks if clinical/reporting delays are longer in this age group.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Waning parameter may be poorly identified in a single season and can introduce spurious oscillation/over-flexibility, harming rolling stability.",
+      "fractional": false,
+      "observation_map": "I",
+      "rationale": "Adds waning immunity to allow sharper, more transient peaks without introducing hospitalization compartment; still parsimonious and within SEIR-family extensions.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Fractional dynamics can be harder to identify and may blur interpretability; could over-smooth or mis-time peaks if memory effect is not supported by data.",
+      "fractional": true,
+      "observation_map": "I",
+      "rationale": "Fractional SEIR can represent heavy-tailed dwell times/effective memory, which may help capture high peakiness without extra compartments; keeps observation simple to avoid delay+structure confounding.",
+      "structure_name": "SEIR"
+    }
+  ],
+  "series_name": "50-64 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

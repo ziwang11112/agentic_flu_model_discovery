@@ -13,7 +13,8 @@ The current repository state supports:
 - V0 proposal-only comparison
 - V1 iterative refinement comparison
 
-It does not yet support frozen scientific claims about LLM reasoning quality, because live-provider evaluation has not yet been validated and frozen under the same protocol as the current repository artifacts.
+It now includes a validated all-series live-provider freeze.
+That freeze supports feasibility and protocol claims about live LLM-V1 orchestration, but it should not be framed as a global performance win over non-LLM discovery because the non-LLM reference remains stronger on most series.
 
 ## Comparison Design
 
@@ -123,6 +124,10 @@ Only that setting should be used for claims about:
 - whether semantic proposal quality is meaningfully better than non-LLM search under matched conditions.
 
 However, live-provider results should not be treated as frozen scientific evidence until the run is validated, its artifacts are checked, and the exact provider/model configuration is recorded alongside the benchmark outputs.
+
+The current all-series OpenAI freeze satisfies this protocol for all six benchmark series.
+It is evidence that live-provider orchestration, strict JSON parsing, hard validation, and artifact leakage checks work in practice.
+It is not evidence of global LLM superiority over the non-LLM constrained discovery baseline.
 
 ## Reporting Language
 

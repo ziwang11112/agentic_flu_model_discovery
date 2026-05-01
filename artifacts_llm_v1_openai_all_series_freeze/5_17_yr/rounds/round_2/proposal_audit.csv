@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,2,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,medium,,True
+5-17 yr,2,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+5-17 yr,2,2,openai,False,True,SEIRS,False,delayed_I,1,True,True,,low,"SEIRS adds an extra dynamical degree of freedom (waning) while also using a 1-week delay that is less supported by the series’ current discovery patterns (2–3 weeks). With only 31 training points, this combination increases identifiability risk (waning vs transmission) without a strong semantic need.",True
+5-17 yr,2,3,openai,False,True,SEIRS,False,delayed_I,2,True,True,,medium,,True
+5-17 yr,2,4,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H directly matches the hospitalization-rate target, an explicit hospitalization compartment is flagged as weakly identifiable for short single-season series. This proposal risks unstable inference of admission/duration/scaling parameters and may over-parameterize relative to the available data; delayed_I is more plausible here as a robust observation proxy.",True

@@ -1,0 +1,119 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true lag is closer to 2 weeks or varies over time, forecasts may show systematic lead/lag around the peak and during rapid rise/decline.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Prioritize robustness with a minimal latent-to-observed lag: SEIR is parsimonious for a single-season, moderately peaky series, and a 1-week delay captures plausible admission/reporting lag without relying on precise phase alignment.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "May over-smooth timing if admissions respond faster than 2 weeks in some periods, producing delayed peak timing and underestimating early growth.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Same low-variance SEIR core with a 2-week delay, matching the previously best-performing delay while avoiding the higher-variance 3-week alignment; intended as a stable baseline for hospitalization-rate-as-lagged-infection-proxy semantics.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "With only 31 training points, the extra degree of freedom can absorb noise, leading to unstable inferred seasonality/turning points and reduced rolling robustness.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Adds waning immunity as a controlled complexity increase while keeping the observation mapping simple and the delay short; included only as a check for improved rolling stability versus SEIR in this age group.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Identifiability issues between waning immunity and transmission can cause drift in mid-season levels and degrade multi-week-ahead forecasts despite good in-sample tracking.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Carries forward the prior best template but constrains delay to the more stable {1,2} set; tests whether SEIRS provides consistent rolling-only gains over SEIR when the lag is set to 2 weeks.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H-state parameters may be weakly identifiable in a short series, causing unstable hospitalization scaling/duration and sensitivity to initialization, which can hurt rolling-only performance.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Single explicit hospitalization-state alternative consistent with target semantics; kept to one SEIHR variant to limit overfitting while allowing a mechanistic admission process rather than a pure lagged-I proxy.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "5-17 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

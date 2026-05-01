@@ -1,0 +1,96 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep structure family fixed to SEIRS for this series (no new compartments/structures this round).",
+      "Prioritize robustness across rolling splits: avoid configurations that rely on longer observation delays; restrict delay_weeks to {0,1} only.",
+      "Treat fractional dynamics as optional but constrained: if fractional is used, pair only with delay_weeks=1 and compare directly against non-fractional baselines; do not explore fractional with delay>=2.",
+      "Always include the simple baseline candidate (fractional=0, obs=I, delay=0) as an anchor for comparison in the proposal set."
+    ],
+    "observed_failure_modes": [
+      "Delay sensitivity: delayed_I with longer delays (2\u20133 weeks) shows degraded and/or less stable rolling performance, suggesting misalignment between latent incidence and observed hospitalization timing for this age group.",
+      "Overfitting/instability risk in fractional variants: fractional=1 can look strong on a single validation window but exhibits higher rolling variability and worse rolling averages for some delays (notably delay=2), indicating reduced robustness across splits.",
+      "Complexity not paying off: adding delay and fractional dynamics does not consistently improve rolling behavior versus the simpler non-fractional, no-delay observation of I; gains appear inconsistent and split-dependent."
+    ],
+    "proposer_instruction": "For the next round, focus the search on SEIRS with observation timing close to contemporaneous hospitalization. Propose a small set centered on (fractional=0, obs=I, delay=0) and (fractional=0, obs=delayed_I, delay=1), plus at most one fractional candidate limited to (fractional=1, obs=delayed_I, delay=1). Do not propose delay=2 or delay=3 variants. The goal is to improve split-robustness rather than chasing single-window validation gains."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SEIRS"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

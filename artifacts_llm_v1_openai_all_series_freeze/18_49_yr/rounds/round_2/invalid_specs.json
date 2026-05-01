@@ -1,0 +1,22 @@
+[
+  {
+    "delay_weeks": 1,
+    "expected_failure_mode": "Delay can become partially redundant with latent/transition times (E->I and I->H), creating timing non-identifiability and occasional peak misalignment across rolling splits.",
+    "fractional": false,
+    "invalid_reason": "non_delayed_observation_requires_zero_delay",
+    "observation_map": "H",
+    "proposal_id": 1,
+    "rationale": "Adds a small 1-week reporting/admission delay while still observing H, allowing modest timing adjustment without relying on delay-only mapping to explain dynamics. Intended to better match hospitalization peak timing in a high-peak series while remaining parsimonious.",
+    "structure_name": "SEIHR"
+  },
+  {
+    "delay_weeks": 2,
+    "expected_failure_mode": "If true admission lag is shorter, a 2-week delay can over-shift peaks and force compensatory changes in transition rates, potentially destabilizing forecasts near the peak.",
+    "fractional": false,
+    "invalid_reason": "non_delayed_observation_requires_zero_delay",
+    "observation_map": "H",
+    "proposal_id": 2,
+    "rationale": "Explores the upper end of the recommended small delay range (2 weeks) while keeping observation focused on H. Useful if admissions are systematically lagged relative to underlying infection dynamics and prior delayed_I(2) performed well but lacked an explicit H state.",
+    "structure_name": "SEIHR"
+  }
+]

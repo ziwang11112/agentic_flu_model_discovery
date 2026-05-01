@@ -1,0 +1,187 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the effective lag varies over time (or is closer to 0 weeks in some segments), a fixed 1-week delay can misalign peak timing and create brittle forecasts across split points.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Keep the current best template: SEIR with a 1-week reporting/admission lag via delayed_I. This matches the surveillance note about hospitalization lag while staying parsimonious and avoiding extra compartments/mixtures that were unstable in rolling splits.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Observation-map mismatch for a hospitalization-rate target: direct I may fit overall shape but systematically shift peak timing/scale relative to admissions, especially in high-peak weeks.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "A controlled ablation of the delay: same SEIR structure but direct I observation to test whether explicit lag is necessary for this series. This reduces sensitivity to lag choice and may improve rolling stability if admissions track incidence closely at weekly resolution.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Weak identifiability in a short, single-season window: the added H dynamics can overfit peak height/width or produce unstable parameter tradeoffs with I, degrading rolling generalization.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Introduce an explicit hospitalization compartment while keeping the observation mapping simple (H only) and no delay. This directly targets hospitalization-rate semantics without composite observations, and changes only the structure relative to the baseline.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "50-64 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777625607,
+          "created_at": 1777625600.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0c26504333f18f260069f46a0084f88194aea50531fe068bbb",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Keep the current best template: SEIR with a 1-week reporting/admission lag via delayed_I. This matches the surveillance note about hospitalization lag while staying parsimonious and avoiding extra compartments/mixtures that were unstable in rolling splits.\",\"expected_failure_mode\":\"If the effective lag varies over time (or is closer to 0 weeks in some segments), a fixed 1-week delay can misalign peak timing and create brittle forecasts across split points.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"A controlled ablation of the delay: same SEIR structure but direct I observation to test whether explicit lag is necessary for this series. This reduces sensitivity to lag choice and may improve rolling stability if admissions track incidence closely at weekly resolution.\",\"expected_failure_mode\":\"Observation-map mismatch for a hospitalization-rate target: direct I may fit overall shape but systematically shift peak timing/scale relative to admissions, especially in high-peak weeks.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Introduce an explicit hospitalization compartment while keeping the observation mapping simple (H only) and no delay. This directly targets hospitalization-rate semantics without composite observations, and changes only the structure relative to the baseline.\",\"expected_failure_mode\":\"Weak identifiability in a short, single-season window: the added H dynamics can overfit peak height/width or produce unstable parameter tradeoffs with I, degrading rolling generalization.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0c26504333f18f260069f46a012b80819484ddff2702d7500b",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1205,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 361,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1566
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Keep the current best template: SEIR with a 1-week reporting/admission lag via delayed_I. This matches the surveillance note about hospitalization lag while staying parsimonious and avoiding extra compartments/mixtures that were unstable in rolling splits.\",\"expected_failure_mode\":\"If the effective lag varies over time (or is closer to 0 weeks in some segments), a fixed 1-week delay can misalign peak timing and create brittle forecasts across split points.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"A controlled ablation of the delay: same SEIR structure but direct I observation to test whether explicit lag is necessary for this series. This reduces sensitivity to lag choice and may improve rolling stability if admissions track incidence closely at weekly resolution.\",\"expected_failure_mode\":\"Observation-map mismatch for a hospitalization-rate target: direct I may fit overall shape but systematically shift peak timing/scale relative to admissions, especially in high-peak weeks.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Introduce an explicit hospitalization compartment while keeping the observation mapping simple (H only) and no delay. This directly targets hospitalization-rate semantics without composite observations, and changes only the structure relative to the baseline.\",\"expected_failure_mode\":\"Weak identifiability in a short, single-season window: the added H dynamics can overfit peak height/width or produce unstable parameter tradeoffs with I, degrading rolling generalization.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Keep the current best template: SEIR with a 1-week reporting/admission lag via delayed_I. This matches the surveillance note about hospitalization lag while staying parsimonious and avoiding extra compartments/mixtures that were unstable in rolling splits.\",\"expected_failure_mode\":\"If the effective lag varies over time (or is closer to 0 weeks in some segments), a fixed 1-week delay can misalign peak timing and create brittle forecasts across split points.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"A controlled ablation of the delay: same SEIR structure but direct I observation to test whether explicit lag is necessary for this series. This reduces sensitivity to lag choice and may improve rolling stability if admissions track incidence closely at weekly resolution.\",\"expected_failure_mode\":\"Observation-map mismatch for a hospitalization-rate target: direct I may fit overall shape but systematically shift peak timing/scale relative to admissions, especially in high-peak weeks.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Introduce an explicit hospitalization compartment while keeping the observation mapping simple (H only) and no delay. This directly targets hospitalization-rate semantics without composite observations, and changes only the structure relative to the baseline.\",\"expected_failure_mode\":\"Weak identifiability in a short, single-season window: the added H dynamics can overfit peak height/width or produce unstable parameter tradeoffs with I, degrading rolling generalization.\"}]}",
+  "scientific_claim_allowed": true
+}

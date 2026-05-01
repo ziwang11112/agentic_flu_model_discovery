@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true lag is longer/variable or admissions reflect severity dynamics rather than timing alone, a fixed 1-week delay may misalign the peak and distort rise/decline symmetry.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Hospitalization-rate surveillance can lag infections; adding an exposed stage plus a short reporting/admission lag can better align a sharp seasonal peak without introducing an explicit hospitalization compartment that may be weakly identifiable in a 31-week training window.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "May over-delay the signal, producing forecasts that peak too late and underfit early-season acceleration if admissions track infections more closely.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "High peakiness and hospitalization semantics suggest a longer infection-to-admission delay may be needed; SEIR with a 2-week delay remains parsimonious while allowing peak timing to shift relative to the infectious proxy.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H vs H\u2192R) and unstable peak height/width extrapolation.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly mapping observations to an explicit hospitalization compartment matches the target semantics (weekly hospitalization rate) and can capture sharper peaks via an additional transition stage, while remaining within allowed templates.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Can blur mechanistic interpretation and inflate persistence (tail) if I and H contributions are not separable, potentially overpredicting post-peak levels.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "If reported hospitalization rates partially reflect both current infectious burden and admissions (e.g., coding/aggregation effects), observing I+H can be a robust compromise that reduces reliance on precisely identifying H alone.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "With only 31 training weeks, waning may be unidentifiable and can mimic noise, causing spurious secondary rises or overly long tails.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Allows waning immunity/re-susceptibility within-season, which can help accommodate high-rate, high-peak series where decline may be slower than SEIR predicts; delayed_I aligns with admission lag without adding H.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "50-64 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777625397,
+          "created_at": 1777625388.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_02b9cc1d0e2aeaf20069f4692c0f5881a18ac7d19a87fd6826",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Hospitalization-rate surveillance can lag infections; adding an exposed stage plus a short reporting/admission lag can better align a sharp seasonal peak without introducing an explicit hospitalization compartment that may be weakly identifiable in a 31-week training window.\",\"expected_failure_mode\":\"If the true lag is longer/variable or admissions reflect severity dynamics rather than timing alone, a fixed 1-week delay may misalign the peak and distort rise/decline symmetry.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"High peakiness and hospitalization semantics suggest a longer infection-to-admission delay may be needed; SEIR with a 2-week delay remains parsimonious while allowing peak timing to shift relative to the infectious proxy.\",\"expected_failure_mode\":\"May over-delay the signal, producing forecasts that peak too late and underfit early-season acceleration if admissions track infections more closely.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly mapping observations to an explicit hospitalization compartment matches the target semantics (weekly hospitalization rate) and can capture sharper peaks via an additional transition stage, while remaining within allowed templates.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H vs H\u2192R) and unstable peak height/width extrapolation.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rates partially reflect both current infectious burden and admissions (e.g., coding/aggregation effects), observing I+H can be a robust compromise that reduces reliance on precisely identifying H alone.\",\"expected_failure_mode\":\"Can blur mechanistic interpretation and inflate persistence (tail) if I and H contributions are not separable, potentially overpredicting post-peak levels.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity/re-susceptibility within-season, which can help accommodate high-rate, high-peak series where decline may be slower than SEIR predicts; delayed_I aligns with admission lag without adding H.\",\"expected_failure_mode\":\"With only 31 training weeks, waning may be unidentifiable and can mimic noise, causing spurious secondary rises or overly long tails.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_02b9cc1d0e2aeaf20069f4692c7a1481a1b66691129f089aa0",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 683,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 553,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1236
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Hospitalization-rate surveillance can lag infections; adding an exposed stage plus a short reporting/admission lag can better align a sharp seasonal peak without introducing an explicit hospitalization compartment that may be weakly identifiable in a 31-week training window.\",\"expected_failure_mode\":\"If the true lag is longer/variable or admissions reflect severity dynamics rather than timing alone, a fixed 1-week delay may misalign the peak and distort rise/decline symmetry.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"High peakiness and hospitalization semantics suggest a longer infection-to-admission delay may be needed; SEIR with a 2-week delay remains parsimonious while allowing peak timing to shift relative to the infectious proxy.\",\"expected_failure_mode\":\"May over-delay the signal, producing forecasts that peak too late and underfit early-season acceleration if admissions track infections more closely.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly mapping observations to an explicit hospitalization compartment matches the target semantics (weekly hospitalization rate) and can capture sharper peaks via an additional transition stage, while remaining within allowed templates.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H vs H\u2192R) and unstable peak height/width extrapolation.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rates partially reflect both current infectious burden and admissions (e.g., coding/aggregation effects), observing I+H can be a robust compromise that reduces reliance on precisely identifying H alone.\",\"expected_failure_mode\":\"Can blur mechanistic interpretation and inflate persistence (tail) if I and H contributions are not separable, potentially overpredicting post-peak levels.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity/re-susceptibility within-season, which can help accommodate high-rate, high-peak series where decline may be slower than SEIR predicts; delayed_I aligns with admission lag without adding H.\",\"expected_failure_mode\":\"With only 31 training weeks, waning may be unidentifiable and can mimic noise, causing spurious secondary rises or overly long tails.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Hospitalization-rate surveillance can lag infections; adding an exposed stage plus a short reporting/admission lag can better align a sharp seasonal peak without introducing an explicit hospitalization compartment that may be weakly identifiable in a 31-week training window.\",\"expected_failure_mode\":\"If the true lag is longer/variable or admissions reflect severity dynamics rather than timing alone, a fixed 1-week delay may misalign the peak and distort rise/decline symmetry.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"High peakiness and hospitalization semantics suggest a longer infection-to-admission delay may be needed; SEIR with a 2-week delay remains parsimonious while allowing peak timing to shift relative to the infectious proxy.\",\"expected_failure_mode\":\"May over-delay the signal, producing forecasts that peak too late and underfit early-season acceleration if admissions track infections more closely.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly mapping observations to an explicit hospitalization compartment matches the target semantics (weekly hospitalization rate) and can capture sharper peaks via an additional transition stage, while remaining within allowed templates.\",\"expected_failure_mode\":\"H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (e.g., I\u2192H vs H\u2192R) and unstable peak height/width extrapolation.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"If reported hospitalization rates partially reflect both current infectious burden and admissions (e.g., coding/aggregation effects), observing I+H can be a robust compromise that reduces reliance on precisely identifying H alone.\",\"expected_failure_mode\":\"Can blur mechanistic interpretation and inflate persistence (tail) if I and H contributions are not separable, potentially overpredicting post-peak levels.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Allows waning immunity/re-susceptibility within-season, which can help accommodate high-rate, high-peak series where decline may be slower than SEIR predicts; delayed_I aligns with admission lag without adding H.\",\"expected_failure_mode\":\"With only 31 training weeks, waning may be unidentifiable and can mimic noise, causing spurious secondary rises or overly long tails.\"}]}",
+  "scientific_claim_allowed": true
+}

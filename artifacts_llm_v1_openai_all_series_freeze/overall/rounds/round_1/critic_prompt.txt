@@ -1,0 +1,117 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "Overall",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.25,
+  "validation_std": 0.0670820393249937,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true lag is longer/variable or admissions track a distinct hospitalized process, delayed_I may mis-time the peak and distort inferred growth/decline rates.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Weekly hospitalization rates can plausibly lag the infectious proxy; adding an exposed stage supports sharp, high-peaked waves while keeping the template parsimonious for a 31-week training window.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Over-smoothing or phase shift if the effective lag is closer to 0\u20131 weeks; may underfit shoulders if multiple sub-peaks exist.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "A 2-week reporting/admission lag is a common coarse weekly-timescale approximation; SEIR helps represent rapid rise and fall consistent with high peakiness.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (I\u2194H) and unstable forecasts.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly mapping observations to an explicit hospitalized compartment aligns with the target semantics (hospitalization_rate) and can capture sharper peaks via an I\u2192H flow without relying on an ad hoc delay.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If the data are truly admissions-only, I+H can bias amplitude and broaden peaks by attributing signal to I rather than H.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "If surveillance reflects a mixture of infectious burden and admissions (e.g., coding/ascertainment blending), observing I+H can be a robust compromise while retaining hospitalization dynamics.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "With only ~41 weeks total, waning may be unidentifiable and can mimic noise or induce spurious secondary waves.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Allows waning immunity/re-susceptibility, which can help accommodate high-rate-scale series with potential within-season replenishment effects while still using a simple lagged observation.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "Overall"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

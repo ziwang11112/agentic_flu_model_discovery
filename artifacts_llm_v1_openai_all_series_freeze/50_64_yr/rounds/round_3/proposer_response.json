@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "May underfit timing if admissions systematically lag infections; peak timing could be slightly early relative to hospitalization-rate target.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Baseline SEIR in the SEIR family with direct I observation to keep identifiability strong in a short, single-season series; can accommodate sharp peaks via implicit time-varying transmission/forcing without adding compartments.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Lag may be weakly identified and behave like a redundant degree of freedom; could drift across rolling splits if true lag varies within season.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Matches prior best spec and surveillance note that admissions may lag an I-state proxy; 1-week lag is a parsimonious way to align peak timing without adding compartments.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Risk of over-shifting peaks and degrading early-season fit; may compensate by distorting latent dynamics, reducing stability.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Explores modest lag uncertainty (0\u20132 weeks) while staying within SEIR; a 2-week delay can better align hospitalization peaks if clinical/reporting delays are longer in this age group.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Waning parameter may be poorly identified in a single season and can introduce spurious oscillation/over-flexibility, harming rolling stability.",
+        "fractional": false,
+        "observation_map": "I",
+        "rationale": "Adds waning immunity to allow sharper, more transient peaks without introducing hospitalization compartment; still parsimonious and within SEIR-family extensions.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Fractional dynamics can be harder to identify and may blur interpretability; could over-smooth or mis-time peaks if memory effect is not supported by data.",
+        "fractional": true,
+        "observation_map": "I",
+        "rationale": "Fractional SEIR can represent heavy-tailed dwell times/effective memory, which may help capture high peakiness without extra compartments; keeps observation simple to avoid delay+structure confounding.",
+        "structure_name": "SEIR"
+      }
+    ],
+    "series_name": "50-64 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777625735,
+          "created_at": 1777625726.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_01dcac91906d82bc0069f46a7e60b481a0b8ece4358384a7a1",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline SEIR in the SEIR family with direct I observation to keep identifiability strong in a short, single-season series; can accommodate sharp peaks via implicit time-varying transmission/forcing without adding compartments.\",\"expected_failure_mode\":\"May underfit timing if admissions systematically lag infections; peak timing could be slightly early relative to hospitalization-rate target.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matches prior best spec and surveillance note that admissions may lag an I-state proxy; 1-week lag is a parsimonious way to align peak timing without adding compartments.\",\"expected_failure_mode\":\"Lag may be weakly identified and behave like a redundant degree of freedom; could drift across rolling splits if true lag varies within season.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Explores modest lag uncertainty (0\u20132 weeks) while staying within SEIR; a 2-week delay can better align hospitalization peaks if clinical/reporting delays are longer in this age group.\",\"expected_failure_mode\":\"Risk of over-shifting peaks and degrading early-season fit; may compensate by distorting latent dynamics, reducing stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds waning immunity to allow sharper, more transient peaks without introducing hospitalization compartment; still parsimonious and within SEIR-family extensions.\",\"expected_failure_mode\":\"Waning parameter may be poorly identified in a single season and can introduce spurious oscillation/over-flexibility, harming rolling stability.\"},{\"structure_name\":\"SEIR\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Fractional SEIR can represent heavy-tailed dwell times/effective memory, which may help capture high peakiness without extra compartments; keeps observation simple to avoid delay+structure confounding.\",\"expected_failure_mode\":\"Fractional dynamics can be harder to identify and may blur interpretability; could over-smooth or mis-time peaks if memory effect is not supported by data.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_01dcac91906d82bc0069f46a7f640c81a0af6f1693d8d9da85",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1123,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 492,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1615
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline SEIR in the SEIR family with direct I observation to keep identifiability strong in a short, single-season series; can accommodate sharp peaks via implicit time-varying transmission/forcing without adding compartments.\",\"expected_failure_mode\":\"May underfit timing if admissions systematically lag infections; peak timing could be slightly early relative to hospitalization-rate target.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matches prior best spec and surveillance note that admissions may lag an I-state proxy; 1-week lag is a parsimonious way to align peak timing without adding compartments.\",\"expected_failure_mode\":\"Lag may be weakly identified and behave like a redundant degree of freedom; could drift across rolling splits if true lag varies within season.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Explores modest lag uncertainty (0\u20132 weeks) while staying within SEIR; a 2-week delay can better align hospitalization peaks if clinical/reporting delays are longer in this age group.\",\"expected_failure_mode\":\"Risk of over-shifting peaks and degrading early-season fit; may compensate by distorting latent dynamics, reducing stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds waning immunity to allow sharper, more transient peaks without introducing hospitalization compartment; still parsimonious and within SEIR-family extensions.\",\"expected_failure_mode\":\"Waning parameter may be poorly identified in a single season and can introduce spurious oscillation/over-flexibility, harming rolling stability.\"},{\"structure_name\":\"SEIR\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Fractional SEIR can represent heavy-tailed dwell times/effective memory, which may help capture high peakiness without extra compartments; keeps observation simple to avoid delay+structure confounding.\",\"expected_failure_mode\":\"Fractional dynamics can be harder to identify and may blur interpretability; could over-smooth or mis-time peaks if memory effect is not supported by data.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"50-64 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Baseline SEIR in the SEIR family with direct I observation to keep identifiability strong in a short, single-season series; can accommodate sharp peaks via implicit time-varying transmission/forcing without adding compartments.\",\"expected_failure_mode\":\"May underfit timing if admissions systematically lag infections; peak timing could be slightly early relative to hospitalization-rate target.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Matches prior best spec and surveillance note that admissions may lag an I-state proxy; 1-week lag is a parsimonious way to align peak timing without adding compartments.\",\"expected_failure_mode\":\"Lag may be weakly identified and behave like a redundant degree of freedom; could drift across rolling splits if true lag varies within season.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Explores modest lag uncertainty (0\u20132 weeks) while staying within SEIR; a 2-week delay can better align hospitalization peaks if clinical/reporting delays are longer in this age group.\",\"expected_failure_mode\":\"Risk of over-shifting peaks and degrading early-season fit; may compensate by distorting latent dynamics, reducing stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Adds waning immunity to allow sharper, more transient peaks without introducing hospitalization compartment; still parsimonious and within SEIR-family extensions.\",\"expected_failure_mode\":\"Waning parameter may be poorly identified in a single season and can introduce spurious oscillation/over-flexibility, harming rolling stability.\"},{\"structure_name\":\"SEIR\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Fractional SEIR can represent heavy-tailed dwell times/effective memory, which may help capture high peakiness without extra compartments; keeps observation simple to avoid delay+structure confounding.\",\"expected_failure_mode\":\"Fractional dynamics can be harder to identify and may blur interpretability; could over-smooth or mis-time peaks if memory effect is not supported by data.\"}]}",
+  "scientific_claim_allowed": true
+}

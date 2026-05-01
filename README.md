@@ -228,9 +228,11 @@ The main outputs are:
 
 LLM-V1 adds iterative refinement on top of the LLM-V0 proposal-only layer.
 It still does not fit parameters, does not write Python equations, and does not change the existing non-LLM benchmark.
-The repository now supports both `provider=mock` and `provider=openai` for LLM-V1 runs, but the currently frozen repository artifacts are still mock-provider engineering validations rather than live-provider scientific evaluations.
+The repository now supports both `provider=mock` and `provider=openai` for LLM-V1 runs.
+The frozen mock-provider artifact root remains the engineering validation baseline, while the clean two-series OpenAI smoke root is the first live-provider protocol check.
 
 Mock provider results are engineering smoke tests and should not be interpreted as evidence of LLM reasoning quality.
+Live-provider results are controlled preliminary evaluations. The all-series freeze now provides an audited live-provider run, but candidate budgets are not matched and the result should not be read as a global LLM-over-non-LLM win.
 
 The V1 loop is:
 
@@ -289,7 +291,40 @@ python scripts/validate_llm_v1_artifacts.py \
   --report reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md
 ```
 
-Live-provider runs should still be treated as controlled evaluation runs rather than automatic scientific claims. The current frozen artifact set in this repository remains mock-provider only until live-provider outputs are explicitly rerun, validated, and frozen under the same protocol.
+Live-provider runs should still be treated as controlled evaluation runs rather than automatic scientific claims. The clean two-series live-provider smoke outputs are frozen as a protocol check, while all-series live-provider outputs should be frozen only after they are explicitly rerun, validated, and reported under the same protocol.
+
+The clean two-series live-provider smoke freeze is stored under:
+
+- [`artifacts_llm_v1_openai_two_series_smoke/`](artifacts_llm_v1_openai_two_series_smoke/)
+- [`reports/llm_v1_openai_two_series_smoke_report.md`](reports/llm_v1_openai_two_series_smoke_report.md)
+- [`reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md`](reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md)
+
+This run passed the artifact/leakage validator on two difficult series, `5-17 yr` and `>= 65 yr`.
+For `5-17 yr`, V1 selected `SEIRS|fractional=0|obs=delayed_I|delay=1` after round-two refinement.
+For `>= 65 yr`, V1 selected `SEIRS|fractional=1|obs=delayed_I|delay=1` in round one.
+Candidate budgets are not matched, so these outputs should not be interpreted as candidate-efficiency evidence.
+
+Run an all-series live-provider freeze in a separate artifact root:
+
+```bash
+python scripts/run_llm_iterative_refinement.py \
+  --config configs/llm_v1_iterative_openai_all_series_freeze.yaml \
+  --all-series \
+  --provider openai \
+  --log-level INFO
+```
+
+Then rebuild and validate the all-series live report against the matching artifact root before using it in paper-level claims.
+
+The clean all-series live-provider freeze is stored under:
+
+- [`artifacts_llm_v1_openai_all_series_freeze/`](artifacts_llm_v1_openai_all_series_freeze/)
+- [`reports/llm_v1_openai_all_series_freeze_report.md`](reports/llm_v1_openai_all_series_freeze_report.md)
+- [`reports/llm_v1_openai_all_series_freeze_artifact_validation_report.md`](reports/llm_v1_openai_all_series_freeze_artifact_validation_report.md)
+
+This all-series run passed artifact/leakage validation across six series, 15 rounds, and 171 checked files.
+V1 improved over the V0 score for `0-4 yr`, `5-17 yr`, and `>= 65 yr`, but improved over the non-LLM reference score only for `0-4 yr`.
+The correct interpretation is that live V1 is operational and sometimes useful, while the observation-aware non-LLM discovery baseline remains the stronger overall reference.
 
 Rebuild the V1 markdown report from existing artifacts:
 
@@ -346,6 +381,10 @@ The repository contains many artifacts, but these files are the fastest path to 
 - LLM-V0 comparison summary: [`artifacts_llm_v0/llm_vs_nonllm_summary.csv`](artifacts_llm_v0/llm_vs_nonllm_summary.csv)
 - LLM-V1 comparison summary: [`artifacts_llm_v1/llm_v1_vs_v0_vs_nonllm_summary.csv`](artifacts_llm_v1/llm_v1_vs_v0_vs_nonllm_summary.csv)
 - LLM-V1 iterative report: [`reports/llm_v1_iterative_report.md`](reports/llm_v1_iterative_report.md)
+- clean two-series live-provider LLM-V1 report: [`reports/llm_v1_openai_two_series_smoke_report.md`](reports/llm_v1_openai_two_series_smoke_report.md)
+- clean two-series live-provider artifact validation: [`reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md`](reports/llm_v1_openai_two_series_smoke_artifact_validation_report.md)
+- clean all-series live-provider LLM-V1 report: [`reports/llm_v1_openai_all_series_freeze_report.md`](reports/llm_v1_openai_all_series_freeze_report.md)
+- clean all-series live-provider artifact validation: [`reports/llm_v1_openai_all_series_freeze_artifact_validation_report.md`](reports/llm_v1_openai_all_series_freeze_artifact_validation_report.md)
 
 ### Discovery Outputs
 

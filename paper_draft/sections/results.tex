@@ -198,73 +198,110 @@ too coverage-gap-driven, and v3 provides the best current compromise. This is
 why the repository now treats benchmark-level conformal v3 as the default
 uncertainty postprocessor while keeping point-forecast selection separate.
 
-\subsection{LLM engineering validation status}
+\subsection{LLM engineering and live-provider validation status}
 
-The repository has now moved beyond the non-LLM-only phase and contains both
-LLM-V0 and LLM-V1 engineering runs. Their interpretation must remain narrow:
-the current frozen artifacts are mock-provider runs designed to validate the
-agentic protocol rather than to establish scientific claims about LLM reasoning
-quality.
+The repository has now moved beyond the non-LLM-only phase and contains three
+LLM layers: V0 proposal-only, V1 mock iterative refinement, and a clean
+two-series V1 live-provider smoke run. Their interpretation must remain
+careful. Mock-provider artifacts validate the orchestration and artifact
+protocol; live-provider artifacts begin to test whether a real model can
+produce useful structure proposals under the same no-test-leakage and hard
+validation constraints.
 
-These LLM engineering runs sit on top of a non-LLM benchmark that is already
-substantially hardened: it now includes fair hospitalization-aware manual
-baselines, observation-aware discovery grammar, five-seed robustness analysis,
-no-age-prior ablations with identical aggregate outcomes, and a fixed
-benchmark-level conformal postprocessor.
+These LLM runs sit on top of a non-LLM benchmark that is already substantially
+hardened: it includes fair hospitalization-aware manual baselines,
+observation-aware discovery grammar, five-seed robustness analysis,
+no-age-prior ablations with identical aggregate outcomes, an objective-aware
+policy layer, and a fixed benchmark-level conformal postprocessor.
 
 \paragraph{LLM-V0.}
-The one-round proposal-only layer successfully exercises the full pipeline:
-prompt-safe summary construction, proposer JSON output, critic annotation, hard
-validation, numerical execution, and structured comparison against the non-LLM
-reference discovery artifacts. This establishes that the LLM layer can be
-inserted without changing the benchmark executor or contaminating it with test
-information.
+The one-round proposal-only layer exercises the full pipeline: prompt-safe
+summary construction, proposer JSON output, critic annotation, hard validation,
+numerical execution, and structured comparison against the non-LLM reference
+discovery artifacts. This establishes that an LLM proposal layer can be
+inserted without changing the benchmark executor or exposing proposer/critic
+prompts to test-derived information.
 
-\paragraph{LLM-V1.}
-The iterative refinement layer also runs end-to-end in mock mode. Across the
-six series, round-aware artifacts are produced for each proposer/critic round,
+\paragraph{LLM-V1 mock validation.}
+The iterative refinement layer runs end-to-end in mock mode. Across the six
+series, round-aware artifacts are produced for each proposer/critic round,
 including proposal audits, validation/rolling leaderboards, analyst feedback,
-and refinement traces. In the current mock runs, only \texttt{5--17 yr}
-exhibits a material round-two improvement in the validation-selected score,
-improving from approximately \num{0.335852} in V0-like one-shot behavior to
-\num{0.322741} after refinement. The remaining series either plateau at round
-one or stop after a negligible score change, which is the intended early-stop
-behavior for a validation-driven loop.
+and refinement traces. The V1 artifact validator confirms that the frozen
+\texttt{artifacts\_llm\_v1/} tree contains the required global and per-round
+files, that round-level prompts and traces do not contain banned test-derived
+terms, that round-level leaderboards exclude test columns, and that the report
+contains the required mock-provider disclaimer. These mock results are
+engineering smoke tests only and should not be interpreted as evidence of LLM
+reasoning quality.
 
-\paragraph{Protocol validation.}
-The LLM-V1 artifact validator and reproducibility snapshot provide a stronger
-engineering check than the earlier non-LLM-only phase. The validator confirms
-that the current \texttt{artifacts\_llm\_v1/} tree contains the required global
-and per-round files, that round-level prompts and traces do not contain banned
-test-derived terms, that round-level leaderboards exclude test columns, and
-that the report contains the required mock-provider disclaimer.
+\paragraph{LLM-V1 live-provider all-series freeze.}
+After the two-series smoke run, LLM-V1 was run with a live provider on all six
+benchmark series under
+\texttt{artifacts\_llm\_v1\_openai\_all\_series\_freeze/}. The artifact
+validator passed: six series directories, 15 total rounds, and 171 files were
+checked, with no leakage failures and no forbidden test-metric columns in
+round-level leaderboards. Across all series, the provider generated 71 raw
+proposals; 69 were schema-valid, hard-valid, and evaluated, giving an aggregate
+evaluated proposal rate of \num{0.972}.
+
+\begin{table}[H]
+\centering
+\caption{Clean all-series live-provider LLM-V1 freeze results. Scores are
+validation/rolling-selected composite scores. Test MAE is reported only after
+the final candidate is selected. Candidate budgets are not matched, so these
+numbers should not be interpreted as efficiency evidence.}
+\label{tab:llm-v1-live-freeze}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{4.4cm} c c c c X}
+\toprule
+Series & Selected V1 structure & Round & V1 score & V0 score & Non-LLM score & Interpretation \\
+\midrule
+Overall & \texttt{SEIR|fractional=0|obs=delayed\_I|delay=1} & 1 & \num{0.369973} & \num{0.317918} & \num{0.317918} & V1 proposes delayed observation but does not improve over the simpler V0/non-LLM SIR reference. \\
+0--4 yr & \texttt{SEIRS|fractional=0|obs=I} & 2 & \num{0.341377} & \num{0.346885} & \num{0.344818} & V1 improves over both V0 and the non-LLM reference score, with round-two refinement. \\
+5--17 yr & \texttt{SEIRS|fractional=0|obs=delayed\_I|delay=2} & 2 & \num{0.288766} & \num{0.335852} & \num{0.273314} & V1 improves over V0 but remains worse than non-LLM discovery. Refinement still improves the V1 trajectory. \\
+18--49 yr & \texttt{SEIR|fractional=0|obs=delayed\_I|delay=2} & 1 & \num{0.325325} & \num{0.250177} & \num{0.260602} & V1 overcomplicates a series where simple \texttt{SIR|obs=I} remains stronger. \\
+50--64 yr & \texttt{SEIR|fractional=0|obs=I} & 3 & \num{0.266879} & \num{0.222208} & \num{0.222209} & Refinement improves V1 internally, but not enough to beat the simple SIR references. \\
+$\geq$65 yr & \texttt{SEIRS|fractional=1|obs=delayed\_I|delay=1} & 1 & \num{0.530717} & \num{0.536832} & \num{0.493660} & V1 improves over V0 but not over non-LLM discovery, which selects the same family with delay 2. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Refinement improved the V1 validation/rolling score for three of six series:
+\texttt{0--4 yr} improved from \num{0.434743} to \num{0.341377},
+\texttt{5--17 yr} improved from \num{0.323247} to \num{0.288766}, and
+\texttt{50--64 yr} improved from \num{0.273996} to \num{0.266879}. The other
+three series selected a round-one candidate and stopped without improvement.
 
 \paragraph{Interpretation boundary.}
-These mock results should not be described as evidence that LLM-V1 outperforms
-non-LLM discovery. The correct interpretation is narrower: the repository now
-supports validation-feedback-driven structure refinement under hard mechanistic
-constraints, and this orchestration can be audited through structured artifacts
-and leakage checks.
+The live all-series freeze supports a limited feasibility claim: a live
+provider can generate mostly hard-valid, semantically aligned structures under
+the current leakage guard, and V1 refinement can improve the validation/rolling
+objective in selected age groups. It does not support a global claim that
+LLM-V1 beats non-LLM discovery. V1 improves over V0 on three of six series, but
+it improves over the non-LLM reference score only for \texttt{0--4 yr}. The
+observation-aware non-LLM discovery baseline remains the stronger overall
+reference.
 
 \subsection{Implications for the next phase}
 
 The next phase should therefore not return to micro-tuning the non-LLM search
-space. That groundwork is already strong. The more valuable next step is a
-controlled live-provider evaluation that preserves the same no-test-leakage and
-artifact-validation rules.
+space. That groundwork is already strong. The live-provider all-series freeze
+also shows that the current agentic loop is operational, but not yet clearly
+superior to the non-LLM constrained search.
 
 The practical order is:
 \begin{enumerate}[leftmargin=1.5em]
-\item run live-provider LLM-V1 on the two most informative series,
-\texttt{5--17 yr} and \texttt{$\geq$65 yr};
-\item validate and freeze those artifacts under the same protocol;
-\item then expand live-provider evaluation to all six series; and
-\item only after that compare V0, V1, and non-LLM discovery as scientific
-forecasting methods.
+\item treat the current all-series live-provider result as the first frozen
+LLM-V1 evidence set;
+\item avoid claiming global LLM dominance over non-LLM discovery;
+\item use the result to motivate better candidate-budget matching and stronger
+live-provider prompt/critic variants; and
+\item only then decide whether a revised live-provider loop is strong enough
+for a paper-level performance claim.
 \end{enumerate}
 
-In other words, the current contribution is already enough to support the
-agentic claim at the engineering-method level:
+In other words, the current contribution already supports the agentic claim at
+the engineering-method level:
 \emph{validation-feedback-driven structure refinement under hard mechanistic
-constraints}. The remaining work is to evaluate that loop with a live provider
-under the same reproducibility standards used for the non-LLM benchmark.
+constraints}. The live-provider result strengthens the feasibility argument,
+but the performance claim should remain conservative because the non-LLM
+observation-aware discovery baseline remains highly competitive.

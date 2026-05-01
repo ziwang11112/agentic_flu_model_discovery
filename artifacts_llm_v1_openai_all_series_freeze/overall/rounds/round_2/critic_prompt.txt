@@ -1,0 +1,117 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "Overall",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.25,
+  "validation_std": 0.0670820393249937,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "Delay may remain weakly identified (1 week vs nearby values), with timing absorbed by latent/infectious durations; waning may be under-identified in a short series and act as an extra degree of freedom.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Primary candidate per feedback: SEIRS supports waning immunity/return-to-susceptible to better accommodate high peakiness and potential multi-wave behavior while keeping a single-channel observation. delayed_I(1) matches plausible admission/reporting lag without adding extra lag mechanisms.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If hospitalization admissions systematically lag infections, removing delay can shift peaks early and force unrealistic E/I durations to align timing.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "No-lag SEIRS control to test whether explicit delay is necessary versus being compensated by E/I timescales; retains waning to handle sharp rise/fall without increasing observation complexity.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Over-lagging can smear peaks and degrade fit around rapid ascent/decline; may be non-identifiable relative to changes in E/I durations.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Alternative small lag within allowed set to cover plausible 1\u20132 week admission delay at weekly resolution while keeping the same parsimonious SEIRS backbone.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May under-represent multi-wave/peakiness if waning immunity is important; can compensate via parameter shifts that smooth peaks.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Baseline continuity with previous best spec; keeps compartment count minimal while retaining the single-channel delayed observation aligned to hospitalization-rate semantics.",
+      "structure_name": "SEIR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H-state dynamics may be weakly identifiable in a short single-season series; mismatch between modeled H stock and observed weekly admission-rate can cause timing/scale errors and over-parameterization effects.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Clean hospitalization-explicit test with direct H observation (no I+H mixing) to align the state with the hospitalization-rate target; minimal added structure beyond what is needed to map to H, consistent with identifiability cautions.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": "Overall"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

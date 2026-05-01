@@ -1,0 +1,97 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SIR|fractional=0|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": "Overall",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.25,
+  "validation_std": 0.0670820393249937,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep observation_map single-channel (avoid I+H mixtures); prioritize either delayed_I or H, not both.",
+      "If using delayed_I, restrict delay_weeks to a small set {0,1,2} and avoid adding additional lag mechanisms simultaneously.",
+      "If using hospitalization-explicit structures (SEIHR/SEIHR-like), constrain hospitalization transition timescales to be short (weekly-scale) and avoid extra compartments beyond what is needed to map to H.",
+      "Prefer structures that can represent waning/return-to-susceptible (SEIRS/SEIRS-like) given competitive performance and to better handle multi-wave/peakiness without extra observation mixing.",
+      "Avoid increasing compartment count unless it is paired with a clear, direct observation mapping to the target (weekly hospitalization rate)."
+    ],
+    "observed_failure_modes": [
+      "Delay sensitivity: SEIR with delayed_I at 1 vs 2 weeks performs similarly, suggesting the model is compensating for timing via other parameters rather than capturing a well-identified reporting/admission lag.",
+      "Hospitalization mapping mismatch: SEIHR with direct H observation does not improve over delayed_I, implying H-state dynamics/parameterization may be misaligned with the hospitalization-rate target at weekly resolution.",
+      "Over-mixing observation channels hurts: SEIHR with I+H observation degrades substantially, indicating identifiability issues and/or double-counting when combining incidence-like and hospitalization-like signals.",
+      "Peakiness not fully captured by simpler structures: despite high peakiness, SEIR variants remain competitive, suggesting current templates may be smoothing peaks via delay/latent periods rather than representing sharper rise/fall mechanisms explicitly.",
+      "Complexity not paying off: adding an H compartment (SEIHR) increases penalties without clear validation/rolling gains, pointing to unnecessary degrees of freedom under current observation assumptions."
+    ],
+    "proposer_instruction": "For the next round, focus proposals around SEIRS with delayed_I (delay 0\u20132) and a small number of well-identified parameters; treat SEIRS+delayed_I(1) as a strong baseline. If exploring hospitalization-explicit models, propose a constrained SEIHR variant observed as H only (no I+H), with minimal additional flexibility and weekly-scale transitions, to test whether a cleaner H mapping can outperform delayed_I without identifiability problems. Do not introduce combined observation maps or additional compartments unless they directly improve the hospitalization mapping."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 1,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIR"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

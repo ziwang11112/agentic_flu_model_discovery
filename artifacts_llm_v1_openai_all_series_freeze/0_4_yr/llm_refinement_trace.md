@@ -1,0 +1,34 @@
+# LLM V1 Refinement Trace
+
+## Round 1
+
+- previous_best_spec: `None`
+- previous_best_score: `None`
+- analyst_feedback_summary:
+- new_specs: `SEIRS|fractional=0|obs=delayed_I|delay=2; SEIRS|fractional=1|obs=delayed_I|delay=1; SEIHR|fractional=0|obs=H; SEIHR|fractional=0|obs=I+H; SEIR|fractional=0|obs=delayed_I|delay=2`
+- round_best_spec: `SEIRS|fractional=0|obs=delayed_I|delay=2`
+- round_best_score: `0.4347433952383731`
+- score_improvement: `None`
+- early_stop: `False`
+
+## Round 2
+
+- previous_best_spec: `SEIRS|fractional=0|obs=delayed_I|delay=2`
+- previous_best_score: `0.4347433952383731`
+- analyst_feedback_summary: Propose a tight set of SEIRS templates centered on delayed_I with delay_weeks in {1,2,3}. Include both fractional=0 and fractional=1 variants but keep the proposal count balanced and avoid additional compartments (no SEIHR) and no composite observations (no I+H). If adding a control, include SEIRS with obs=I (no delay) to check whether the delay is truly necessary, but keep the main emphasis on delayed_I timing refinement.
+- new_specs: `SEIRS|fractional=0|obs=delayed_I|delay=1; SEIRS|fractional=0|obs=delayed_I|delay=2; SEIRS|fractional=0|obs=delayed_I|delay=3; SEIRS|fractional=1|obs=delayed_I|delay=1; SEIRS|fractional=1|obs=delayed_I|delay=2; SEIRS|fractional=0|obs=I`
+- round_best_spec: `SEIRS|fractional=0|obs=I`
+- round_best_score: `0.34137650027950367`
+- score_improvement: `0.0933668949588694`
+- early_stop: `False`
+
+## Round 3
+
+- previous_best_spec: `SEIRS|fractional=0|obs=I`
+- previous_best_score: `0.34137650027950367`
+- analyst_feedback_summary: For the next round, focus the search on SEIRS with observation timing close to contemporaneous hospitalization. Propose a small set centered on (fractional=0, obs=I, delay=0) and (fractional=0, obs=delayed_I, delay=1), plus at most one fractional candidate limited to (fractional=1, obs=delayed_I, delay=1). Do not propose delay=2 or delay=3 variants. The goal is to improve split-robustness rather than chasing single-window validation gains.
+- new_specs: `SEIRS|fractional=0|obs=I; SEIRS|fractional=0|obs=delayed_I|delay=1; SEIRS|fractional=1|obs=delayed_I|delay=1`
+- round_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=1`
+- round_best_score: `0.38791611664294173`
+- score_improvement: `-0.04653961636343806`
+- early_stop: `True`

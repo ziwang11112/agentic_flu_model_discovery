@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+50-64 yr,3,0,openai,False,True,SEIR,False,I,0,True,True,,medium,,True
+50-64 yr,3,1,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+50-64 yr,3,2,openai,False,True,SEIR,False,delayed_I,2,True,True,,low,,True
+50-64 yr,3,3,openai,False,True,SEIRS,False,I,0,True,True,,low,"SEIRS adds a waning-immunity parameter that is typically weakly identifiable in a single-season window and can mimic other effects (time-varying transmission, reporting changes), increasing over-complexity risk without improving hospitalization-target alignment (still obs=I, no delay).",True
+50-64 yr,3,4,openai,False,True,SEIR,True,I,0,True,True,,low,"Fractional memory is not clearly justified by the provided series summary (single season, high peakiness but no indication of long-memory behavior). Fractional SEIR increases identifiability risk and can overfit by absorbing timing/shape errors that are more plausibly explained by an observation lag (delayed_I) for hospitalization-rate targets.",True

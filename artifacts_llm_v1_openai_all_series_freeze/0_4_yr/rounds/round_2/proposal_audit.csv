@@ -1,0 +1,7 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,2,0,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True
+0-4 yr,2,1,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,2,2,openai,False,True,SEIRS,False,delayed_I,3,True,True,,medium,,True
+0-4 yr,2,3,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,"Fractional memory is not clearly justified for a short (n_train=31) single-season series with moderate peakiness; it increases flexibility and overfitting risk and can reduce identifiability/stability across splits. Given existing non-fractional delayed_I candidates spanning delays, the incremental value is likely low at this stage.",True
+0-4 yr,2,4,openai,False,True,SEIRS,True,delayed_I,2,True,True,,low,"Same concern as proposal 3, amplified by coupling fractional dynamics with the already-strong 2-week delay: added flexibility may fit curvature idiosyncrasies rather than signal in a short season, increasing parameter sensitivity and identifiability risk without a clear mechanistic need.",True
+0-4 yr,2,5,openai,False,True,SEIRS,False,I,0,True,True,,medium,,True

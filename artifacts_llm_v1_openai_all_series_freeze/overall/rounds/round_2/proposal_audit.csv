@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+Overall,2,0,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True
+Overall,2,1,openai,False,True,SEIRS,False,delayed_I,0,True,True,,medium,,True
+Overall,2,2,openai,False,True,SEIRS,False,delayed_I,2,True,True,,medium,,True
+Overall,2,3,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+Overall,2,4,openai,False,True,SEIHR,False,H,0,True,True,,low,"Observation-target alignment is potentially problematic: observing H (a stock/compartment level) is not the same as weekly hospitalization admissions/rate unless the model’s H state is explicitly defined as an admission flow proxy. Additionally, adding an H compartment increases complexity and is specifically flagged as weakly identifiable for short single-season series; delayed_I is more plausible here given the surveillance semantics and limited data length.",True

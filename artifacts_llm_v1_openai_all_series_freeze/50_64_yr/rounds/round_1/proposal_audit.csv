@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+50-64 yr,1,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+50-64 yr,1,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,medium,,True
+50-64 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H matches target semantics, an explicit hospitalization compartment is specifically noted as weakly identifiable for short single-season series; mapping observations directly to H increases risk of parameter tradeoffs (I→H vs H→R) and unstable extrapolation. Also less plausible than delayed_I as a minimal lagged proxy given the surveillance note.",True
+50-64 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,,True
+50-64 yr,1,4,openai,False,True,SEIRS,False,delayed_I,1,True,True,,low,"SEIRS adds waning immunity, which is likely unidentifiable with 31 training weeks and can mimic noise or induce spurious persistence/secondary dynamics. Added complexity is not clearly justified by the provided single-season summary; delayed_I already addresses the main semantic mismatch without extra states.",True

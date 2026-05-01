@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+18-49 yr,2,0,openai,False,True,SEIHR,False,H,0,True,True,,medium,,True
+18-49 yr,2,1,openai,False,True,SEIHR,False,H,1,False,False,non_delayed_observation_requires_zero_delay,low,,False
+18-49 yr,2,2,openai,False,True,SEIHR,False,H,2,False,False,non_delayed_observation_requires_zero_delay,low,,False
+18-49 yr,2,3,openai,False,True,SEIHR,True,H,0,True,True,,low,"Fractional memory is not well-justified here given short single-season data and already-added H compartment. Fractional order can overfit peakiness/tails and absorb delay/residence-time effects, worsening identifiability and interpretability without clear need.",True

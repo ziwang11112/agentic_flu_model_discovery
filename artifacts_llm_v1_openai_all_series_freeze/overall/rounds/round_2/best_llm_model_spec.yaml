@@ -1,0 +1,12 @@
+series_name: Overall
+best_spec:
+  structure_name: SEIRS
+  fractional: false
+  observation_map: delayed_I
+  delay_weeks: 2
+selection_score: 0.3750711645523941
+selection_validation_mae: 0.15199045633620611
+selection_rolling_mean_mae: 0.15507278787724357
+provider: openai
+provider_is_mock: false
+scientific_claim_allowed: true

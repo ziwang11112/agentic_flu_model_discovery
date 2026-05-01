@@ -1,0 +1,4 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,3,0,openai,False,True,SEIRS,False,I,0,True,True,,medium,,True
+0-4 yr,3,1,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True
+0-4 yr,3,2,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,"Fractional memory is not clearly justified for a single-season, 31-week training series with only moderate peakiness; it increases flexibility and parameter sensitivity, raising identifiability/overfitting risk. Given the surveillance note, improving alignment is better achieved via delayed_I than via fractional dynamics, and the non-fractional delayed_I already captures the primary semantic mismatch.",True

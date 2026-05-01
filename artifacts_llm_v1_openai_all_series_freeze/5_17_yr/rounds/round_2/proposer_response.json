@@ -1,0 +1,203 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true lag is closer to 2 weeks or varies over time, forecasts may show systematic lead/lag around the peak and during rapid rise/decline.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Prioritize robustness with a minimal latent-to-observed lag: SEIR is parsimonious for a single-season, moderately peaky series, and a 1-week delay captures plausible admission/reporting lag without relying on precise phase alignment.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "May over-smooth timing if admissions respond faster than 2 weeks in some periods, producing delayed peak timing and underestimating early growth.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Same low-variance SEIR core with a 2-week delay, matching the previously best-performing delay while avoiding the higher-variance 3-week alignment; intended as a stable baseline for hospitalization-rate-as-lagged-infection-proxy semantics.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "With only 31 training points, the extra degree of freedom can absorb noise, leading to unstable inferred seasonality/turning points and reduced rolling robustness.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Adds waning immunity as a controlled complexity increase while keeping the observation mapping simple and the delay short; included only as a check for improved rolling stability versus SEIR in this age group.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Identifiability issues between waning immunity and transmission can cause drift in mid-season levels and degrade multi-week-ahead forecasts despite good in-sample tracking.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Carries forward the prior best template but constrains delay to the more stable {1,2} set; tests whether SEIRS provides consistent rolling-only gains over SEIR when the lag is set to 2 weeks.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H-state parameters may be weakly identifiable in a short series, causing unstable hospitalization scaling/duration and sensitivity to initialization, which can hurt rolling-only performance.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Single explicit hospitalization-state alternative consistent with target semantics; kept to one SEIHR variant to limit overfitting while allowing a mechanistic admission process rather than a pure lagged-I proxy.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777624786,
+          "created_at": 1777624773.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_09398b64f00ef6080069f466c5c2dc819781fd780ca4757f63",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Prioritize robustness with a minimal latent-to-observed lag: SEIR is parsimonious for a single-season, moderately peaky series, and a 1-week delay captures plausible admission/reporting lag without relying on precise phase alignment.\",\"expected_failure_mode\":\"If the true lag is closer to 2 weeks or varies over time, forecasts may show systematic lead/lag around the peak and during rapid rise/decline.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same low-variance SEIR core with a 2-week delay, matching the previously best-performing delay while avoiding the higher-variance 3-week alignment; intended as a stable baseline for hospitalization-rate-as-lagged-infection-proxy semantics.\",\"expected_failure_mode\":\"May over-smooth timing if admissions respond faster than 2 weeks in some periods, producing delayed peak timing and underestimating early growth.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity as a controlled complexity increase while keeping the observation mapping simple and the delay short; included only as a check for improved rolling stability versus SEIR in this age group.\",\"expected_failure_mode\":\"With only 31 training points, the extra degree of freedom can absorb noise, leading to unstable inferred seasonality/turning points and reduced rolling robustness.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Carries forward the prior best template but constrains delay to the more stable {1,2} set; tests whether SEIRS provides consistent rolling-only gains over SEIR when the lag is set to 2 weeks.\",\"expected_failure_mode\":\"Identifiability issues between waning immunity and transmission can cause drift in mid-season levels and degrade multi-week-ahead forecasts despite good in-sample tracking.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Single explicit hospitalization-state alternative consistent with target semantics; kept to one SEIHR variant to limit overfitting while allowing a mechanistic admission process rather than a pure lagged-I proxy.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, causing unstable hospitalization scaling/duration and sensitivity to initialization, which can hurt rolling-only performance.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_09398b64f00ef6080069f466c7c5ac81978db25aff8c568dcf",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1311,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 556,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1867
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Prioritize robustness with a minimal latent-to-observed lag: SEIR is parsimonious for a single-season, moderately peaky series, and a 1-week delay captures plausible admission/reporting lag without relying on precise phase alignment.\",\"expected_failure_mode\":\"If the true lag is closer to 2 weeks or varies over time, forecasts may show systematic lead/lag around the peak and during rapid rise/decline.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same low-variance SEIR core with a 2-week delay, matching the previously best-performing delay while avoiding the higher-variance 3-week alignment; intended as a stable baseline for hospitalization-rate-as-lagged-infection-proxy semantics.\",\"expected_failure_mode\":\"May over-smooth timing if admissions respond faster than 2 weeks in some periods, producing delayed peak timing and underestimating early growth.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity as a controlled complexity increase while keeping the observation mapping simple and the delay short; included only as a check for improved rolling stability versus SEIR in this age group.\",\"expected_failure_mode\":\"With only 31 training points, the extra degree of freedom can absorb noise, leading to unstable inferred seasonality/turning points and reduced rolling robustness.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Carries forward the prior best template but constrains delay to the more stable {1,2} set; tests whether SEIRS provides consistent rolling-only gains over SEIR when the lag is set to 2 weeks.\",\"expected_failure_mode\":\"Identifiability issues between waning immunity and transmission can cause drift in mid-season levels and degrade multi-week-ahead forecasts despite good in-sample tracking.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Single explicit hospitalization-state alternative consistent with target semantics; kept to one SEIHR variant to limit overfitting while allowing a mechanistic admission process rather than a pure lagged-I proxy.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, causing unstable hospitalization scaling/duration and sensitivity to initialization, which can hurt rolling-only performance.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Prioritize robustness with a minimal latent-to-observed lag: SEIR is parsimonious for a single-season, moderately peaky series, and a 1-week delay captures plausible admission/reporting lag without relying on precise phase alignment.\",\"expected_failure_mode\":\"If the true lag is closer to 2 weeks or varies over time, forecasts may show systematic lead/lag around the peak and during rapid rise/decline.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Same low-variance SEIR core with a 2-week delay, matching the previously best-performing delay while avoiding the higher-variance 3-week alignment; intended as a stable baseline for hospitalization-rate-as-lagged-infection-proxy semantics.\",\"expected_failure_mode\":\"May over-smooth timing if admissions respond faster than 2 weeks in some periods, producing delayed peak timing and underestimating early growth.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adds waning immunity as a controlled complexity increase while keeping the observation mapping simple and the delay short; included only as a check for improved rolling stability versus SEIR in this age group.\",\"expected_failure_mode\":\"With only 31 training points, the extra degree of freedom can absorb noise, leading to unstable inferred seasonality/turning points and reduced rolling robustness.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Carries forward the prior best template but constrains delay to the more stable {1,2} set; tests whether SEIRS provides consistent rolling-only gains over SEIR when the lag is set to 2 weeks.\",\"expected_failure_mode\":\"Identifiability issues between waning immunity and transmission can cause drift in mid-season levels and degrade multi-week-ahead forecasts despite good in-sample tracking.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Single explicit hospitalization-state alternative consistent with target semantics; kept to one SEIHR variant to limit overfitting while allowing a mechanistic admission process rather than a pure lagged-I proxy.\",\"expected_failure_mode\":\"H-state parameters may be weakly identifiable in a short series, causing unstable hospitalization scaling/duration and sensitivity to initialization, which can hurt rolling-only performance.\"}]}",
+  "scientific_claim_allowed": true
+}

@@ -1,0 +1,195 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable in a short single-season series, leading to parameter tradeoffs between I->H transition and H outflow that can shift peak width or tail decay.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly aligns the hospitalization-rate target with an explicit hospitalization compartment, addressing prior evidence that infection-proxy observations (I or delayed_I) alone miss peak timing/magnitude in high-peak series. Keeps complexity minimal (adds only H) and avoids mixed observation maps with identifiability concerns.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Delay can become partially redundant with latent/transition times (E->I and I->H), creating timing non-identifiability and occasional peak misalignment across rolling splits.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Adds a small 1-week reporting/admission delay while still observing H, allowing modest timing adjustment without relying on delay-only mapping to explain dynamics. Intended to better match hospitalization peak timing in a high-peak series while remaining parsimonious.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If true admission lag is shorter, a 2-week delay can over-shift peaks and force compensatory changes in transition rates, potentially destabilizing forecasts near the peak.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Explores the upper end of the recommended small delay range (2 weeks) while keeping observation focused on H. Useful if admissions are systematically lagged relative to underlying infection dynamics and prior delayed_I(2) performed well but lacked an explicit H state.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Fractional order may absorb multiple mechanisms (generation time + reporting) and become hard to interpret/identify, sometimes yielding overly persistent tails or sensitivity to initialization across splits.",
+        "fractional": true,
+        "observation_map": "H",
+        "rationale": "Fractional dynamics can flexibly represent heavy-tailed residence times and sharper/longer peaks without adding compartments, which may help with high peakiness while retaining an explicit hospitalization state and a clean H observation mapping.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "18-49 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777625253,
+          "created_at": 1777625243.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0a84709f13f196e70069f4689bc6a88195a0583e47b2ef3d1b",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the hospitalization-rate target with an explicit hospitalization compartment, addressing prior evidence that infection-proxy observations (I or delayed_I) alone miss peak timing/magnitude in high-peak series. Keeps complexity minimal (adds only H) and avoids mixed observation maps with identifiability concerns.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series, leading to parameter tradeoffs between I->H transition and H outflow that can shift peak width or tail decay.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":1,\"rationale\":\"Adds a small 1-week reporting/admission delay while still observing H, allowing modest timing adjustment without relying on delay-only mapping to explain dynamics. Intended to better match hospitalization peak timing in a high-peak series while remaining parsimonious.\",\"expected_failure_mode\":\"Delay can become partially redundant with latent/transition times (E->I and I->H), creating timing non-identifiability and occasional peak misalignment across rolling splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":2,\"rationale\":\"Explores the upper end of the recommended small delay range (2 weeks) while keeping observation focused on H. Useful if admissions are systematically lagged relative to underlying infection dynamics and prior delayed_I(2) performed well but lacked an explicit H state.\",\"expected_failure_mode\":\"If true admission lag is shorter, a 2-week delay can over-shift peaks and force compensatory changes in transition rates, potentially destabilizing forecasts near the peak.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Fractional dynamics can flexibly represent heavy-tailed residence times and sharper/longer peaks without adding compartments, which may help with high peakiness while retaining an explicit hospitalization state and a clean H observation mapping.\",\"expected_failure_mode\":\"Fractional order may absorb multiple mechanisms (generation time + reporting) and become hard to interpret/identify, sometimes yielding overly persistent tails or sensitivity to initialization across splits.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0a84709f13f196e70069f4689c95108195ba997eafa5ac502c",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1142,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 487,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1629
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the hospitalization-rate target with an explicit hospitalization compartment, addressing prior evidence that infection-proxy observations (I or delayed_I) alone miss peak timing/magnitude in high-peak series. Keeps complexity minimal (adds only H) and avoids mixed observation maps with identifiability concerns.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series, leading to parameter tradeoffs between I->H transition and H outflow that can shift peak width or tail decay.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":1,\"rationale\":\"Adds a small 1-week reporting/admission delay while still observing H, allowing modest timing adjustment without relying on delay-only mapping to explain dynamics. Intended to better match hospitalization peak timing in a high-peak series while remaining parsimonious.\",\"expected_failure_mode\":\"Delay can become partially redundant with latent/transition times (E->I and I->H), creating timing non-identifiability and occasional peak misalignment across rolling splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":2,\"rationale\":\"Explores the upper end of the recommended small delay range (2 weeks) while keeping observation focused on H. Useful if admissions are systematically lagged relative to underlying infection dynamics and prior delayed_I(2) performed well but lacked an explicit H state.\",\"expected_failure_mode\":\"If true admission lag is shorter, a 2-week delay can over-shift peaks and force compensatory changes in transition rates, potentially destabilizing forecasts near the peak.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Fractional dynamics can flexibly represent heavy-tailed residence times and sharper/longer peaks without adding compartments, which may help with high peakiness while retaining an explicit hospitalization state and a clean H observation mapping.\",\"expected_failure_mode\":\"Fractional order may absorb multiple mechanisms (generation time + reporting) and become hard to interpret/identify, sometimes yielding overly persistent tails or sensitivity to initialization across splits.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"18-49 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the hospitalization-rate target with an explicit hospitalization compartment, addressing prior evidence that infection-proxy observations (I or delayed_I) alone miss peak timing/magnitude in high-peak series. Keeps complexity minimal (adds only H) and avoids mixed observation maps with identifiability concerns.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series, leading to parameter tradeoffs between I->H transition and H outflow that can shift peak width or tail decay.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":1,\"rationale\":\"Adds a small 1-week reporting/admission delay while still observing H, allowing modest timing adjustment without relying on delay-only mapping to explain dynamics. Intended to better match hospitalization peak timing in a high-peak series while remaining parsimonious.\",\"expected_failure_mode\":\"Delay can become partially redundant with latent/transition times (E->I and I->H), creating timing non-identifiability and occasional peak misalignment across rolling splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":2,\"rationale\":\"Explores the upper end of the recommended small delay range (2 weeks) while keeping observation focused on H. Useful if admissions are systematically lagged relative to underlying infection dynamics and prior delayed_I(2) performed well but lacked an explicit H state.\",\"expected_failure_mode\":\"If true admission lag is shorter, a 2-week delay can over-shift peaks and force compensatory changes in transition rates, potentially destabilizing forecasts near the peak.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Fractional dynamics can flexibly represent heavy-tailed residence times and sharper/longer peaks without adding compartments, which may help with high peakiness while retaining an explicit hospitalization state and a clean H observation mapping.\",\"expected_failure_mode\":\"Fractional order may absorb multiple mechanisms (generation time + reporting) and become hard to interpret/identify, sometimes yielding overly persistent tails or sensitivity to initialization across splits.\"}]}",
+  "scientific_claim_allowed": true
+}
