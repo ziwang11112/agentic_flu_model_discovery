@@ -1,0 +1,25 @@
+series_name,budget_k,llm_best_score_at_k,nonllm_best_score_at_k,llm_better_at_k,llm_order_available,nonllm_order_available,order_matched,efficiency_claim_allowed,note
+0-4 yr,4,0.4347433952383731,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+0-4 yr,8,0.3450037682610331,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+0-4 yr,12,0.3413765002795036,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+0-4 yr,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+18-49 yr,4,0.3253248775732474,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+18-49 yr,8,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+18-49 yr,12,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+18-49 yr,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+5-17 yr,4,0.3232474834368306,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+5-17 yr,8,0.3232474834368306,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+5-17 yr,12,0.288765993626152,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+5-17 yr,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+50-64 yr,4,0.2739962889086243,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+50-64 yr,8,0.2736377146285013,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+50-64 yr,12,0.2668792175925199,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+50-64 yr,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+>= 65 yr,4,0.530716656824221,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+>= 65 yr,8,0.530716656824221,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+>= 65 yr,12,0.530716656824221,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+>= 65 yr,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+Overall,4,0.3699730808271582,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+Overall,8,0.3699730808271582,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+Overall,12,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.
+Overall,16,,,,True,False,False,False,Non-LLM candidate order unavailable; descriptive candidate counts only; no candidate-efficiency claim is supported.

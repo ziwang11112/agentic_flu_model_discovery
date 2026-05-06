@@ -4,6 +4,8 @@ data:
   raw_csv: FluSurveillance_Custom_Download_Data.csv
   processed_dir: data/processed
   include_age_robustness: false
+  season_mode: pooled
+  seasons: []
   age_groups:
     - 0-4 yr
     - 5-17 yr

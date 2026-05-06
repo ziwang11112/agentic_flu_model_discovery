@@ -122,12 +122,13 @@ def age_structure_prior_penalty(
     """Age-group-specific score adjustment for discovery candidates."""
     if not search_config.use_age_prior:
         return 0.0
+    age_key = series_name.split(" / ", 1)[1] if " / " in series_name else series_name
 
     simple_bonus = search_config.age_prior_simple_bonus
     recurrence_bonus = search_config.age_prior_recurrence_bonus
     fractional_bonus = search_config.age_prior_fractional_bonus
 
-    if series_name in {"Overall", "18-49 yr", "50-64 yr"}:
+    if age_key in {"Overall", "18-49 yr", "50-64 yr"}:
         penalty = 0.0
         if spec.structure_name == "SIR":
             penalty -= simple_bonus
@@ -139,7 +140,7 @@ def age_structure_prior_penalty(
             penalty += fractional_bonus
         return float(penalty)
 
-    if series_name == "0-4 yr":
+    if age_key == "0-4 yr":
         penalty = 0.0
         if spec.structure_name == "SEIRS":
             penalty -= recurrence_bonus
@@ -149,7 +150,7 @@ def age_structure_prior_penalty(
             penalty += 0.5 * fractional_bonus
         return float(penalty)
 
-    if series_name == "5-17 yr":
+    if age_key == "5-17 yr":
         penalty = 0.0
         if spec.structure_name == "SEIRS":
             penalty -= recurrence_bonus
@@ -157,7 +158,7 @@ def age_structure_prior_penalty(
             penalty -= 0.5 * fractional_bonus
         return float(penalty)
 
-    if series_name == ">= 65 yr":
+    if age_key == ">= 65 yr":
         penalty = 0.0
         if spec.structure_name == "SEIRS":
             penalty -= 0.5 * recurrence_bonus

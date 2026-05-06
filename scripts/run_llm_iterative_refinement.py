@@ -12,7 +12,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import yaml
-from src.data.loader import ROBUSTNESS_AGE_GROUPS, filter_series, load_flu_surv_data
+from src.data.loader import ROBUSTNESS_AGE_GROUPS, filter_series, load_flu_surv_data, resolve_data_path
 from src.data.split import make_chronological_split
 from src.discovery.search import SearchConfig
 from src.llm.config import load_llm_config
@@ -118,16 +118,17 @@ def main() -> None:
     if args.series and args.all_series:
         raise ValueError("Specify either repeated --series values or --all-series, not both.")
 
-    frame = load_flu_surv_data(REPO_ROOT / config["data"]["raw_csv"])
+    data_config = config["data"]
+    frame = load_flu_surv_data(resolve_data_path(REPO_ROOT, data_config["raw_csv"]))
     fit_config = _fit_config(config)
     search_config = _search_config(config)
     output_root = ensure_dir(llm_config.output_root)
 
-    series_names = args.series if args.series else ["Overall", *config["data"].get("age_groups", ROBUSTNESS_AGE_GROUPS)]
+    series_names = args.series if args.series else ["Overall", *data_config.get("age_groups", ROBUSTNESS_AGE_GROUPS)]
     series_outputs = []
     for offset, series_name in enumerate(series_names):
         logger.info("LLM-V1 start series=%s", series_name)
-        series_frame = filter_series(frame, age_category=series_name)
+        series_frame = filter_series(frame, age_category=series_name, seasons=data_config.get("seasons"))
         y = series_frame["WEEKLY RATE"].to_numpy(dtype=float)
         split = make_chronological_split(len(y))
         series_outputs.append(

@@ -1,0 +1,19 @@
+data:
+  raw_csv: data/raw/flusurvnet_multiseason_full.csv
+  processed_dir: data/processed_flusurvnet_multiseason
+  age_groups:
+    - Overall
+    - 0-4 yr
+    - 5-17 yr
+    - 18-49 yr
+    - 50-64 yr
+    - ">= 65 yr"
+  seasons_train: []
+  seasons_val: []
+  seasons_test: []
+
+artifacts:
+  root_dir: artifacts_flusurvnet_multiseason_smoke
+
+evaluation:
+  horizons: [1, 2, 4]

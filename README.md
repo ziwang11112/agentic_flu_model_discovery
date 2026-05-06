@@ -757,6 +757,18 @@ and for age robustness:
 - `artifacts_age_robustness/benchmark_test_mae_heatmap.png`
 - `artifacts_age_robustness/benchmark_rolling_mae_heatmap.png`
 
+## Paper-Ready Supplementary Runs
+
+Additional paper-support scripts are additive and write to new artifact roots by default:
+
+- multi-season FluSurv-NET audit plan/config: `configs/flusurvnet_multiseason_smoke.yaml` and `python scripts/audit_flusurvnet_multiseason.py --csv data/raw/flusurvnet_multiseason_full.csv --output-dir data/processed_flusurvnet_multiseason --report reports/flusurvnet_multiseason_audit.md`
+- selected-series OpenAI repeats: `python scripts/run_llm_v1_selected_repeats.py --repeat-ids 1 2 3`
+- LLM-vs-nonLLM budget diagnostic: `python scripts/build_llm_budget_diagnostic.py --llm-root artifacts_llm_v1_openai_all_series_freeze --nonllm-root artifacts_multiseed_age_robustness_observation --output-root artifacts_llm_budget_diagnostic --report reports/llm_budget_diagnostic_report.md`
+- dengue non-LLM weekly smoke benchmark: `python scripts/run_dengue_weekly_smoke.py --config configs/dengue_weekly_smoke.yaml`
+
+The budget diagnostic is descriptive unless candidate order and scoring are both available and comparable at fixed K budgets. It must not be used to claim candidate efficiency or global LLM superiority when budgets/order are unmatched.
+Do not run selected OpenAI live repeats in CI; they require `OPENAI_API_KEY` and intentionally call the live provider.
+
 ## Configuration Guide
 
 Main runtime controls live in [`configs/default.yaml`](configs/default.yaml) and [`configs/age_robustness.yaml`](configs/age_robustness.yaml).
@@ -779,6 +791,10 @@ Important knobs include:
 - `discovery.score_stability_weight`: penalty on unstable rolling-origin error behavior
 - `discovery.age_prior_*`: light age-group priors over simpler, recurrent, or fractional structures
 - `data.include_age_robustness`: toggle for rerunning all age-specific series
+- `data.season_mode`: `pooled` concatenates selected seasons into one sequence and is for smoke/descriptive runs only; `separate` evaluates each FluSurv-NET season as its own series
+- `data.seasons`: optional FluSurv-NET season labels, such as `2023-24`, used to subset the raw export
+
+For paper-level multi-season claims, prefer `season_mode=separate` or an explicit season-level train/validation/test split over pooled mode.
 
 ## Testing
 
@@ -786,11 +802,14 @@ The test suite currently covers:
 
 - data filtering
 - time sorting
+- season-aware FluSurv-NET processing
+- dengue data normalization
 - mass conservation checks
 - deterministic SEIR forward simulation
 - discovery-rule validation
 - discovery scoring helpers
 - reporting outputs
+- LLM budget diagnostic guardrails
 - probabilistic bootstrap uncertainty shape checks
 
 ## Limitations

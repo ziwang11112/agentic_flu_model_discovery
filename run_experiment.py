@@ -10,7 +10,14 @@ from typing import Any
 import pandas as pd
 import yaml
 
-from src.data.loader import build_processed_series, filter_series, load_flu_surv_data, save_processed_outputs
+from src.data.loader import (
+    SEASON_MODE_POOLED,
+    build_flu_series_frames,
+    build_processed_series,
+    load_flu_surv_data,
+    resolve_data_path,
+    save_processed_outputs,
+)
 from src.data.split import make_chronological_split
 from src.discovery.search import SearchConfig
 from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family
@@ -258,23 +265,30 @@ def main() -> None:
     set_global_seed(int(config["seed"]))
     logger.info("Global seed=%d", int(config["seed"]))
 
-    raw_csv_path = repo_root / config["data"]["raw_csv"]
+    raw_csv_path = resolve_data_path(repo_root, config["data"]["raw_csv"])
     raw_output_dir = ensure_dir(repo_root / "data" / "raw")
     copied_raw_csv = raw_output_dir / raw_csv_path.name
     if raw_csv_path.exists() and raw_csv_path.resolve() != copied_raw_csv.resolve():
         shutil.copy2(raw_csv_path, copied_raw_csv)
 
+    data_config = config["data"]
+    seasons = data_config.get("seasons")
+    season_mode = str(data_config.get("season_mode", SEASON_MODE_POOLED))
     frame = load_flu_surv_data(raw_csv_path)
     processed = build_processed_series(
         frame=frame,
-        include_age_groups=bool(config["data"]["include_age_robustness"]),
-        age_groups=config["data"]["age_groups"],
+        include_age_groups=bool(data_config["include_age_robustness"]),
+        age_groups=data_config["age_groups"],
+        seasons=seasons,
+        season_mode=season_mode,
     )
-    save_processed_outputs(processed, repo_root / config["data"]["processed_dir"])
+    save_processed_outputs(processed, repo_root / data_config["processed_dir"])
     logger.info(
-        "Processed data saved to %s with series=%s",
-        repo_root / config["data"]["processed_dir"],
+        "Processed data saved to %s with series=%s seasons=%s season_mode=%s",
+        repo_root / data_config["processed_dir"],
         sorted(processed["series_name"].unique().tolist()),
+        sorted(processed["season"].unique().tolist()),
+        season_mode,
     )
 
     if _benchmark_level_conformal_enabled(config) and bool(config["fitting"].get("calibrate_intervals", True)):
@@ -288,42 +302,47 @@ def main() -> None:
     artifact_root = ensure_dir(repo_root / config["artifacts"]["root_dir"])
 
     benchmark_leaderboards = []
-    overall_series = filter_series(frame, age_category="Overall")
-    overall_board = _run_series_benchmark(
-        series_name="Overall",
-        series_frame=overall_series,
-        fit_config=fit_config,
-        search_config=search_config,
-        artifact_root=artifact_root,
-        horizons=horizons,
-        seed=int(config["seed"]),
+    series_items = build_flu_series_frames(
+        frame=frame,
+        include_age_groups=bool(data_config["include_age_robustness"]),
+        age_groups=data_config["age_groups"],
+        seasons=seasons,
+        season_mode=season_mode,
     )
-    benchmark_leaderboards.append(overall_board)
-    combined_so_far = pd.concat(benchmark_leaderboards, ignore_index=True)
-    combined_so_far.to_csv(artifact_root / "benchmark_leaderboard_partial.csv", index=False)
-    logger.info("Wrote partial leaderboard=%s", artifact_root / "benchmark_leaderboard_partial.csv")
-
-    if bool(config["data"]["include_age_robustness"]):
-        for age_group in config["data"]["age_groups"]:
-            logger.info("Starting age-group robustness series=%s", age_group)
-            age_series = filter_series(frame, age_category=age_group)
-            age_board = _run_series_benchmark(
-                series_name=age_group,
-                series_frame=age_series,
-                fit_config=fit_config,
-                search_config=search_config,
-                artifact_root=artifact_root / "robustness",
-                horizons=horizons,
-                seed=int(config["seed"]) + 1000 + len(benchmark_leaderboards),
-            )
-            benchmark_leaderboards.append(age_board)
-            combined_so_far = pd.concat(benchmark_leaderboards, ignore_index=True)
-            combined_so_far.to_csv(artifact_root / "benchmark_leaderboard_partial.csv", index=False)
-            logger.info(
-                "Completed age-group series=%s partial_leaderboard=%s",
-                age_group,
-                artifact_root / "benchmark_leaderboard_partial.csv",
-            )
+    for item in series_items:
+        series_name = str(item["series_name"])
+        if bool(item["frame"].empty):  # type: ignore[union-attr]
+            logger.warning("Skipping empty series=%s seasons=%s", series_name, item["seasons"])
+            continue
+        is_robustness = bool(item["is_robustness"])
+        if is_robustness:
+            series_artifact_parent = artifact_root / "robustness"
+        else:
+            series_artifact_parent = artifact_root
+        if season_mode != SEASON_MODE_POOLED:
+            series_artifact_parent = series_artifact_parent / "seasons"
+        if season_mode == SEASON_MODE_POOLED and not is_robustness and series_name == "Overall":
+            series_seed = int(config["seed"])
+        else:
+            series_seed = int(config["seed"]) + 1000 + len(benchmark_leaderboards)
+        logger.info("Starting benchmark series=%s seasons=%s", series_name, item["seasons"])
+        board = _run_series_benchmark(
+            series_name=series_name,
+            series_frame=item["frame"],  # type: ignore[arg-type]
+            fit_config=fit_config,
+            search_config=search_config,
+            artifact_root=series_artifact_parent,
+            horizons=horizons,
+            seed=series_seed,
+        )
+        benchmark_leaderboards.append(board)
+        combined_so_far = pd.concat(benchmark_leaderboards, ignore_index=True)
+        combined_so_far.to_csv(artifact_root / "benchmark_leaderboard_partial.csv", index=False)
+        logger.info(
+            "Completed series=%s partial_leaderboard=%s",
+            series_name,
+            artifact_root / "benchmark_leaderboard_partial.csv",
+        )
 
     combined_board = pd.concat(benchmark_leaderboards, ignore_index=True)
     combined_board.to_csv(artifact_root / "benchmark_leaderboard.csv", index=False)
