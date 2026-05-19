@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+5-17 yr,1,1,openai,False,True,SEIRS,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Observation-target alignment is conceptually good (H for hospitalization rate), but explicit H in SEIHR is likely weakly identifiable in a short single-season weekly series. High risk of parameter tradeoffs (I→H vs recovery/length-of-stay) and unstable extrapolation without strong information to pin down H dynamics.",True
+5-17 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,I+H is poorly aligned to a hospitalization-rate target unless the surveillance measure is known to blend prevalence and admissions. Mixing compartments increases over-complexity and identifiability risk (multiple time scales) and can broaden peaks/persistence in ways that mimic fit without being mechanistically justified for this target.,True
+5-17 yr,1,4,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True

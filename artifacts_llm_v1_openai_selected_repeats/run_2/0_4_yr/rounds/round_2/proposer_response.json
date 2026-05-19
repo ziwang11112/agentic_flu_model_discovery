@@ -1,0 +1,198 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the true lag varies within-season or is shorter/longer than 2 weeks, forecasts may show phase shift (peak timing error) despite reasonable amplitude.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Anchor specification matching prior best: SEIRS captures waning immunity/reinfection dynamics; delayed_I with 2-week lag aligns with hospitalization reporting/admission lag and has shown better rolling robustness than shorter delays.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "May reintroduce rolling instability/overreaction to week-to-week changes (timing jitter), especially around the peak, if the effective lag is closer to 2 weeks.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Near-neighborhood lag variant to test slightly faster hospitalization response while keeping the same parsimonious SEIRS backbone; may improve peak timing if admissions track infections more tightly in this age group.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Can oversmooth and lag the peak too much, underestimating rapid rises and producing late peak forecasts if the true lag is closer to 1\u20132 weeks.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Alternative nearby lag to accommodate slower admission/reporting dynamics and smoother high-scale series; can reduce sensitivity to short-term fluctuations by enforcing a longer effective delay.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "May remain sensitive/overflexible across rolling splits (parameter non-identifiability in short series), yielding variable peak width/tail behavior and inconsistent multi-week forecasts.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Single fractional variant kept close to the anchor (same structure and delay) to potentially improve rolling stability via memory effects without changing observation semantics; included as a cautious robustness probe rather than a complexity jump in compartments.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "0-4 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779150786.0,
+          "conversation": null,
+          "created_at": 1779150778.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0f01e617169464e9006a0bafbad298819686a68eb5ff811360",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor specification matching prior best: SEIRS captures waning immunity/reinfection dynamics; delayed_I with 2-week lag aligns with hospitalization reporting/admission lag and has shown better rolling robustness than shorter delays.\",\"expected_failure_mode\":\"If the true lag varies within-season or is shorter/longer than 2 weeks, forecasts may show phase shift (peak timing error) despite reasonable amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Near-neighborhood lag variant to test slightly faster hospitalization response while keeping the same parsimonious SEIRS backbone; may improve peak timing if admissions track infections more tightly in this age group.\",\"expected_failure_mode\":\"May reintroduce rolling instability/overreaction to week-to-week changes (timing jitter), especially around the peak, if the effective lag is closer to 2 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative nearby lag to accommodate slower admission/reporting dynamics and smoother high-scale series; can reduce sensitivity to short-term fluctuations by enforcing a longer effective delay.\",\"expected_failure_mode\":\"Can oversmooth and lag the peak too much, underestimating rapid rises and producing late peak forecasts if the true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant kept close to the anchor (same structure and delay) to potentially improve rolling stability via memory effects without changing observation semantics; included as a cautious robustness probe rather than a complexity jump in compartments.\",\"expected_failure_mode\":\"May remain sensitive/overflexible across rolling splits (parameter non-identifiability in short series), yielding variable peak width/tail behavior and inconsistent multi-week forecasts.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0f01e617169464e9006a0bafbbdafc8196a8c889b2b9b35dd2",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1196,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 436,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1632
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor specification matching prior best: SEIRS captures waning immunity/reinfection dynamics; delayed_I with 2-week lag aligns with hospitalization reporting/admission lag and has shown better rolling robustness than shorter delays.\",\"expected_failure_mode\":\"If the true lag varies within-season or is shorter/longer than 2 weeks, forecasts may show phase shift (peak timing error) despite reasonable amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Near-neighborhood lag variant to test slightly faster hospitalization response while keeping the same parsimonious SEIRS backbone; may improve peak timing if admissions track infections more tightly in this age group.\",\"expected_failure_mode\":\"May reintroduce rolling instability/overreaction to week-to-week changes (timing jitter), especially around the peak, if the effective lag is closer to 2 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative nearby lag to accommodate slower admission/reporting dynamics and smoother high-scale series; can reduce sensitivity to short-term fluctuations by enforcing a longer effective delay.\",\"expected_failure_mode\":\"Can oversmooth and lag the peak too much, underestimating rapid rises and producing late peak forecasts if the true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant kept close to the anchor (same structure and delay) to potentially improve rolling stability via memory effects without changing observation semantics; included as a cautious robustness probe rather than a complexity jump in compartments.\",\"expected_failure_mode\":\"May remain sensitive/overflexible across rolling splits (parameter non-identifiability in short series), yielding variable peak width/tail behavior and inconsistent multi-week forecasts.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor specification matching prior best: SEIRS captures waning immunity/reinfection dynamics; delayed_I with 2-week lag aligns with hospitalization reporting/admission lag and has shown better rolling robustness than shorter delays.\",\"expected_failure_mode\":\"If the true lag varies within-season or is shorter/longer than 2 weeks, forecasts may show phase shift (peak timing error) despite reasonable amplitude.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Near-neighborhood lag variant to test slightly faster hospitalization response while keeping the same parsimonious SEIRS backbone; may improve peak timing if admissions track infections more tightly in this age group.\",\"expected_failure_mode\":\"May reintroduce rolling instability/overreaction to week-to-week changes (timing jitter), especially around the peak, if the effective lag is closer to 2 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Alternative nearby lag to accommodate slower admission/reporting dynamics and smoother high-scale series; can reduce sensitivity to short-term fluctuations by enforcing a longer effective delay.\",\"expected_failure_mode\":\"Can oversmooth and lag the peak too much, underestimating rapid rises and producing late peak forecasts if the true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant kept close to the anchor (same structure and delay) to potentially improve rolling stability via memory effects without changing observation semantics; included as a cautious robustness probe rather than a complexity jump in compartments.\",\"expected_failure_mode\":\"May remain sensitive/overflexible across rolling splits (parameter non-identifiability in short series), yielding variable peak width/tail behavior and inconsistent multi-week forecasts.\"}]}",
+  "scientific_claim_allowed": true
+}

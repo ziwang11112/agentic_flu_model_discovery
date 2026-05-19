@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,1,1,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H aligns semantically with hospitalization rate, adding an explicit H compartment in SEIHR increases complexity and identifiability risk for a short single-season series (n_train=31), consistent with the stated risk note. Likely to create unstable separation between I and H timing/scale without strong information in the data.",True
+0-4 yr,1,2,openai,False,True,SEIHR,False,I+H,0,True,True,,medium,,True
+0-4 yr,1,3,openai,False,True,SEIRS,True,delayed_I,1,True,True,,low,"Fractional memory adds flexibility that is hard to justify with 31 training points and moderate peakiness; high risk of overfitting and weak identifiability of the fractional parameter. Also, delayed_I with delay=1 conflicts with the stronger plausibility of ~2-week lag already supported by current discovery patterns.",True
+0-4 yr,1,4,openai,False,True,SEIR,False,delayed_I,3,True,True,,low,,True

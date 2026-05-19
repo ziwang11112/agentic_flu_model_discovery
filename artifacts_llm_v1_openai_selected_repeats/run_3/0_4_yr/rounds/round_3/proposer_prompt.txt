@@ -1,0 +1,98 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep structure family fixed to SEIRS for this series; focus search on observation mapping/lag and fractional toggle rather than adding new compartments.",
+      "Prioritize delayed_I with delay_weeks in {1,2}; de-emphasize delay_weeks=3 unless paired with an explicit mechanism that justifies longer lag (otherwise likely over-lag).",
+      "If exploring fractional dynamics, constrain to fractional=1 only when paired with delay_weeks=1 or 2; avoid expanding fractional complexity beyond current setting.",
+      "Add a constraint to favor configurations with low rolling split variability (stability) over those that only improve a single validation window; avoid settings that show large rolling std.",
+      "Do not broaden template complexity (no additional seasonal terms or extra states) until lag/fractional identifiability is resolved."
+    ],
+    "observed_failure_modes": [
+      "Delay sensitivity: performance varies notably across delay_weeks (1\u20133), suggesting the observation lag is a key misspecification risk and may be interacting with peak timing.",
+      "Fractional vs non-fractional tradeoff: fractional variants show mixed behavior (some better on rolling mean error but not consistently), indicating potential over-flexibility or parameter identifiability issues rather than a clear win.",
+      "Stability issues for at least one configuration: one delayed_I setting shows markedly higher rolling variability, consistent with occasional split-specific misalignment (e.g., phase/peak timing drift) rather than uniform fit quality.",
+      "Longer delays (e.g., 3 weeks) appear to degrade rolling performance and increase instability, consistent with over-lagging the hospitalization signal relative to latent incidence dynamics."
+    ],
+    "proposer_instruction": "For the next round on the 0\u20134 yr hospitalization-rate series, keep SEIRS as the base template and refine only (a) fractional toggle and (b) observation lag for delayed_I. Concentrate proposals on delayed_I with delay_weeks=1 and delay_weeks=2, testing both fractional=0 and fractional=1, and treat delay_weeks=3 as low priority unless you can justify it via improved stability. When selecting candidates, prefer those that are robust across rolling splits (low variability) and avoid configurations that show split-specific blow-ups indicative of phase/peak misalignment."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 1,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

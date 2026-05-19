@@ -1,0 +1,4 @@
+series_name,model_name,test_mae,test_rmse,test_smape,num_free_params,num_compartments
+2018-19 / Overall,delayed_observation_seir,3.1476580168821267,3.4661697312349995,1.0044603030556163,8,4
+2018-19 / Overall,deterministic_seir,3.1538170789083173,3.4378771989843355,0.9917557993424667,8,4
+2018-19 / Overall,constrained_structure_discovery,4.236468437620908,4.74060965171212,1.069182478251943,11,5

@@ -761,12 +761,15 @@ and for age robustness:
 
 Additional paper-support scripts are additive and write to new artifact roots by default:
 
-- multi-season FluSurv-NET audit plan/config: `configs/flusurvnet_multiseason_smoke.yaml` and `python scripts/audit_flusurvnet_multiseason.py --csv data/raw/flusurvnet_multiseason_full.csv --output-dir data/processed_flusurvnet_multiseason --report reports/flusurvnet_multiseason_audit.md`
+- multi-season FluSurv-NET RESP-NET preparation: `python scripts/prepare_flusurvnet_multiseason_from_respnet.py --output data/raw/flusurvnet_multiseason_full.csv`
+- multi-season FluSurv-NET audit: `python scripts/audit_flusurvnet_multiseason.py --csv data/raw/flusurvnet_multiseason_full.csv --output-dir data/processed_flusurvnet_multiseason --report reports/flusurvnet_multiseason_audit.md`
+- season-separated multi-season FluSurv-NET benchmark: `python scripts/run_flusurvnet_multiseason_seasonal_benchmark.py --config configs/flusurvnet_multiseason_seasonal_selected.yaml --log-level INFO`
 - selected-series OpenAI repeats: `python scripts/run_llm_v1_selected_repeats.py --repeat-ids 1 2 3`
 - LLM-vs-nonLLM budget diagnostic: `python scripts/build_llm_budget_diagnostic.py --llm-root artifacts_llm_v1_openai_all_series_freeze --nonllm-root artifacts_multiseed_age_robustness_observation --output-root artifacts_llm_budget_diagnostic --report reports/llm_budget_diagnostic_report.md`
 - dengue non-LLM weekly smoke benchmark: `python scripts/run_dengue_weekly_smoke.py --config configs/dengue_weekly_smoke.yaml`
 
 The budget diagnostic is descriptive unless candidate order and scoring are both available and comparable at fixed K budgets. It must not be used to claim candidate efficiency or global LLM superiority when budgets/order are unmatched.
+The multi-season FluSurv-NET seasonal benchmark evaluates each completed season as its own within-season trajectory. Use it as a cross-season robustness supplement, not as a direct previous-season-to-future-season transfer forecast.
 Do not run selected OpenAI live repeats in CI; they require `OPENAI_API_KEY` and intentionally call the live provider.
 
 ## Configuration Guide

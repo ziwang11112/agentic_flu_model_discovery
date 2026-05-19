@@ -1,0 +1,140 @@
+{
+  "best_full_params": {
+    "E0": 0.20846307524132665,
+    "I0": 0.11767323502082234,
+    "R0": 0.0,
+    "S0": 0.673863689737851,
+    "b0": -0.8815061819610448,
+    "b1": -0.4926307351055999,
+    "b2": -0.8198506248347399,
+    "fractional": 0.0,
+    "gamma": 0.06353244499481472,
+    "omega": 0.601353815578655,
+    "rho": 1.5021515114344886,
+    "sigma": 0.2739580526950051
+  },
+  "best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "I",
+    "structure_name": "SEIRS"
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 0.12751418140893028,
+    "train": 0.0975078420250888,
+    "train_plus_validation": 0.11379229400550189
+  },
+  "model_name": "constrained_structure_discovery",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.3622618686029633,
+      "rmse": 0.427912121678172,
+      "smape": 0.41198669479818223
+    },
+    "2": {
+      "mae": 0.43231011514060497,
+      "rmse": 0.4768017087341334,
+      "smape": 0.5014758750732036
+    },
+    "4": {
+      "mae": 0.587552836574876,
+      "rmse": 0.6219664764109496,
+      "smape": 0.6705907073712538
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.46070827343948145,
+    "mean_rmse": 0.5088934356077517
+  },
+  "search_best_record": {
+    "age_prior_penalty": -0.01,
+    "complexity_penalty": 0.18,
+    "complexity_penalty_compartments": 0.08,
+    "complexity_penalty_delay": 0.0,
+    "complexity_penalty_fractional": 0.0,
+    "complexity_penalty_h_observation": 0.0,
+    "complexity_penalty_observation": 0.0,
+    "complexity_penalty_params": 0.09,
+    "complexity_penalty_recurrence": 0.01,
+    "delay_weeks": 0,
+    "fractional": false,
+    "multi_split_blocks": 2,
+    "multi_split_penalty": 0.06641633979213055,
+    "multi_split_val_mean_mae": 0.40272533553161516,
+    "multi_split_val_std_mae": 0.1328326795842611,
+    "num_compartments": 4,
+    "num_free_params": 9,
+    "observation_family": "infectious",
+    "observation_map": "I",
+    "params": {
+      "E0": 0.20414395612513267,
+      "I0": 0.1006551745695694,
+      "R0": 0.0,
+      "S0": 0.695200869305298,
+      "b0": 0.20702781997207503,
+      "b1": 0.28804379193130886,
+      "b2": -0.06495107196639317,
+      "fractional": 0.0,
+      "gamma": 0.08822177438649825,
+      "omega": 0.07013491613924362,
+      "rho": 1.0298721883401627,
+      "sigma": 0.25565626311007017
+    },
+    "rolling_val_error_std": 0.20060032694816995,
+    "rolling_val_mean_mae": 0.3926458518720969,
+    "rolling_val_mean_rmse": 0.4425910409706001,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.3458859500898015,
+        "rmse": 0.4097770294441372,
+        "smape": 0.447123020727281
+      },
+      "2": {
+        "mae": 0.4394057536543922,
+        "rmse": 0.47540505249706294,
+        "smape": 0.5848153041515953
+      }
+    },
+    "round": 1,
+    "score": 0.6792617407133796,
+    "spec_key": "SEIRS|fractional=0|obs=I",
+    "stability_penalty": 0.040120065389633995,
+    "structure_name": "SEIRS",
+    "train_mae": 0.22598817416097883,
+    "train_objective": 0.09750784536010976,
+    "train_rmse": 0.2779854781101647,
+    "val_mae": 0.47069363237041884,
+    "val_rmse": 0.5576825970362148,
+    "val_smape": 0.6738731131160257
+  },
+  "series_name": "2021-22 / 0-4 yr",
+  "test_metrics": {
+    "mae": 0.40996507791699394,
+    "rmse": 0.4865560168478435,
+    "smape": 0.43833249123184514
+  },
+  "train_metrics": {
+    "mae": 0.22596389875090891,
+    "rmse": 0.27795400104152657,
+    "smape": 0.6989002034243986
+  },
+  "validation_metrics": {
+    "mae": 0.47084981038929513,
+    "rmse": 0.5578636479230068,
+    "smape": 0.6741984117003552
+  }
+}

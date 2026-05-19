@@ -55,3 +55,10 @@ def test_deterministic_seir_forward_step_matches_update_equations() -> None:
     )
 
     assert np.allclose(next_state, expected)
+
+
+def test_fit_with_zero_restarts_still_samples_when_no_warm_start() -> None:
+    model = DeterministicSEIRModel(FitConfig(n_restarts=0, maxiter=2))
+    result = model.fit(np.array([0.1, 0.2, 0.3], dtype=float), np.random.default_rng(123))
+
+    assert result.raw_params.shape == (model.raw_parameter_dim,)

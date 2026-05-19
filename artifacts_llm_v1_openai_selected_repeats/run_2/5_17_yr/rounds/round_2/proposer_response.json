@@ -1,0 +1,214 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable in a short single-season series; can yield parameter tradeoffs (e.g., I\u2192H rate vs H duration) and over-smoothing or phase shifts if admissions timing is not well captured.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Primary semantic anchor: target is weekly hospitalization rate, so directly observing H avoids relying on an inferred I-to-hospitalization lag. Keeps within allowed families and provides a robustness benchmark against delayed_I specs.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If hospitalization dynamics vary over time or differ from a fixed lagged-I proxy, forecasts can mis-time peaks or mis-estimate amplitude; delay may be unstable across splits.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Low-complexity anchor with a plausible 2-week lag from infections to admissions; aligns with prior best delay and prioritizes rolling robustness by avoiding waning-immunity and hospitalization compartments.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If true lag is longer, forecasts may lead the observed hospitalization peak and inflate early-season rates; delay choice can be unstable and window-dependent.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Tight delay-grid exploration for robustness: a shorter lag can reduce sensitivity to split timing and may better match faster admission pathways in pediatric populations while keeping structure parsimonious.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Higher risk of split-specific overfit and degraded rolling performance; may lag peaks excessively and under-react to rapid changes.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Completes the constrained delay search (1\u20133 weeks) to assess stability; provides a controlled comparison to detect overfit/sensitivity previously noted for longer delays.",
+        "structure_name": "SEIR"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Added waning-immunity flexibility can be weakly identified and may absorb noise, causing instability across rolling splits or unrealistic rebound dynamics.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Include only one waning-immunity variant as a challenger to the SEIR anchor at the previously best delay; tests whether SEIRS improves rolling stability without expanding delay degrees of freedom.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Observation mixture can be non-identifiable (I vs H contributions) and may blur timing, leading to biased peak height or overly persistent tails.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Alternative hospitalization-aligned mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; stays within SEIHR while offering a second direct-hospitalization benchmark.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779150994.0,
+          "conversation": null,
+          "created_at": 1779150984.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_053e2fd53a679753006a0bb0885aa48193975c55d4cc39cafd",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Primary semantic anchor: target is weekly hospitalization rate, so directly observing H avoids relying on an inferred I-to-hospitalization lag. Keeps within allowed families and provides a robustness benchmark against delayed_I specs.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series; can yield parameter tradeoffs (e.g., I\u2192H rate vs H duration) and over-smoothing or phase shifts if admissions timing is not well captured.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Low-complexity anchor with a plausible 2-week lag from infections to admissions; aligns with prior best delay and prioritizes rolling robustness by avoiding waning-immunity and hospitalization compartments.\",\"expected_failure_mode\":\"If hospitalization dynamics vary over time or differ from a fixed lagged-I proxy, forecasts can mis-time peaks or mis-estimate amplitude; delay may be unstable across splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tight delay-grid exploration for robustness: a shorter lag can reduce sensitivity to split timing and may better match faster admission pathways in pediatric populations while keeping structure parsimonious.\",\"expected_failure_mode\":\"If true lag is longer, forecasts may lead the observed hospitalization peak and inflate early-season rates; delay choice can be unstable and window-dependent.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Completes the constrained delay search (1\u20133 weeks) to assess stability; provides a controlled comparison to detect overfit/sensitivity previously noted for longer delays.\",\"expected_failure_mode\":\"Higher risk of split-specific overfit and degraded rolling performance; may lag peaks excessively and under-react to rapid changes.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Include only one waning-immunity variant as a challenger to the SEIR anchor at the previously best delay; tests whether SEIRS improves rolling stability without expanding delay degrees of freedom.\",\"expected_failure_mode\":\"Added waning-immunity flexibility can be weakly identified and may absorb noise, causing instability across rolling splits or unrealistic rebound dynamics.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-aligned mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; stays within SEIHR while offering a second direct-hospitalization benchmark.\",\"expected_failure_mode\":\"Observation mixture can be non-identifiable (I vs H contributions) and may blur timing, leading to biased peak height or overly persistent tails.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_053e2fd53a679753006a0bb0891fac81938205844859b04f9b",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1230,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 625,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1855
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Primary semantic anchor: target is weekly hospitalization rate, so directly observing H avoids relying on an inferred I-to-hospitalization lag. Keeps within allowed families and provides a robustness benchmark against delayed_I specs.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series; can yield parameter tradeoffs (e.g., I\u2192H rate vs H duration) and over-smoothing or phase shifts if admissions timing is not well captured.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Low-complexity anchor with a plausible 2-week lag from infections to admissions; aligns with prior best delay and prioritizes rolling robustness by avoiding waning-immunity and hospitalization compartments.\",\"expected_failure_mode\":\"If hospitalization dynamics vary over time or differ from a fixed lagged-I proxy, forecasts can mis-time peaks or mis-estimate amplitude; delay may be unstable across splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tight delay-grid exploration for robustness: a shorter lag can reduce sensitivity to split timing and may better match faster admission pathways in pediatric populations while keeping structure parsimonious.\",\"expected_failure_mode\":\"If true lag is longer, forecasts may lead the observed hospitalization peak and inflate early-season rates; delay choice can be unstable and window-dependent.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Completes the constrained delay search (1\u20133 weeks) to assess stability; provides a controlled comparison to detect overfit/sensitivity previously noted for longer delays.\",\"expected_failure_mode\":\"Higher risk of split-specific overfit and degraded rolling performance; may lag peaks excessively and under-react to rapid changes.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Include only one waning-immunity variant as a challenger to the SEIR anchor at the previously best delay; tests whether SEIRS improves rolling stability without expanding delay degrees of freedom.\",\"expected_failure_mode\":\"Added waning-immunity flexibility can be weakly identified and may absorb noise, causing instability across rolling splits or unrealistic rebound dynamics.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-aligned mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; stays within SEIHR while offering a second direct-hospitalization benchmark.\",\"expected_failure_mode\":\"Observation mixture can be non-identifiable (I vs H contributions) and may blur timing, leading to biased peak height or overly persistent tails.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Primary semantic anchor: target is weekly hospitalization rate, so directly observing H avoids relying on an inferred I-to-hospitalization lag. Keeps within allowed families and provides a robustness benchmark against delayed_I specs.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable in a short single-season series; can yield parameter tradeoffs (e.g., I\u2192H rate vs H duration) and over-smoothing or phase shifts if admissions timing is not well captured.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Low-complexity anchor with a plausible 2-week lag from infections to admissions; aligns with prior best delay and prioritizes rolling robustness by avoiding waning-immunity and hospitalization compartments.\",\"expected_failure_mode\":\"If hospitalization dynamics vary over time or differ from a fixed lagged-I proxy, forecasts can mis-time peaks or mis-estimate amplitude; delay may be unstable across splits.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Tight delay-grid exploration for robustness: a shorter lag can reduce sensitivity to split timing and may better match faster admission pathways in pediatric populations while keeping structure parsimonious.\",\"expected_failure_mode\":\"If true lag is longer, forecasts may lead the observed hospitalization peak and inflate early-season rates; delay choice can be unstable and window-dependent.\"},{\"structure_name\":\"SEIR\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Completes the constrained delay search (1\u20133 weeks) to assess stability; provides a controlled comparison to detect overfit/sensitivity previously noted for longer delays.\",\"expected_failure_mode\":\"Higher risk of split-specific overfit and degraded rolling performance; may lag peaks excessively and under-react to rapid changes.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Include only one waning-immunity variant as a challenger to the SEIR anchor at the previously best delay; tests whether SEIRS improves rolling stability without expanding delay degrees of freedom.\",\"expected_failure_mode\":\"Added waning-immunity flexibility can be weakly identified and may absorb noise, causing instability across rolling splits or unrealistic rebound dynamics.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Alternative hospitalization-aligned mapping that can be more robust if admissions reflect a mixture of current infectious burden and hospitalized census/flow; stays within SEIHR while offering a second direct-hospitalization benchmark.\",\"expected_failure_mode\":\"Observation mixture can be non-identifiable (I vs H contributions) and may blur timing, leading to biased peak height or overly persistent tails.\"}]}",
+  "scientific_claim_allowed": true
+}

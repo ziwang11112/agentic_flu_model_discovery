@@ -1,0 +1,129 @@
+{
+  "best_full_params": {
+    "E0": 0.01210197060583349,
+    "H0": 0.013007077604994347,
+    "I0": 0.0073303206926114955,
+    "R0": 0.0,
+    "S0": 0.9675606310965607,
+    "b0": 1.9053443990753007,
+    "b1": -0.4860851240191878,
+    "b2": -0.8923283602794667,
+    "eta": 0.44411967606305675,
+    "fractional": 0.0,
+    "gamma_h": 0.4909885765676504,
+    "gamma_i": 0.03294222398739247,
+    "rho": 37.56771748277481,
+    "sigma": 0.5497726253471424
+  },
+  "best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "H",
+    "structure_name": "SEIHR"
+  },
+  "complexity": {
+    "num_compartments": 5,
+    "num_free_params": 11
+  },
+  "fit_objectives": {
+    "full_series": 0.5544580511679242,
+    "train": 0.3216158396858486,
+    "train_plus_validation": 0.3893618258185242
+  },
+  "model_name": "constrained_structure_discovery",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.83456780719155,
+      "rmse": 1.036009914186608,
+      "smape": 0.9121404191761919
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.83456780719155,
+    "mean_rmse": 1.036009914186608
+  },
+  "search_best_record": {
+    "age_prior_penalty": 0.0,
+    "complexity_penalty": 0.21500000000000002,
+    "complexity_penalty_compartments": 0.1,
+    "complexity_penalty_delay": 0.0,
+    "complexity_penalty_fractional": 0.0,
+    "complexity_penalty_h_observation": 0.005,
+    "complexity_penalty_observation": 0.0,
+    "complexity_penalty_params": 0.11,
+    "complexity_penalty_recurrence": 0.0,
+    "delay_weeks": 0,
+    "fractional": false,
+    "multi_split_blocks": 2,
+    "multi_split_penalty": 0.05208740105434298,
+    "multi_split_val_mean_mae": 0.7355614378828237,
+    "multi_split_val_std_mae": 0.10417480210868596,
+    "num_compartments": 5,
+    "num_free_params": 11,
+    "observation_family": "hospitalized",
+    "observation_map": "H",
+    "params": {
+      "E0": 0.010598549838024902,
+      "H0": 0.02750720186024559,
+      "I0": 0.008279755261585215,
+      "R0": 0.0,
+      "S0": 0.9536144930401442,
+      "b0": 1.7410820709459647,
+      "b1": 1.763898874295784,
+      "b2": -1.2004505127236778,
+      "eta": 0.4502710522260552,
+      "fractional": 0.0,
+      "gamma_h": 0.03253648963657543,
+      "gamma_i": 0.02825184985461203,
+      "rho": 6.2320551623820535,
+      "sigma": 0.9334219497394589
+    },
+    "rolling_val_error_std": 0.4627843047842886,
+    "rolling_val_mean_mae": 0.7355614378828236,
+    "rolling_val_mean_rmse": 0.8690339128336273,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.7355614378828236,
+        "rmse": 0.8690339128336273,
+        "smape": 0.16802339778502454
+      }
+    },
+    "round": 1,
+    "score": 1.0952056998940245,
+    "spec_key": "SEIHR|fractional=0|obs=H",
+    "stability_penalty": 0.09255686095685772,
+    "structure_name": "SEIHR",
+    "train_mae": 0.27055632297674387,
+    "train_objective": 0.3223607573905386,
+    "train_rmse": 0.36541281313018664,
+    "val_mae": 0.6617209703681671,
+    "val_rmse": 0.8133423909568872,
+    "val_smape": 0.15216519831226727
+  },
+  "series_name": "2019-20 / Overall",
+  "test_metrics": {
+    "mae": 2.26174933203887,
+    "rmse": 2.2848280067587527,
+    "smape": 1.7225499866577907
+  },
+  "train_metrics": {
+    "mae": 0.2765869801351528,
+    "rmse": 0.36814923280066236,
+    "smape": 0.22118904805110082
+  },
+  "validation_metrics": {
+    "mae": 0.6602757796740497,
+    "rmse": 0.811166367723446,
+    "smape": 0.15175328881753591
+  }
+}

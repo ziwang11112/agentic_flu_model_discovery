@@ -1,0 +1,13 @@
+repeat_id,series_name,proposal_count,hard_valid_count,valid_rate,leakage_status
+1,0-4 yr,12,12,1.0,PASS
+1,5-17 yr,8,8,1.0,PASS
+1,>= 65 yr,13,13,1.0,PASS
+2,0-4 yr,9,9,1.0,PASS
+2,5-17 yr,18,18,1.0,PASS
+2,>= 65 yr,10,10,1.0,PASS
+3,0-4 yr,14,14,1.0,PASS
+3,5-17 yr,14,14,1.0,PASS
+3,>= 65 yr,14,14,1.0,PASS
+1,ALL,33,33,1.0,PASS
+2,ALL,37,37,1.0,PASS
+3,ALL,42,42,1.0,PASS

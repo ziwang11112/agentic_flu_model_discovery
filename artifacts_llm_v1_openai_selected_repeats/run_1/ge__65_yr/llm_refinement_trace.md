@@ -1,0 +1,34 @@
+# LLM V1 Refinement Trace
+
+## Round 1
+
+- previous_best_spec: `None`
+- previous_best_score: `None`
+- analyst_feedback_summary: 
+- new_specs: `SEIRS|fractional=1|obs=delayed_I|delay=2; SEIRS|fractional=1|obs=delayed_I|delay=1; SEIRS|fractional=1|obs=delayed_I|delay=3; SEIHR|fractional=0|obs=H; SEIHR|fractional=0|obs=I+H`
+- round_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=3`
+- round_best_score: `0.5745554277231055`
+- score_improvement: `None`
+- early_stop: `False`
+
+## Round 2
+
+- previous_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=3`
+- previous_best_score: `0.5745554277231055`
+- analyst_feedback_summary: For the next round, propose a small set of refinements centered on (A) SEIRS with fractional dynamics and delayed_I observation, primarily tuning delay_weeks in {1,2,3} with emphasis on 2, and (B) SEIHR with H-only observation as a comparator. Do not propose I+H (or other mixed) observation maps. Keep complexity minimal and vary only one modeling choice per proposal (e.g., delay only, or structure only) to diagnose whether remaining error is mainly phase (lag) vs shape (hospitalization compartment) vs fractional-memory effects. Aim for candidates that are less sensitive across rolling splits rather than narrowly optimized to a single validation segment.
+- new_specs: `SEIRS|fractional=1|obs=delayed_I|delay=2; SEIRS|fractional=1|obs=delayed_I|delay=1; SEIRS|fractional=1|obs=delayed_I|delay=3; SEIHR|fractional=0|obs=H`
+- round_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=1`
+- round_best_score: `0.5345297013638254`
+- score_improvement: `0.040025726359280145`
+- early_stop: `False`
+
+## Round 3
+
+- previous_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=1`
+- previous_best_score: `0.5345297013638254`
+- analyst_feedback_summary: For the next round, focus proposals on SEIRS with fractional dynamics and an infection-proxy observation (prefer delayed_I). Treat delay_weeks=1 as the anchor; optionally include delay_weeks=0 or 2 only if paired with a clear rationale for peak timing/shape (e.g., a slightly different observation mapping that still represents a short infection-to-hospitalization lag). Avoid switching to SEIHR with direct H observation unless you also incorporate a short lag/measurement process that effectively behaves like delayed infections.
+- new_specs: `SEIRS|fractional=1|obs=delayed_I|delay=1; SEIRS|fractional=1|obs=delayed_I; SEIRS|fractional=1|obs=delayed_I|delay=2; SEIRS|fractional=1|obs=I`
+- round_best_spec: `SEIRS|fractional=1|obs=delayed_I|delay=0`
+- round_best_score: `0.5158384610624661`
+- score_improvement: `0.01869124030135927`
+- early_stop: `False`

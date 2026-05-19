@@ -1,0 +1,8 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,3,0,openai,False,True,SEIR,False,delayed_I,1,True,True,,high,,True
+5-17 yr,3,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+5-17 yr,3,2,openai,False,True,SEIR,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,3,3,openai,False,True,SEIRS,False,delayed_I,1,True,True,,medium,,True
+5-17 yr,3,4,openai,False,True,SEIRS,False,delayed_I,3,True,True,,low,"Combines two flexibility sources (SEIRS waning + long delay=3), increasing non-identifiability (waning vs timing) and overfitting risk for a single-season 31-week training series; likely unstable across rolling windows.",True
+5-17 yr,3,5,openai,False,True,SEIHR,False,H,0,True,True,,low,"Explicit H compartment is flagged as weakly identifiable for short single-season series; observing H directly can still leave H/I transition rates underdetermined and invite compensatory dynamics, especially with only 31 training points.",True
+5-17 yr,3,6,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"I+H observation is poorly aligned with the stated target semantics (hospitalization rate). It adds ambiguity in attribution between prevalence and admissions and can mask timing/shape errors, increasing identifiability risk without clear justification.",True

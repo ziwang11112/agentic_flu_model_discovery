@@ -1,0 +1,4 @@
+series_name,v1_num_candidates_evaluated,v0_num_candidates_evaluated,nonllm_num_candidates_evaluated,v1_best_score,v0_best_score,nonllm_best_score,candidate_efficiency_note,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,14,2,,0.34307812755556577,0.3468847515837221,,Reference discovery candidate budget unavailable.,openai,False,True
+5-17 yr,14,2,,0.2562622197187475,0.335852284924599,,Reference discovery candidate budget unavailable.,openai,False,True
+>= 65 yr,14,2,,0.5063536508184849,0.5368324415196509,,Reference discovery candidate budget unavailable.,openai,False,True

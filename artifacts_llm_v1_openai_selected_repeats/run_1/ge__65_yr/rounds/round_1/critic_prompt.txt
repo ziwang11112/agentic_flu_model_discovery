@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the hospitalization process has dynamics not well-approximated by a fixed 2-week lag (e.g., variable lag or additional smoothing), forecasts may show phase error around the peak and mis-timed decline.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matches prior discovered pattern and surveillance note that admissions lag an infectious proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a 31-week training window.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true lag is longer (or effectively longer due to reporting delays), the model may peak too early and overpredict near-term rates.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Alternative shorter lag to hedge timing uncertainty in older-adult admissions; retains SEIRS flexibility for high peakiness while keeping the observation model simple.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "If true lag is shorter, the model may peak too late and underpredict the early upswing.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Alternative longer lag to capture slower progression-to-admission in older adults and/or reporting latency; still parsimonious compared with adding an explicit H compartment.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H may be weakly identifiable in a short single-season series, leading to parameter tradeoffs (E/I/H rates) and unstable extrapolation beyond the peak.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly aligns the observation with the hospitalization-rate target via an explicit H compartment; can better represent admission/occupancy dynamics than a pure lagged-I proxy when peakiness is high.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "If the target is closer to pure admissions than a mixture, the model may fit by compensating with unrealistic I/H proportions, degrading peak height and tail behavior.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Robustifies against ambiguity between incident infectious burden and hospitalized burden by allowing the observation to reflect a mixture; can reduce sensitivity to H identifiability while still leveraging SEIHR structure.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

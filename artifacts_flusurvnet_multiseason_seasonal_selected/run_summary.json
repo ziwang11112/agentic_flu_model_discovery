@@ -1,0 +1,50 @@
+{
+  "calibration_rows": 54,
+  "completed_seasons_path": "D:\\Projects\\agentic_flu_model_discovery\\data\\processed_flusurvnet_multiseason\\recommended_completed_seasons.csv",
+  "data_source": "FluSurv-NET RESP-NET transformed multi-season CSV",
+  "leaderboard_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_selected\\benchmark_leaderboard.csv",
+  "models": [
+    "deterministic_seir",
+    "probabilistic_seir",
+    "hospitalized_seihr",
+    "delayed_observation_seir",
+    "fractional_seir",
+    "constrained_structure_discovery"
+  ],
+  "recommendation_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_selected\\age_group_recommendation.csv",
+  "recommendation_rows": 18,
+  "seasonal_modes_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_selected\\multiseason_age_recommendation_modes.csv",
+  "seasons": [
+    "2018-19",
+    "2019-20",
+    "2021-22",
+    "2022-23",
+    "2023-24",
+    "2024-25"
+  ],
+  "seed": 2626,
+  "series_evaluated": [
+    "2018-19 / Overall",
+    "2018-19 / 0-4 yr",
+    "2018-19 / >= 65 yr",
+    "2019-20 / Overall",
+    "2019-20 / 0-4 yr",
+    "2019-20 / >= 65 yr",
+    "2021-22 / Overall",
+    "2021-22 / 0-4 yr",
+    "2021-22 / >= 65 yr",
+    "2022-23 / Overall",
+    "2022-23 / 0-4 yr",
+    "2022-23 / >= 65 yr",
+    "2023-24 / Overall",
+    "2023-24 / 0-4 yr",
+    "2023-24 / >= 65 yr",
+    "2024-25 / Overall",
+    "2024-25 / 0-4 yr",
+    "2024-25 / >= 65 yr"
+  ],
+  "summary_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_selected\\benchmark_model_summary.csv",
+  "summary_rows": 108,
+  "winner_rows": 18,
+  "winners_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_selected\\benchmark_series_winners.csv"
+}

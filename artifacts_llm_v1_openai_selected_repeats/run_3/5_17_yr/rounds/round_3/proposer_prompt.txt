@@ -1,0 +1,97 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep SEIRS, fractional=0 fixed (do not expand to fractional this round).",
+      "Focus delay_weeks in a narrow band around 0\u20132; deprioritize delay>=3 unless paired with a compensating observation-map change.",
+      "Require at least one proposal that removes explicit delay (delay=0) but changes observation_map away from delayed_I to test whether timing alignment can be captured differently.",
+      "Avoid increasing template complexity beyond current SEIRS variants; prioritize robustness across rolling splits over single-window alignment."
+    ],
+    "observed_failure_modes": [
+      "Delay choice appears unstable across splits: delay=0 looks best on rolling-only aggregate, while delay=1\u20132 look best on the single validation window; suggests sensitivity to phase alignment rather than robust dynamics.",
+      "Longer delays (e.g., 3 weeks) degrade rolling performance, consistent with over-shifting peaks/troughs and accumulating timing error.",
+      "All top entries are the same base structure (non-fractional SEIRS with delayed_I), indicating the search is not yet exploring alternative observation mappings or modest structural variants that could improve robustness without relying on delay tuning.",
+      "Potential overfit to the held-out validation segment (very low val errors for delay=1\u20132 relative to rolling means), implying the model may be matching a specific local pattern rather than generalizable behavior."
+    ],
+    "proposer_instruction": "For the next round, keep the core SEIRS (non-fractional) but reduce reliance on delay tuning: propose a small set centered on delay=0\u20132, and include at least one delay=0 alternative observation mapping (i.e., not delayed_I) to address phase alignment more robustly. Do not introduce higher-complexity structures; aim for templates that maintain stable performance across rolling splits rather than optimizing a single validation window."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 0,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

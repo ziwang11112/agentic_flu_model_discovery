@@ -1,0 +1,198 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If true admissions lag is closer to 2 weeks, forecasts may peak early and under-represent the rising limb; may show mild split-to-split timing bias.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Primary candidate aligned with prior best spec; 1-week lag is a parsimonious way to map latent incidence proxy to hospitalization-rate reporting while minimizing phase drift risk and supporting stability across rolling splits.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Risk of over-lagging in some seasons/splits leading to late peaks and inflated tail; can increase instability if peak timing varies across splits.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Second core candidate to address observed delay sensitivity; 2-week lag can better align hospitalization timing without adding compartments, and may reduce peak misalignment for moderate-peakiness series.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Potential identifiability/over-flexibility: can fit noise or shift effective generation time, causing occasional split-specific phase drift and higher rolling variability.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Controlled exploration of fractional dynamics under the recommended constraint (fractional only with delay 1\u20132); may capture heterogeneous mixing/memory effects while keeping lag short to preserve timing stability.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Compounded timing uncertainty (fractional memory + longer lag) may over-smooth or delay peaks, increasing split-to-split variability and degrading stability if true lag is shorter.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Fractional + 2-week lag tests whether added flexibility improves robustness when admissions lag is longer; still within constrained search and avoids adding explicit H state per guidance.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "0-4 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779151935.0,
+          "conversation": null,
+          "created_at": 1779151928.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0f281c472491996d006a0bb43878488190b37d0a7efdc3fba3",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary candidate aligned with prior best spec; 1-week lag is a parsimonious way to map latent incidence proxy to hospitalization-rate reporting while minimizing phase drift risk and supporting stability across rolling splits.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2 weeks, forecasts may peak early and under-represent the rising limb; may show mild split-to-split timing bias.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Second core candidate to address observed delay sensitivity; 2-week lag can better align hospitalization timing without adding compartments, and may reduce peak misalignment for moderate-peakiness series.\",\"expected_failure_mode\":\"Risk of over-lagging in some seasons/splits leading to late peaks and inflated tail; can increase instability if peak timing varies across splits.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Controlled exploration of fractional dynamics under the recommended constraint (fractional only with delay 1\u20132); may capture heterogeneous mixing/memory effects while keeping lag short to preserve timing stability.\",\"expected_failure_mode\":\"Potential identifiability/over-flexibility: can fit noise or shift effective generation time, causing occasional split-specific phase drift and higher rolling variability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Fractional + 2-week lag tests whether added flexibility improves robustness when admissions lag is longer; still within constrained search and avoids adding explicit H state per guidance.\",\"expected_failure_mode\":\"Compounded timing uncertainty (fractional memory + longer lag) may over-smooth or delay peaks, increasing split-to-split variability and degrading stability if true lag is shorter.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0f281c472491996d006a0bb4390da48190ae83e9bc55433fa2",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1259,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 423,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1682
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary candidate aligned with prior best spec; 1-week lag is a parsimonious way to map latent incidence proxy to hospitalization-rate reporting while minimizing phase drift risk and supporting stability across rolling splits.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2 weeks, forecasts may peak early and under-represent the rising limb; may show mild split-to-split timing bias.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Second core candidate to address observed delay sensitivity; 2-week lag can better align hospitalization timing without adding compartments, and may reduce peak misalignment for moderate-peakiness series.\",\"expected_failure_mode\":\"Risk of over-lagging in some seasons/splits leading to late peaks and inflated tail; can increase instability if peak timing varies across splits.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Controlled exploration of fractional dynamics under the recommended constraint (fractional only with delay 1\u20132); may capture heterogeneous mixing/memory effects while keeping lag short to preserve timing stability.\",\"expected_failure_mode\":\"Potential identifiability/over-flexibility: can fit noise or shift effective generation time, causing occasional split-specific phase drift and higher rolling variability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Fractional + 2-week lag tests whether added flexibility improves robustness when admissions lag is longer; still within constrained search and avoids adding explicit H state per guidance.\",\"expected_failure_mode\":\"Compounded timing uncertainty (fractional memory + longer lag) may over-smooth or delay peaks, increasing split-to-split variability and degrading stability if true lag is shorter.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Primary candidate aligned with prior best spec; 1-week lag is a parsimonious way to map latent incidence proxy to hospitalization-rate reporting while minimizing phase drift risk and supporting stability across rolling splits.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2 weeks, forecasts may peak early and under-represent the rising limb; may show mild split-to-split timing bias.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Second core candidate to address observed delay sensitivity; 2-week lag can better align hospitalization timing without adding compartments, and may reduce peak misalignment for moderate-peakiness series.\",\"expected_failure_mode\":\"Risk of over-lagging in some seasons/splits leading to late peaks and inflated tail; can increase instability if peak timing varies across splits.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Controlled exploration of fractional dynamics under the recommended constraint (fractional only with delay 1\u20132); may capture heterogeneous mixing/memory effects while keeping lag short to preserve timing stability.\",\"expected_failure_mode\":\"Potential identifiability/over-flexibility: can fit noise or shift effective generation time, causing occasional split-specific phase drift and higher rolling variability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Fractional + 2-week lag tests whether added flexibility improves robustness when admissions lag is longer; still within constrained search and avoids adding explicit H state per guidance.\",\"expected_failure_mode\":\"Compounded timing uncertainty (fractional memory + longer lag) may over-smooth or delay peaks, increasing split-to-split variability and degrading stability if true lag is shorter.\"}]}",
+  "scientific_claim_allowed": true
+}

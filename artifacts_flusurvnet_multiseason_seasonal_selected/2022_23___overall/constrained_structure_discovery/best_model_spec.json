@@ -1,0 +1,58 @@
+{
+  "age_prior_penalty": -0.01,
+  "complexity_penalty": 0.12,
+  "complexity_penalty_compartments": 0.06,
+  "complexity_penalty_delay": 0.0,
+  "complexity_penalty_fractional": 0.0,
+  "complexity_penalty_h_observation": 0.0,
+  "complexity_penalty_observation": 0.0,
+  "complexity_penalty_params": 0.06,
+  "complexity_penalty_recurrence": 0.0,
+  "delay_weeks": 0,
+  "fractional": false,
+  "multi_split_blocks": 2,
+  "multi_split_penalty": 0.031183471425135053,
+  "multi_split_val_mean_mae": 0.15613112253241712,
+  "multi_split_val_std_mae": 0.062366942850270106,
+  "num_compartments": 3,
+  "num_free_params": 6,
+  "observation_family": "infectious",
+  "observation_map": "I",
+  "params": {
+    "I0": 0.018364995067937488,
+    "R0": 0.0,
+    "S0": 0.9816350049320625,
+    "b0": 0.06445126245101142,
+    "b1": 0.6818058873517211,
+    "b2": 0.24398924315127807,
+    "fractional": 0.0,
+    "gamma": 0.3873556875222087,
+    "rho": 24.62731006106252
+  },
+  "rolling_val_error_std": 0.0739935088653833,
+  "rolling_val_mean_mae": 0.14923166705716617,
+  "rolling_val_mean_rmse": 0.1666399420850257,
+  "rolling_val_metrics": {
+    "1": {
+      "mae": 0.14011865913849267,
+      "rmse": 0.15888481731215118,
+      "smape": 0.7191245350366596
+    },
+    "2": {
+      "mae": 0.15834467497583965,
+      "rmse": 0.17439506685790018,
+      "smape": 0.8466891706190192
+    }
+  },
+  "round": 1,
+  "score": 0.31211329573062885,
+  "spec_key": "SIR|fractional=0|obs=I",
+  "stability_penalty": 0.014798701773076663,
+  "structure_name": "SIR",
+  "train_mae": 0.41743436938493744,
+  "train_objective": 0.35647343384718144,
+  "train_rmse": 0.5368834186770705,
+  "val_mae": 0.14453207710040658,
+  "val_rmse": 0.16433925027152366,
+  "val_smape": 0.7592632906138569
+}

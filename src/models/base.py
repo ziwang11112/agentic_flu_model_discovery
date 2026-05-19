@@ -120,6 +120,8 @@ class BaseEpidemicModel(ABC):
     ) -> FitResult:
         """Fit the model with multiple random restarts."""
         total_restarts = self.fit_config.n_restarts if n_restarts is None else n_restarts
+        if warm_start is None and total_restarts <= 0:
+            total_restarts = 1
         candidates: list[np.ndarray] = []
         if warm_start is not None:
             candidates.append(np.asarray(warm_start, dtype=float))

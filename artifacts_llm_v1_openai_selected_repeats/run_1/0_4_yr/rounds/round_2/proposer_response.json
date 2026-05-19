@@ -1,0 +1,198 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If admissions systematically lag infections, delay=0 will shift peaks early and degrade fit around turning points.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Primary SEIRS family with fractional dynamics; tests whether this hospitalization-rate series aligns closely with contemporaneous infections (no lag) while keeping structure consistent with prior best.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "May underperform if the effective lag varies over time or differs by season, leading to residual phase error.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Replicates the previous best specification to anchor comparisons and isolate the effect of alternative delays on forecast stability.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If true lag is closer to 1 week, delay=2 can over-lag the signal, smoothing/late-peaking forecasts and increasing split-to-split variability.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Same fractional SEIRS with a slightly longer lag to test sensitivity in the narrow 0\u20132 week neighborhood while preserving parsimony.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "Reduced robustness and higher variability across splits; may struggle to capture moderate peakiness at high rate scale without fractional memory effects.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Single non-fractional robustness comparator matched to the best delay; checks whether fractional dynamics are essential versus a standard SEIRS with the same observation timing.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "0-4 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779149725.0,
+          "conversation": null,
+          "created_at": 1779149716.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0d0ff73f1ce6bec1006a0bab94b40481978571b4280155f1ac",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\n  \"series_name\": \"0-4 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Primary SEIRS family with fractional dynamics; tests whether this hospitalization-rate series aligns closely with contemporaneous infections (no lag) while keeping structure consistent with prior best.\",\n      \"expected_failure_mode\": \"If admissions systematically lag infections, delay=0 will shift peaks early and degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Replicates the previous best specification to anchor comparisons and isolate the effect of alternative delays on forecast stability.\",\n      \"expected_failure_mode\": \"May underperform if the effective lag varies over time or differs by season, leading to residual phase error.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Same fractional SEIRS with a slightly longer lag to test sensitivity in the narrow 0\u20132 week neighborhood while preserving parsimony.\",\n      \"expected_failure_mode\": \"If true lag is closer to 1 week, delay=2 can over-lag the signal, smoothing/late-peaking forecasts and increasing split-to-split variability.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Single non-fractional robustness comparator matched to the best delay; checks whether fractional dynamics are essential versus a standard SEIRS with the same observation timing.\",\n      \"expected_failure_mode\": \"Reduced robustness and higher variability across splits; may struggle to capture moderate peakiness at high rate scale without fractional memory effects.\"\n    }\n  ]\n}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0d0ff73f1ce6bec1006a0bab9598f08197bd8ae2d286ffbb88",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1130,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 451,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1581
+          },
+          "user": null
+        },
+        "raw_response_text": "{\n  \"series_name\": \"0-4 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Primary SEIRS family with fractional dynamics; tests whether this hospitalization-rate series aligns closely with contemporaneous infections (no lag) while keeping structure consistent with prior best.\",\n      \"expected_failure_mode\": \"If admissions systematically lag infections, delay=0 will shift peaks early and degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Replicates the previous best specification to anchor comparisons and isolate the effect of alternative delays on forecast stability.\",\n      \"expected_failure_mode\": \"May underperform if the effective lag varies over time or differs by season, leading to residual phase error.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Same fractional SEIRS with a slightly longer lag to test sensitivity in the narrow 0\u20132 week neighborhood while preserving parsimony.\",\n      \"expected_failure_mode\": \"If true lag is closer to 1 week, delay=2 can over-lag the signal, smoothing/late-peaking forecasts and increasing split-to-split variability.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Single non-fractional robustness comparator matched to the best delay; checks whether fractional dynamics are essential versus a standard SEIRS with the same observation timing.\",\n      \"expected_failure_mode\": \"Reduced robustness and higher variability across splits; may struggle to capture moderate peakiness at high rate scale without fractional memory effects.\"\n    }\n  ]\n}"
+      }
+    ]
+  },
+  "raw_response_text": "{\n  \"series_name\": \"0-4 yr\",\n  \"proposals\": [\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 0,\n      \"rationale\": \"Primary SEIRS family with fractional dynamics; tests whether this hospitalization-rate series aligns closely with contemporaneous infections (no lag) while keeping structure consistent with prior best.\",\n      \"expected_failure_mode\": \"If admissions systematically lag infections, delay=0 will shift peaks early and degrade fit around turning points.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Replicates the previous best specification to anchor comparisons and isolate the effect of alternative delays on forecast stability.\",\n      \"expected_failure_mode\": \"May underperform if the effective lag varies over time or differs by season, leading to residual phase error.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": true,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 2,\n      \"rationale\": \"Same fractional SEIRS with a slightly longer lag to test sensitivity in the narrow 0\u20132 week neighborhood while preserving parsimony.\",\n      \"expected_failure_mode\": \"If true lag is closer to 1 week, delay=2 can over-lag the signal, smoothing/late-peaking forecasts and increasing split-to-split variability.\"\n    },\n    {\n      \"structure_name\": \"SEIRS\",\n      \"fractional\": false,\n      \"observation_map\": \"delayed_I\",\n      \"delay_weeks\": 1,\n      \"rationale\": \"Single non-fractional robustness comparator matched to the best delay; checks whether fractional dynamics are essential versus a standard SEIRS with the same observation timing.\",\n      \"expected_failure_mode\": \"Reduced robustness and higher variability across splits; may struggle to capture moderate peakiness at high rate scale without fractional memory effects.\"\n    }\n  ]\n}",
+  "scientific_claim_allowed": true
+}

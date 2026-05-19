@@ -1,0 +1,97 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Keep templates within the current candidate families (SEIR, SEIRS, SEIHR); avoid adding new compartments beyond these in the next round.",
+      "Treat observation delay as a small discrete search: restrict delayed_I to delay_weeks \u2208 {1,2,3} and prioritize robustness across rolling splits over single-window validation fit.",
+      "Include at least one direct-hospitalization observation mapping (SEIHR with obs=H) among next-round proposals to benchmark against delayed_I mappings.",
+      "Prefer lower-complexity variants unless they demonstrate clear rolling robustness (i.e., only keep SEIRS over SEIR if rolling performance is consistently better across splits)."
+    ],
+    "observed_failure_modes": [
+      "Validation vs rolling mismatch: one spec (SEIRS delayed_I delay=3) looks very strong on the single validation window but degrades notably on rolling splits, suggesting sensitivity to split timing and potential overfit to the held-out segment.",
+      "Delay identifiability/instability: performance varies materially between delay=2 and delay=3, indicating the observation delay is a key but unstable degree of freedom for this series.",
+      "Structure ambiguity: SEIR/SEIRS/SEIHR families are all competitive on rolling metrics, implying the data do not strongly identify added compartments (waning immunity or hospitalization compartment) at this horizon/scale.",
+      "Observation-map mismatch risk: mapping hospitalizations to I (even with delay) can fit some windows but may be less robust than directly observing H (SEIHR), as suggested by comparatively steadier rolling behavior for H-based specs."
+    ],
+    "proposer_instruction": "Focus next-round proposals on robustness across rolling splits rather than optimizing a single validation window. Explore a tight grid over observation delay for delayed_I (1\u20133 weeks), but also prioritize SEIHR with obs=H as a more semantically aligned mapping for hospitalization rates. Keep the search within SEIR/SEIRS/SEIHR and avoid extra complexity unless it yields consistent rolling improvements; use SEIR delayed_I (delay=2) and SEIHR H as the primary anchors, with SEIRS variants only if they improve rolling stability."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 2,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+>= 65 yr,3,0,openai,False,True,SEIRS,True,delayed_I,1,True,True,,high,,True
+>= 65 yr,3,1,openai,False,True,SEIRS,True,delayed_I,0,True,True,,low,"A zero-delay delayed_I is effectively contemporaneous I while retaining fractional dynamics; for a hospitalization-rate target, this is less semantically aligned than delayed_I with a positive lag. Given high peakiness and short series length, the added flexibility from fractional memory plus no lag increases risk of timing compensation/overfitting without clear mechanistic justification.",True
+>= 65 yr,3,2,openai,False,True,SEIRS,True,delayed_I,2,True,True,,medium,,True
+>= 65 yr,3,3,openai,False,True,SEIRS,True,I,0,True,True,,low,,True

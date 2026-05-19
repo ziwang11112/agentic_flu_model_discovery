@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,2,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,2,1,openai,False,True,SEIRS,False,delayed_I,1,True,True,,medium,,True
+0-4 yr,2,2,openai,False,True,SEIRS,False,delayed_I,3,True,True,,low,,True
+0-4 yr,2,3,openai,False,True,SEIRS,True,delayed_I,2,True,True,,low,"Fractional memory is not clearly justified by the series summary (single season, n_train=31) and adds flexibility that can mimic delay/waning effects, increasing overfitting and identifiability risk. Given the explicit risk note about weak identifiability in short series, adding fractional dynamics on top of SEIRS+delay is more likely to create parameter tradeoffs (memory vs. delay vs. waning) than to reflect a well-supported mechanism.",True

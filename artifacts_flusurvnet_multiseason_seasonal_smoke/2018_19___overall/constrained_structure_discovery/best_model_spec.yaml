@@ -1,0 +1,53 @@
+round: 1
+spec_key: SEIHR|fractional=0|obs=H
+structure_name: SEIHR
+fractional: false
+observation_map: H
+delay_weeks: 0
+observation_family: hospitalized
+num_free_params: 11
+num_compartments: 5
+train_objective: 0.2297941007579209
+train_mae: 0.25553989333208404
+train_rmse: 0.319639530007946
+val_mae: 2.34796077886346
+val_rmse: 2.516587074010765
+val_smape: 0.6822985705433858
+rolling_val_mean_mae: 0.7654431154492309
+rolling_val_mean_rmse: 0.8004447615986447
+multi_split_blocks: 2
+multi_split_val_mean_mae: 0.7654431154492309
+multi_split_val_std_mae: 0.19132724013424518
+multi_split_penalty: 0.09566362006712259
+rolling_val_error_std: 0.23411248019293313
+rolling_val_metrics:
+  '1':
+    mae: 0.7654431154492309
+    rmse: 0.8004447615986447
+    smape: 0.1984079127400488
+stability_penalty: 0.046822496038586625
+complexity_penalty: 0.21500000000000002
+complexity_penalty_params: 0.11
+complexity_penalty_compartments: 0.1
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.005
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: 0.0
+score: 1.1229292315549402
+params:
+  b0: 1.2117837017817246
+  b1: 1.07987926964371
+  b2: -0.4901252606225867
+  sigma: 0.6855325066974518
+  eta: 0.2375429211906521
+  gamma_i: 0.03266997657661566
+  gamma_h: 0.06961689557876685
+  rho: 4.868127541876254
+  S0: 0.9273274996730205
+  E0: 0.024330562294180156
+  I0: 0.015592695841169082
+  H0: 0.032749242191630376
+  R0: 0.0
+  fractional: 0.0

@@ -1,0 +1,52 @@
+round: 1
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 6
+num_compartments: 3
+train_objective: 0.9550628653870972
+train_mae: 0.6367741447539452
+train_rmse: 0.8876404444303151
+val_mae: 4.575981644970575
+val_rmse: 5.270839415900786
+val_smape: 0.5126192573796914
+rolling_val_mean_mae: 2.219546373802528
+rolling_val_mean_rmse: 2.7192553552607692
+multi_split_blocks: 2
+multi_split_val_mean_mae: 2.0787392444261776
+multi_split_val_std_mae: 1.2598202148617808
+multi_split_penalty: 0.6299101074308904
+rolling_val_error_std: 1.570715732648788
+rolling_val_metrics:
+  '1':
+    mae: 1.6698502862123252
+    rmse: 2.0263321423541076
+    smape: 0.17587621181254362
+  '2':
+    mae: 2.76924246139273
+    rmse: 3.412178568167431
+    smape: 0.30969516925445645
+stability_penalty: 0.3141431465297576
+complexity_penalty: 0.12
+complexity_penalty_params: 0.06
+complexity_penalty_compartments: 0.06
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: -0.01
+score: 3.1327924983868263
+params:
+  b0: -2.227792914426373
+  b1: 1.867963033043765
+  b2: 1.501987699566464
+  gamma: 0.002731626864314489
+  rho: 12.789878221892156
+  S0: 0.9981790424085881
+  I0: 0.0018209575914118431
+  R0: 0.0
+  fractional: 0.0

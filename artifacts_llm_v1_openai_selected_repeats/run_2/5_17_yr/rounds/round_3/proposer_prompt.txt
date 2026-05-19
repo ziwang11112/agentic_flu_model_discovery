@@ -1,0 +1,97 @@
+You are a public-health time-series model-template proposer.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+You must propose candidate compartment-template specifications for forecasting
+aggregate weekly influenza hospitalization rates.
+
+You do not fit parameters.
+You do not write Python code.
+You do not use test metrics.
+You only propose JSON model specifications under the allowed DSL.
+
+Allowed structures:
+SIR, SEIR, SEIRS, SEIHR, SEIAR
+
+Allowed observation maps:
+I, H, I+H, delayed_I
+
+Rules:
+- obs=H requires SEIHR
+- obs=I+H requires SEIHR
+- obs=delayed_I requires delay_weeks in {1,2,3}
+- non-delayed observations must use delay_weeks=0
+- keep proposals compatible with the DSL and parsimonious
+- return strict JSON only
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=0|obs=delayed_I|delay=3"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "5-17 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.08,
+  "validation_std": 0.07483314773547883,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Previous feedback:
+{
+  "analyst_feedback": {
+    "next_round_constraints": [
+      "Prioritize templates that improve rolling-only consistency over single-window fit; avoid configurations that show large divergence between fixed validation and rolling-only behavior.",
+      "Keep complexity controlled: prefer SEIR/SEIRS-class structures unless an added compartment is paired with a clearly justified observation mapping (to reduce under-identification risk with short training history).",
+      "Explore delay as a small discrete set centered near 1\u20133 weeks, but do not expand delay search widely; instead vary observation mapping/aggregation to capture hospitalization-rate measurement characteristics.",
+      "Maintain non-fractional dynamics for this round (fractional=0), since current best-performing patterns are already in that regime and the series has no zeros and moderate peakiness."
+    ],
+    "observed_failure_modes": [
+      "Delay sensitivity is mild: SEIR delayed_I with 1\u20133 week delays clusters tightly, suggesting the model family is not strongly identifying the reporting/clinical lag and may be compensating via other parameters.",
+      "SEIRS delayed_I (delay=2) shows a notable gap between single validation vs rolling-only behavior, indicating potential overfit to the fixed validation window or sensitivity to split placement (temporal generalization weakness).",
+      "Adding explicit hospitalization compartment (SEIHR with H or I+H observation) does not yield consistent rolling-only gains relative to simpler SEIR delayed_I, implying extra structure may be under-identified for this series length (31 train weeks) and moderate peakiness.",
+      "Current discovery patterns are concentrated in SEIRS/SEIR with delayed_I; limited exploration of alternative observation mappings may be leaving systematic measurement mismatch unaddressed (e.g., hospitalization rate behaving more like a lagged/filtered incidence signal than raw I)."
+    ],
+    "proposer_instruction": "Focus proposals on SEIR/SEIRS with alternative observation mappings that better represent hospitalization-rate measurement as a lagged/aggregated incidence proxy. Keep delay_weeks in {1,2,3} but diversify beyond delayed_I by testing plausible aggregated/filtered incidence observations (e.g., combinations or smoothed/lagged variants if available in the template set). De-emphasize adding new compartments (e.g., SEIHR) unless paired with a parsimonious observation choice that directly targets hospitalization-rate reporting (and does not increase free structure unnecessarily). Aim for configurations that are stable across rolling splits rather than optimizing a single validation window."
+  },
+  "previous_best_spec": {
+    "delay_weeks": 2,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  }
+}
+
+Return:
+{
+  "series_name": "...",
+  "proposals": [
+    {
+      "structure_name": "...",
+      "fractional": false,
+      "observation_map": "...",
+      "delay_weeks": 0,
+      "rationale": "...",
+      "expected_failure_mode": "..."
+    }
+  ]
+}

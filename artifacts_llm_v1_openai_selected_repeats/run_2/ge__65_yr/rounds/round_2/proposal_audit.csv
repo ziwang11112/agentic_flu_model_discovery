@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+>= 65 yr,2,0,openai,False,True,SEIRS,True,delayed_I,2,True,True,,high,,True
+>= 65 yr,2,1,openai,False,True,SEIRS,True,I,0,True,True,,low,,True
+>= 65 yr,2,2,openai,False,True,SEIRS,True,delayed_I,1,True,True,,medium,,True
+>= 65 yr,2,3,openai,False,True,SEIRS,True,delayed_I,3,True,True,,low,,True
+>= 65 yr,2,4,openai,False,True,SEIHR,True,H,0,True,True,,low,"Observation map H matches the target, but adding an explicit H compartment (SEIHR) increases over-complexity and identifiability risk for short single-season data (n_train=31), especially with high peakiness where multiple compartments can trade off to fit timing/shape. Given the stated risk note, delayed_I is more plausible than H here.",True

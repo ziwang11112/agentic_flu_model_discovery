@@ -1,0 +1,4 @@
+series_name,repeats,v1_over_v0_rate,v1_over_nonllm_score_rate,mean_v1_score,std_v1_score,mean_v1_minus_v0,mean_v1_minus_nonllm_score,mean_v1_minus_nonllm_test_mae,mean_v1_minus_nonllm_rolling_mae,dominant_selected_spec,dominant_observation_map,dominant_fractional,dominant_delay_weeks,mean_valid_rate
+0-4 yr,3,0.3333333333333333,,0.345693157665625,0.0022673451510310323,-0.0011915939180971817,,0.0005271776148451001,0.0161936171100678,SEIRS|fractional=0|obs=delayed_I|delay=1,delayed_I,False,1,1.0
+5-17 yr,3,1.0,,0.27754325064469865,0.01917561395686176,-0.05830903427990036,,0.04686249246874627,0.013962975674653133,SEIRS|fractional=0|obs=delayed_I|delay=2,delayed_I,False,2,1.0
+>= 65 yr,3,1.0,,0.5095350081927672,0.005459030733835321,-0.027297433326883763,,0.1283824926413316,0.0591169088927345,SEIRS|fractional=1|obs=delayed_I|delay=2,delayed_I,True,2,1.0

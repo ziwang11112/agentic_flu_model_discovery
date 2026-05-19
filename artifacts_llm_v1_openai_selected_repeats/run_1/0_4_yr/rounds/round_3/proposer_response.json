@@ -1,0 +1,190 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the true admission lag is closer to 1 week (or varies within-season), a fixed 2-week delay can shift peaks late and under/over-shoot during rapid rise/decline periods.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Anchor on the dominant discovered template (SEIRS + delayed_I) while prioritizing a modest 2-week lag that aligns with hospitalization timing and has shown comparatively better rolling stability than 1-week in prior feedback.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "May overfit timing to a particular held-out segment; can degrade on rolling splits if the effective lag is longer or changes over time, leading to premature peaks.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Include the prior best spec as a comparator within the recommended narrow delay band; maintains parsimony and tests whether the 1-week lag remains robust beyond a single validation window.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Higher split-to-split variability/instability in short series (31 train weeks); may introduce spurious persistence or heavy-tailed dynamics that mis-time peaks and inflate uncertainty.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Single fractional variant allowed by constraints: paired with the more stable 2-week delay to test whether fractional dynamics improve robustness for moderate peakiness/high scale without expanding mechanisms beyond the template knobs.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "0-4 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779149871.0,
+          "conversation": null,
+          "created_at": 1779149864.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0341dd8f4c1f441b006a0bac27ffd881a3a7d7373c94f374a6",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor on the dominant discovered template (SEIRS + delayed_I) while prioritizing a modest 2-week lag that aligns with hospitalization timing and has shown comparatively better rolling stability than 1-week in prior feedback.\",\"expected_failure_mode\":\"If the true admission lag is closer to 1 week (or varies within-season), a fixed 2-week delay can shift peaks late and under/over-shoot during rapid rise/decline periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Include the prior best spec as a comparator within the recommended narrow delay band; maintains parsimony and tests whether the 1-week lag remains robust beyond a single validation window.\",\"expected_failure_mode\":\"May overfit timing to a particular held-out segment; can degrade on rolling splits if the effective lag is longer or changes over time, leading to premature peaks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant allowed by constraints: paired with the more stable 2-week delay to test whether fractional dynamics improve robustness for moderate peakiness/high scale without expanding mechanisms beyond the template knobs.\",\"expected_failure_mode\":\"Higher split-to-split variability/instability in short series (31 train weeks); may introduce spurious persistence or heavy-tailed dynamics that mis-time peaks and inflate uncertainty.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0341dd8f4c1f441b006a0bac28e0a081a3bf475c23339b1246",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1149,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 344,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1493
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor on the dominant discovered template (SEIRS + delayed_I) while prioritizing a modest 2-week lag that aligns with hospitalization timing and has shown comparatively better rolling stability than 1-week in prior feedback.\",\"expected_failure_mode\":\"If the true admission lag is closer to 1 week (or varies within-season), a fixed 2-week delay can shift peaks late and under/over-shoot during rapid rise/decline periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Include the prior best spec as a comparator within the recommended narrow delay band; maintains parsimony and tests whether the 1-week lag remains robust beyond a single validation window.\",\"expected_failure_mode\":\"May overfit timing to a particular held-out segment; can degrade on rolling splits if the effective lag is longer or changes over time, leading to premature peaks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant allowed by constraints: paired with the more stable 2-week delay to test whether fractional dynamics improve robustness for moderate peakiness/high scale without expanding mechanisms beyond the template knobs.\",\"expected_failure_mode\":\"Higher split-to-split variability/instability in short series (31 train weeks); may introduce spurious persistence or heavy-tailed dynamics that mis-time peaks and inflate uncertainty.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"0-4 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor on the dominant discovered template (SEIRS + delayed_I) while prioritizing a modest 2-week lag that aligns with hospitalization timing and has shown comparatively better rolling stability than 1-week in prior feedback.\",\"expected_failure_mode\":\"If the true admission lag is closer to 1 week (or varies within-season), a fixed 2-week delay can shift peaks late and under/over-shoot during rapid rise/decline periods.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Include the prior best spec as a comparator within the recommended narrow delay band; maintains parsimony and tests whether the 1-week lag remains robust beyond a single validation window.\",\"expected_failure_mode\":\"May overfit timing to a particular held-out segment; can degrade on rolling splits if the effective lag is longer or changes over time, leading to premature peaks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Single fractional variant allowed by constraints: paired with the more stable 2-week delay to test whether fractional dynamics improve robustness for moderate peakiness/high scale without expanding mechanisms beyond the template knobs.\",\"expected_failure_mode\":\"Higher split-to-split variability/instability in short series (31 train weeks); may introduce spurious persistence or heavy-tailed dynamics that mis-time peaks and inflate uncertainty.\"}]}",
+  "scientific_claim_allowed": true
+}

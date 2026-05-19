@@ -1,0 +1,119 @@
+{
+  "best_full_params": {
+    "E0": 1.619031025028733e-05,
+    "I0": 0.03249864758562338,
+    "R0": 0.0,
+    "S0": 0.9674851621041263,
+    "b0": 6.031542446866584,
+    "b1": 2.450394223576604,
+    "b2": -5.059043456801605,
+    "gamma": 0.31385704370965845,
+    "obs_scale": 0.7644519797401156,
+    "rho": 52.7457208425522,
+    "sigma": 0.5630658858703804
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 50.1316889282757,
+    "train": 37.74199317245301,
+    "train_plus_validation": 45.594029000571965
+  },
+  "model_name": "probabilistic_seir",
+  "probabilistic_metrics": {
+    "average_interval_width_50": 0.7778835919172462,
+    "average_interval_width_80": 1.4270654126952889,
+    "average_interval_width_95": 1.8548245100587941,
+    "coverage_50": 0.5714285714285714,
+    "coverage_80": 1.0,
+    "coverage_95": 1.0,
+    "interval_calibration_method": "none",
+    "interval_calibration_scales": {
+      "50": 1.0,
+      "80": 1.0,
+      "95": 1.0
+    },
+    "interval_summary": {
+      "50": {
+        "average_interval_width": 0.7778835919172462,
+        "coverage_gap": 0.0714285714285714,
+        "empirical_coverage": 0.5714285714285714,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 1.4270654126952889,
+        "coverage_gap": 0.19999999999999996,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 1.8548245100587941,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "negative_log_likelihood": 8.231819929141501,
+    "raw_interval_summary": {
+      "50": {
+        "average_interval_width": 0.7778835919172462,
+        "coverage_gap": 0.0714285714285714,
+        "empirical_coverage": 0.5714285714285714,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 1.4270654126952889,
+        "coverage_gap": 0.19999999999999996,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 1.8548245100587941,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "uncertainty_draws": 10,
+    "uncertainty_method": "bootstrap"
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.47537779232477023,
+      "rmse": 0.5152839723390876,
+      "smape": 1.5139209946419738
+    },
+    "2": {
+      "mae": 0.518681910884729,
+      "rmse": 0.5835539478631362,
+      "smape": 1.2011037988355393
+    },
+    "4": {
+      "mae": 0.9859954281223382,
+      "rmse": 1.8186025372084802,
+      "smape": 1.8406410640063076
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.6600183771106125,
+    "mean_rmse": 0.9724801524702347
+  },
+  "series_name": "2022-23 / >= 65 yr",
+  "test_metrics": {
+    "mae": 0.3514031885287414,
+    "rmse": 0.3849200047868656,
+    "smape": 1.3141188954925396
+  },
+  "train_metrics": {
+    "mae": 1.4472234782413587,
+    "rmse": 2.1048026417993286,
+    "smape": 0.266407407321241
+  },
+  "validation_metrics": {
+    "mae": 0.6736066144726913,
+    "rmse": 0.6832334046173387,
+    "smape": 1.4831709281485044
+  }
+}

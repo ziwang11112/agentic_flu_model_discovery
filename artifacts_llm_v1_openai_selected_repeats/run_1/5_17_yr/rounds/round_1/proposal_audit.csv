@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+5-17 yr,1,1,openai,False,True,SEIRS,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H maps directly to the hospitalization-rate target, an explicit H compartment is flagged as weakly identifiable for short single-season series. SEIHR adds extra transition rates (e.g., I→H, H→R) that can confound with transmission and recovery, risking unstable fits without clear additional signal in 31 weeks.",True
+5-17 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,I+H is not well-aligned to an admissions-focused hospitalization-rate target and can blur interpretation/scale (mixing prevalence-like and admissions/severity-like components). It also inherits SEIHR identifiability risks while adding an additional observation mixture that can be hard to disentangle in short data.,True
+5-17 yr,1,4,openai,False,True,SEIR,False,delayed_I,2,True,True,,medium,,True

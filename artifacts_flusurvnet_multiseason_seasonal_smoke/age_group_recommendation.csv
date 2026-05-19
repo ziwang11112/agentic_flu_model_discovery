@@ -1,0 +1,7 @@
+series_name,recommended_model,decision_type,recommended_test_rank,recommended_rolling_rank,rank_score,best_test_model,best_test_mae,best_rolling_model,best_rolling_mean_mae,recommended_discovery_structure_name,recommended_discovery_fractional,recommended_discovery_observation_map,recommended_discovery_delay_weeks
+2018-19 / Overall,delayed_observation_seir,test_preferred,1,2,3.0,delayed_observation_seir,3.1476580168821267,constrained_structure_discovery,0.8782812940507688,,,,
+2019-20 / Overall,constrained_structure_discovery,consensus,1,1,2.0,constrained_structure_discovery,2.26174933203887,constrained_structure_discovery,0.83456780719155,SEIHR,False,H,0.0
+2021-22 / Overall,constrained_structure_discovery,consensus,1,1,2.0,constrained_structure_discovery,0.292667516408537,constrained_structure_discovery,0.3293496248646954,SIR,False,I,0.0
+2022-23 / Overall,constrained_structure_discovery,consensus,1,1,2.0,constrained_structure_discovery,0.15848964168397098,constrained_structure_discovery,0.14950698488488864,SIR,False,I,0.0
+2023-24 / Overall,deterministic_seir,test_preferred,1,2,3.0,deterministic_seir,0.035202584197920335,constrained_structure_discovery,0.07556816523036217,,,,
+2024-25 / Overall,constrained_structure_discovery,consensus,1,1,2.0,constrained_structure_discovery,0.2584837825409681,constrained_structure_discovery,0.8421312858215024,SIR,False,delayed_I,3.0

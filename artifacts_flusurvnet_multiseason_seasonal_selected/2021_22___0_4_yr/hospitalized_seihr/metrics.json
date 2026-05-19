@@ -1,0 +1,74 @@
+{
+  "best_full_params": {
+    "E0": 0.3493107930448371,
+    "H0": 1.8519513399987838e-06,
+    "I0": 5.6977508272415076e-27,
+    "R0": 0.0,
+    "S0": 0.650687355003823,
+    "b0": -125.96564690169538,
+    "b1": 107.55747150839878,
+    "b2": -80.95859075263438,
+    "eta": 0.062104316702227456,
+    "gamma_h": 0.19348226284054978,
+    "gamma_i": 0.11061917666539403,
+    "rho": 16.3523577673742,
+    "sigma": 0.17655251706039413
+  },
+  "complexity": {
+    "num_compartments": 5,
+    "num_free_params": 11
+  },
+  "fit_objectives": {
+    "full_series": 0.06595124496267003,
+    "train": 0.013320278410431175,
+    "train_plus_validation": 0.05877115235548211
+  },
+  "model_name": "hospitalized_seihr",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.674397652071221,
+      "rmse": 0.7405956350832734,
+      "smape": 1.0844584606425585
+    },
+    "2": {
+      "mae": 0.5512012894356972,
+      "rmse": 0.6221176383398652,
+      "smape": 0.8517931350810851
+    },
+    "4": {
+      "mae": 0.6938356554806205,
+      "rmse": 0.7845473197015777,
+      "smape": 1.013202064496504
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.6398115323291796,
+    "mean_rmse": 0.715753531041572
+  },
+  "series_name": "2021-22 / 0-4 yr",
+  "test_metrics": {
+    "mae": 0.47635551420576816,
+    "rmse": 0.5781572504636302,
+    "smape": 0.4197214401533107
+  },
+  "train_metrics": {
+    "mae": 0.09383244380618327,
+    "rmse": 0.1152463391999406,
+    "smape": 0.6722698346607789
+  },
+  "validation_metrics": {
+    "mae": 0.810113595267207,
+    "rmse": 0.8698781949925053,
+    "smape": 1.7266684006313329
+  }
+}

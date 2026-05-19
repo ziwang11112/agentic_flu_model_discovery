@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Delay and waning-immunity effects can be confounded, yielding plausible fits but unstable multi-week-ahead forecasts when peak timing shifts.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Matches prior discovery pattern and surveillance note that admissions can lag an infection proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a short series.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true lag is longer, forecasts may lead the observed peak (early peak timing) and underpredict the post-peak tail.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Tests a shorter reporting/admission lag while keeping the same parsimonious SEIRS backbone; can better align with rapid hospitalization onset in older adults.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "Long delay can over-smooth and shift peaks too late, degrading near-term forecasts and exaggerating persistence after the peak.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Explores a longer effective lag from infection proxy to hospitalization-rate observation, which can occur with care-seeking and admission delays; retains SEIRS flexibility for high peakiness.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H dynamics may be weakly identifiable with 31 training points, causing parameter non-identifiability and unstable forecasts (especially peak height).",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Directly maps the target semantics (hospitalization rate) to an explicit hospitalization compartment; can capture distinct hospitalization dynamics separate from infectious prevalence.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Mixture mapping can blur interpretation and may overfit peak magnitude by trading off I vs H contributions, reducing generalization across weeks.",
+      "fractional": false,
+      "observation_map": "I+H",
+      "rationale": "Allows the observed hospitalization-rate signal to reflect a mixture of infectious burden and hospitalization occupancy/admissions proxy, potentially improving robustness when H alone is weakly identified.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

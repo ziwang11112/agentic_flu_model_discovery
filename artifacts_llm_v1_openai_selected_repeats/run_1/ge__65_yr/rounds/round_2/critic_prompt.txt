@@ -1,0 +1,110 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If true admissions lag differs from 2 weeks (or varies over the season), peak timing may shift (phase error), producing split-to-split sensitivity despite good overall shape.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Center on the apparent lag sweet spot (2 weeks) within the best-performing family (fractional SEIRS + delayed_I). This isolates whether remaining error is primarily phase alignment vs other structural issues, while aiming for improved rolling robustness relative to more extreme delays.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May systematically lead the observed peak (too-early incidence proxy), causing early peak predictions and degraded rolling stability if the true lag is closer to 2\u20133 weeks.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "A minimal one-step perturbation around the 2-week center to probe delay brittleness without changing structure or fractional memory. Useful to diagnose whether the series prefers a shorter clinical/reporting lag in some splits.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "If 3 weeks is too long, forecasts may lag the peak and over-extend the tail, with phase error dominating and sensitivity across rolling splits.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Retain the previous best spec as an anchor comparator to assess whether improvements come from shifting delay toward 2 weeks or from other factors. Keeps all else fixed to isolate delay effects.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H compartment may be weakly identifiable in a short, peaky series, leading to unstable parameter tradeoffs (e.g., E/I/H timing) and higher rolling variability even if point fit is competitive.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Comparator focused on explicit hospitalization dynamics with direct H observation, as requested. This tests whether remaining error is better addressed by adding an H compartment (shape/translation from infections to admissions) rather than tuning delay in delayed_I.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

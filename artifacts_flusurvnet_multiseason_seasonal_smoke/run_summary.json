@@ -1,0 +1,35 @@
+{
+  "calibration_rows": 0,
+  "completed_seasons_path": "D:\\Projects\\agentic_flu_model_discovery\\data\\processed_flusurvnet_multiseason\\recommended_completed_seasons.csv",
+  "data_source": "FluSurv-NET RESP-NET transformed multi-season CSV",
+  "leaderboard_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_smoke\\benchmark_leaderboard.csv",
+  "models": [
+    "deterministic_seir",
+    "delayed_observation_seir",
+    "constrained_structure_discovery"
+  ],
+  "recommendation_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_smoke\\age_group_recommendation.csv",
+  "recommendation_rows": 6,
+  "seasonal_modes_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_smoke\\multiseason_age_recommendation_modes.csv",
+  "seasons": [
+    "2018-19",
+    "2019-20",
+    "2021-22",
+    "2022-23",
+    "2023-24",
+    "2024-25"
+  ],
+  "seed": 2424,
+  "series_evaluated": [
+    "2018-19 / Overall",
+    "2019-20 / Overall",
+    "2021-22 / Overall",
+    "2022-23 / Overall",
+    "2023-24 / Overall",
+    "2024-25 / Overall"
+  ],
+  "summary_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_smoke\\benchmark_model_summary.csv",
+  "summary_rows": 18,
+  "winner_rows": 6,
+  "winners_path": "D:\\Projects\\agentic_flu_model_discovery\\artifacts_flusurvnet_multiseason_seasonal_smoke\\benchmark_series_winners.csv"
+}

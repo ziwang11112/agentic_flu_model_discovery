@@ -1,0 +1,4 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,3,0,openai,False,True,SEIRS,False,I,0,True,True,,low,,True
+5-17 yr,3,1,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True
+5-17 yr,3,2,openai,False,True,SEIRS,False,delayed_I,2,True,True,,medium,,True

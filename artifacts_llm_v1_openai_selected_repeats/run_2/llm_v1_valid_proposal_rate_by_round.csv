@@ -1,0 +1,8 @@
+series_name,round_id,num_raw_proposals,num_schema_valid,num_hard_valid,num_evaluated,valid_proposal_rate,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,1,5,5,5,5,1.0,openai,False,True
+0-4 yr,2,4,4,4,4,1.0,openai,False,True
+5-17 yr,1,5,5,5,5,1.0,openai,False,True
+5-17 yr,2,6,6,6,6,1.0,openai,False,True
+5-17 yr,3,7,7,7,7,1.0,openai,False,True
+>= 65 yr,1,5,5,5,5,1.0,openai,False,True
+>= 65 yr,2,5,5,5,5,1.0,openai,False,True

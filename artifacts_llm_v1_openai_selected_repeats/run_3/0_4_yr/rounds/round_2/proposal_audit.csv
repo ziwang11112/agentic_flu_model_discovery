@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,2,0,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True
+0-4 yr,2,1,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,2,2,openai,False,True,SEIRS,True,delayed_I,1,True,True,,medium,,True
+0-4 yr,2,3,openai,False,True,SEIRS,True,delayed_I,2,True,True,,medium,,True
+0-4 yr,2,4,openai,False,True,SEIRS,False,delayed_I,3,True,True,,low,"A fixed 3-week delayed_I mapping is less plausible given the stated 1–2 week admission lag and risks systematic phase error (late peaks/declines). With short single-season data, this is more likely to misalign timing than to reveal a stable alternative, and it does not address shape/scale issues beyond timing.",True

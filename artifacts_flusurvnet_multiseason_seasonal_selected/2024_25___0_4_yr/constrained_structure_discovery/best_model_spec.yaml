@@ -1,0 +1,54 @@
+round: 1
+spec_key: SEIR|fractional=0|obs=delayed_I|delay=3
+structure_name: SEIR
+fractional: false
+observation_map: delayed_I
+delay_weeks: 3
+observation_family: delayed
+num_free_params: 8
+num_compartments: 4
+train_objective: 0.5468844030612589
+train_mae: 0.29520073442033345
+train_rmse: 0.45286802637982587
+val_mae: 3.5253943279753215
+val_rmse: 4.123932111203519
+val_smape: 0.5231008225049057
+rolling_val_mean_mae: 2.5076605436878294
+rolling_val_mean_rmse: 2.8603245678890343
+multi_split_blocks: 2
+multi_split_val_mean_mae: 2.475386595026217
+multi_split_val_std_mae: 0.4742186516209065
+multi_split_penalty: 0.23710932581045324
+rolling_val_error_std: 1.3751259331121553
+rolling_val_metrics:
+  '1':
+    mae: 2.16895087190994
+    rmse: 2.449074693423695
+    smape: 0.35964164420705896
+  '2':
+    mae: 2.8463702154657193
+    rmse: 3.271574442354374
+    smape: 0.4397399313752472
+stability_penalty: 0.2750251866224311
+complexity_penalty: 0.175
+complexity_penalty_params: 0.08
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.015
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: -0.005
+score: 3.157521107459101
+params:
+  b0: 1.0942150262141286
+  b1: 2.9719583855291694
+  b2: 2.6156559431961446
+  sigma: 0.4564320241197964
+  gamma: 0.0008468248107147535
+  rho: 9.286628967277984
+  S0: 0.9969085885894227
+  E0: 0.002230337541648257
+  I0: 0.000861073868929125
+  R0: 0.0
+  fractional: 0.0

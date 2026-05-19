@@ -1,0 +1,103 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the true admission lag is closer to 1 week (or varies within-season), a fixed 2-week delay can shift peaks late and under/over-shoot during rapid rise/decline periods.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor on the dominant discovered template (SEIRS + delayed_I) while prioritizing a modest 2-week lag that aligns with hospitalization timing and has shown comparatively better rolling stability than 1-week in prior feedback.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May overfit timing to a particular held-out segment; can degrade on rolling splits if the effective lag is longer or changes over time, leading to premature peaks.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Include the prior best spec as a comparator within the recommended narrow delay band; maintains parsimony and tests whether the 1-week lag remains robust beyond a single validation window.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Higher split-to-split variability/instability in short series (31 train weeks); may introduce spurious persistence or heavy-tailed dynamics that mis-time peaks and inflate uncertainty.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Single fractional variant allowed by constraints: paired with the more stable 2-week delay to test whether fractional dynamics improve robustness for moderate peakiness/high scale without expanding mechanisms beyond the template knobs.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "0-4 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

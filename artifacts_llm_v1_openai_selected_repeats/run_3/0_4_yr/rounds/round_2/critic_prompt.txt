@@ -1,0 +1,119 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=0|obs=I",
+    "SEIRS|fractional=0|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=delayed_I|delay=1"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "moderate",
+  "rate_scale": "high",
+  "series_name": "0-4 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.24000000000000005,
+  "validation_std": 0.16852299546352714,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If true admissions lag is closer to 2 weeks, forecasts may be phase-shifted early (peaks predicted too soon) and under/over-shoot around turning points.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Keeps SEIRS core (waning immunity/reinfection) while aligning hospitalization-rate observations to infections via a short 1-week reporting/admission lag; parsimonious and consistent with prior sensitivity around 1\u20132 weeks.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "If the effective lag varies over time or is shorter (\u22481 week), the model can produce delayed peaks and sluggish rise/decline, degrading short-horizon accuracy.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Matches the previous best spec and directly targets the key timing misalignment by using a 2-week lag from I proxy to observed hospitalizations; retains simple non-fractional dynamics for stability.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May be over-flexible across splits, yielding higher variability/instability and occasional unrealistic curvature (over-sharpened or flattened peaks) despite good average fit.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Adds fractional flexibility to capture moderate peakiness at high rate scale while keeping the observation mapping simple (single 1-week delay) to limit instability; useful if non-fractional SEIRS underfits peak shape.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Risk of split-to-split instability/overfitting (especially with short series) and potential identifiability tradeoffs between fractional effects and lag, causing inconsistent peak timing/amplitude.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Combines the empirically strong 2-week lag with fractional dynamics to accommodate subtle non-exponential dwell-time effects without adding compartments; a targeted extension when timing is right but shape is off.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "If true lag is 1\u20132 weeks, this will systematically lag the observed series (late peaks, late declines) and can inflate errors near rapid transitions.",
+      "fractional": false,
+      "observation_map": "delayed_I",
+      "rationale": "Boundary sensitivity check for longer infection-to-admission delays while keeping the same SEIRS backbone; helps diagnose whether residual errors are primarily timing-related beyond 2 weeks.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": "0-4 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

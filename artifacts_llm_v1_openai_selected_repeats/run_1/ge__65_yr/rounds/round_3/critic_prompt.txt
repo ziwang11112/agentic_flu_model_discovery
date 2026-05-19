@@ -1,0 +1,110 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "If the true reporting/admission lag is effectively 0 or varies over time, a fixed 1-week delay can misalign peak timing and induce systematic lead/lag errors around the apex.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor specification matching prior best: SEIRS supports waning immunity across the season, fractional dynamics help capture sharp/peaky waves, and a 1-week delayed infection proxy aligns with short infection-to-admission lag while avoiding the instability seen at longer delays.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "May shift peaks earlier than observed if admissions lag infections by ~1 week, degrading fit around rapid upswings/downslope and producing overly sharp leading edges.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "No explicit delay as a robustness check when the hospitalization-rate series behaves like a near-contemporaneous proxy for incidence (e.g., rapid progression in older adults or reporting aligned to symptom onset week). Keeps the same peak-shape flexibility via fractional SEIRS.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Delay sensitivity: may increase rolling variability and mis-time sharp peaks (especially in high-peakiness series), potentially requiring compensatory parameter shifts that reduce forecast stability.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Shorter-than-3-week but longer-lag alternative to accommodate slightly slower infection-to-admission timing or administrative aggregation effects; retained within the requested 0\u20132 search while keeping the same SEIRS+fractional peakiness handling.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Can underrepresent the empirically observed lagged relationship between infections and admissions, leading to biased peak timing and poorer alignment on the downslope.",
+      "fractional": true,
+      "observation_map": "I",
+      "rationale": "Direct infection-proxy observation without delay as a parsimonious baseline within the preferred SEIRS family; useful when the hospitalization-rate series is effectively proportional to contemporaneous infectious burden rather than lagged incidence.",
+      "structure_name": "SEIRS"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

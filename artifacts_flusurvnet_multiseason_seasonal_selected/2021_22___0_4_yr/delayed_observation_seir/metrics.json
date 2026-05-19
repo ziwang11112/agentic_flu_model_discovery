@@ -1,0 +1,73 @@
+{
+  "best_full_params": {
+    "E0": 2.5079024665802483e-05,
+    "I0": 0.00012674464878763408,
+    "R0": 0.0,
+    "S0": 0.9998481763265467,
+    "b0": 30.59545499768283,
+    "b1": -32.73802856218413,
+    "b2": 6.24627982206974,
+    "delay": 0,
+    "gamma": 0.9989872833277702,
+    "rho": 29.039874016462647,
+    "sigma": 0.09359993088204503
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 8
+  },
+  "fit_objectives": {
+    "full_series": 0.049749146428343244,
+    "train": 0.02128126317243227,
+    "train_plus_validation": 0.018005111360923705
+  },
+  "model_name": "delayed_observation_seir",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.48174855033031533,
+      "rmse": 0.5452696787186678,
+      "smape": 0.748782610875579
+    },
+    "2": {
+      "mae": 0.8986241692082918,
+      "rmse": 0.9476422711735073,
+      "smape": 1.6204916716325357
+    },
+    "4": {
+      "mae": 0.6888924448466227,
+      "rmse": 0.7784017577041306,
+      "smape": 1.001977615753767
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.6897550547950765,
+    "mean_rmse": 0.7571045691987686
+  },
+  "selected_delay": 0,
+  "series_name": "2021-22 / 0-4 yr",
+  "test_metrics": {
+    "mae": 0.9868730857348966,
+    "rmse": 1.0495736196185206,
+    "smape": 1.8285190738466788
+  },
+  "train_metrics": {
+    "mae": 0.10859216923755668,
+    "rmse": 0.14586186240872476,
+    "smape": 0.8159535917478129
+  },
+  "validation_metrics": {
+    "mae": 0.7988355090275728,
+    "rmse": 0.8620748049621959,
+    "smape": 1.66932197144328
+  }
+}

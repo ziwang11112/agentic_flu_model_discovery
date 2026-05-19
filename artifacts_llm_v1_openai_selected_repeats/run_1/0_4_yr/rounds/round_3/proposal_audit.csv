@@ -1,0 +1,4 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,3,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,3,1,openai,False,True,SEIRS,False,delayed_I,1,True,True,,medium,,True
+0-4 yr,3,2,openai,False,True,SEIRS,True,delayed_I,2,True,True,,low,"Fractional memory is not clearly justified by the series summary (single season, moderate peakiness, no zeros) and adds overfitting/identifiability risk in a short (31-week) training window. The expected failure mode (spurious persistence/instability) is particularly concerning for hospitalization-rate timing, where lag structure already provides temporal smoothing.",True

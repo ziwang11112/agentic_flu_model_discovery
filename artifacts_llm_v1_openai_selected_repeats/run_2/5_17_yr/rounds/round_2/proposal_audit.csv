@@ -1,0 +1,7 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+5-17 yr,2,0,openai,False,True,SEIHR,False,H,0,True,True,,low,,True
+5-17 yr,2,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+5-17 yr,2,2,openai,False,True,SEIR,False,delayed_I,1,True,True,,medium,,True
+5-17 yr,2,3,openai,False,True,SEIR,False,delayed_I,3,True,True,,medium,,True
+5-17 yr,2,4,openai,False,True,SEIRS,False,delayed_I,2,True,True,,low,,True
+5-17 yr,2,5,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"SEIHR with observation I+H introduces an additional mixture weight/scale ambiguity between I and H contributions, compounding the already weak identifiability of an explicit H compartment in short single-season data; likely to blur timing and inflate persistence without clear semantic necessity over delayed_I.",True

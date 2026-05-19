@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,1,0,openai,False,True,SEIRS,False,delayed_I,2,True,True,,high,,True
+0-4 yr,1,1,openai,False,True,SEIR,False,delayed_I,2,True,True,,high,,True
+0-4 yr,1,2,openai,False,True,SEIHR,False,H,0,True,True,,low,"Although H maps directly to the hospitalization-rate target, adding an explicit H compartment in SEIHR is likely weakly identifiable in a short single-season series (31 train weeks), with substantial risk of confounding between I progression and H dynamics. This increases over-complexity relative to delayed_I alternatives that already match the stated surveillance semantics.",True
+0-4 yr,1,3,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"I+H is poorly aligned to a hospitalization-rate target unless the surveillance signal truly mixes admissions with occupancy; the proposal’s own failure mode highlights this ambiguity. It also inherits SEIHR identifiability concerns and adds additional mapping ambiguity (mixture weights implicitly fixed), increasing risk of misattributing shape/level in short data.",True
+0-4 yr,1,4,openai,False,True,SEIRS,True,delayed_I,1,True,True,,medium,,True

@@ -1,0 +1,214 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If true admissions lag is closer to 2\u20133 weeks, delay=1 may shift peaks too early, producing phase error and underestimating the post-peak tail.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Bracket the currently favored 2\u20133 week lag with a shorter delay to test whether rolling-split degradation is driven by over-lagging early-season rises or split-to-split timing shifts. Keeps the SEIRS family and non-fractional dynamics unchanged to isolate timing effects.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If lag varies across the season or differs by split, a fixed 2-week delay can cause inconsistent peak alignment and rolling instability.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Core candidate aligned with prior discovery patterns and mechanistic note that hospitalizations lag infections; serves as the central timing hypothesis for rolling robustness comparisons.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "May over-lag the signal in some splits, leading to late peaks and degraded short-horizon forecasts around turning points.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Retain the previous best spec as a baseline; tests whether the longer end of the plausible lag window yields more stable peak timing across rolling splits for this age group.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If admissions are genuinely lagged, no-delay mapping will systematically lead the observed series, causing early peaks and poor calibration near onset/peak.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Minimal alternative observation mapping closely related to delayed_I: removes the lag to check whether the hospitalization-rate series is effectively contemporaneous with the model\u2019s I proxy in some splits, which could explain delay sensitivity and rolling degradation.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Same as other fixed-lag specs: susceptible to split-dependent timing shifts; may overfit a particular validation segment\u2019s phase.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Duplicate of the 3-week lag retained intentionally as the anchor configuration for comparing rolling-split consistency against neighboring delays (1\u20132 weeks) without introducing additional mechanisms.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Same as other no-delay mappings: likely phase lead if hospitalization is lagged; may inflate apparent fit in some windows while degrading rolling performance.",
+        "fractional": false,
+        "observation_map": "delayed_I",
+        "rationale": "Duplicate of the no-delay check retained intentionally as the simplest phase-alignment stress test against the delayed variants, keeping structure and fractional setting constant.",
+        "structure_name": "SEIRS"
+      }
+    ],
+    "series_name": "5-17 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779152165.0,
+          "conversation": null,
+          "created_at": 1779152154.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_06539308560df8e4006a0bb51a765481929d98c07708395f0d",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Bracket the currently favored 2\u20133 week lag with a shorter delay to test whether rolling-split degradation is driven by over-lagging early-season rises or split-to-split timing shifts. Keeps the SEIRS family and non-fractional dynamics unchanged to isolate timing effects.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2\u20133 weeks, delay=1 may shift peaks too early, producing phase error and underestimating the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Core candidate aligned with prior discovery patterns and mechanistic note that hospitalizations lag infections; serves as the central timing hypothesis for rolling robustness comparisons.\",\"expected_failure_mode\":\"If lag varies across the season or differs by split, a fixed 2-week delay can cause inconsistent peak alignment and rolling instability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Retain the previous best spec as a baseline; tests whether the longer end of the plausible lag window yields more stable peak timing across rolling splits for this age group.\",\"expected_failure_mode\":\"May over-lag the signal in some splits, leading to late peaks and degraded short-horizon forecasts around turning points.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Minimal alternative observation mapping closely related to delayed_I: removes the lag to check whether the hospitalization-rate series is effectively contemporaneous with the model\u2019s I proxy in some splits, which could explain delay sensitivity and rolling degradation.\",\"expected_failure_mode\":\"If admissions are genuinely lagged, no-delay mapping will systematically lead the observed series, causing early peaks and poor calibration near onset/peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Duplicate of the 3-week lag retained intentionally as the anchor configuration for comparing rolling-split consistency against neighboring delays (1\u20132 weeks) without introducing additional mechanisms.\",\"expected_failure_mode\":\"Same as other fixed-lag specs: susceptible to split-dependent timing shifts; may overfit a particular validation segment\u2019s phase.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Duplicate of the no-delay check retained intentionally as the simplest phase-alignment stress test against the delayed variants, keeping structure and fractional setting constant.\",\"expected_failure_mode\":\"Same as other no-delay mappings: likely phase lead if hospitalization is lagged; may inflate apparent fit in some windows while degrading rolling performance.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_06539308560df8e4006a0bb51b0e348192b55fb3401b5307b4",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1220,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 608,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1828
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Bracket the currently favored 2\u20133 week lag with a shorter delay to test whether rolling-split degradation is driven by over-lagging early-season rises or split-to-split timing shifts. Keeps the SEIRS family and non-fractional dynamics unchanged to isolate timing effects.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2\u20133 weeks, delay=1 may shift peaks too early, producing phase error and underestimating the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Core candidate aligned with prior discovery patterns and mechanistic note that hospitalizations lag infections; serves as the central timing hypothesis for rolling robustness comparisons.\",\"expected_failure_mode\":\"If lag varies across the season or differs by split, a fixed 2-week delay can cause inconsistent peak alignment and rolling instability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Retain the previous best spec as a baseline; tests whether the longer end of the plausible lag window yields more stable peak timing across rolling splits for this age group.\",\"expected_failure_mode\":\"May over-lag the signal in some splits, leading to late peaks and degraded short-horizon forecasts around turning points.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Minimal alternative observation mapping closely related to delayed_I: removes the lag to check whether the hospitalization-rate series is effectively contemporaneous with the model\u2019s I proxy in some splits, which could explain delay sensitivity and rolling degradation.\",\"expected_failure_mode\":\"If admissions are genuinely lagged, no-delay mapping will systematically lead the observed series, causing early peaks and poor calibration near onset/peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Duplicate of the 3-week lag retained intentionally as the anchor configuration for comparing rolling-split consistency against neighboring delays (1\u20132 weeks) without introducing additional mechanisms.\",\"expected_failure_mode\":\"Same as other fixed-lag specs: susceptible to split-dependent timing shifts; may overfit a particular validation segment\u2019s phase.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Duplicate of the no-delay check retained intentionally as the simplest phase-alignment stress test against the delayed variants, keeping structure and fractional setting constant.\",\"expected_failure_mode\":\"Same as other no-delay mappings: likely phase lead if hospitalization is lagged; may inflate apparent fit in some windows while degrading rolling performance.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\"5-17 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Bracket the currently favored 2\u20133 week lag with a shorter delay to test whether rolling-split degradation is driven by over-lagging early-season rises or split-to-split timing shifts. Keeps the SEIRS family and non-fractional dynamics unchanged to isolate timing effects.\",\"expected_failure_mode\":\"If true admissions lag is closer to 2\u20133 weeks, delay=1 may shift peaks too early, producing phase error and underestimating the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Core candidate aligned with prior discovery patterns and mechanistic note that hospitalizations lag infections; serves as the central timing hypothesis for rolling robustness comparisons.\",\"expected_failure_mode\":\"If lag varies across the season or differs by split, a fixed 2-week delay can cause inconsistent peak alignment and rolling instability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Retain the previous best spec as a baseline; tests whether the longer end of the plausible lag window yields more stable peak timing across rolling splits for this age group.\",\"expected_failure_mode\":\"May over-lag the signal in some splits, leading to late peaks and degraded short-horizon forecasts around turning points.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Minimal alternative observation mapping closely related to delayed_I: removes the lag to check whether the hospitalization-rate series is effectively contemporaneous with the model\u2019s I proxy in some splits, which could explain delay sensitivity and rolling degradation.\",\"expected_failure_mode\":\"If admissions are genuinely lagged, no-delay mapping will systematically lead the observed series, causing early peaks and poor calibration near onset/peak.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Duplicate of the 3-week lag retained intentionally as the anchor configuration for comparing rolling-split consistency against neighboring delays (1\u20132 weeks) without introducing additional mechanisms.\",\"expected_failure_mode\":\"Same as other fixed-lag specs: susceptible to split-dependent timing shifts; may overfit a particular validation segment\u2019s phase.\"},{\"structure_name\":\"SEIRS\",\"fractional\":false,\"observation_map\":\"delayed_I\",\"delay_weeks\":0,\"rationale\":\"Duplicate of the no-delay check retained intentionally as the simplest phase-alignment stress test against the delayed variants, keeping structure and fractional setting constant.\",\"expected_failure_mode\":\"Same as other no-delay mappings: likely phase lead if hospitalization is lagged; may inflate apparent fit in some windows while degrading rolling performance.\"}]}",
+  "scientific_claim_allowed": true
+}

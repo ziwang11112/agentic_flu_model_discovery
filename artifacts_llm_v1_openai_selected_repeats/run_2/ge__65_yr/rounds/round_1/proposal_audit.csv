@@ -1,0 +1,6 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+>= 65 yr,1,0,openai,False,True,SEIRS,True,delayed_I,2,True,True,,high,,True
+>= 65 yr,1,1,openai,False,True,SEIRS,True,delayed_I,1,True,True,,medium,,True
+>= 65 yr,1,2,openai,False,True,SEIRS,True,delayed_I,3,True,True,,medium,,True
+>= 65 yr,1,3,openai,False,True,SEIHR,False,H,0,True,True,,low,"SEIHR with direct H observation is likely weakly identifiable with only 31 training points in a single season, consistent with the provided risk note. This adds compartmental complexity that can be absorbed by other parameters (e.g., transmission/waning), increasing instability without clear necessity given delayed_I is already plausible.",True
+>= 65 yr,1,4,openai,False,True,SEIHR,False,I+H,0,True,True,,low,"SEIHR plus I+H observation further increases flexibility and confounding (tradeoffs between I and H contributions) on short data, raising overfitting/identifiability risk. It also weakens interpretability of a hospitalization-rate target by mixing states without strong justification here.",True

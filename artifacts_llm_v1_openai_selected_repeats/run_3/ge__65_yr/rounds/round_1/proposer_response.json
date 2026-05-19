@@ -1,0 +1,206 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Delay and waning can be partially confounded, yielding unstable timing/height tradeoffs and mis-timed peaks when the true lag varies within-season.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Matches prior discovery pattern and surveillance note that admissions can lag an infection proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a short series.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "If the true lag is closer to 2\u20133 weeks, forecasts may lead the peak and understate the post-peak tail.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Alternative shorter reporting/admission lag to capture high peakiness without adding an H compartment; fractional dynamics can flexibly match sharp rises/decays in high-rate series.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Over-long lag can smear the inferred incidence, producing overly smooth forecasts and delayed peak timing.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Longer lag variant to accommodate slower progression-to-admission in older adults while keeping the same parsimonious SEIRS backbone.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H-related rates may be weakly identifiable with only 31 training points, leading to parameter drift and unstable multi-week forecasts.",
+        "fractional": false,
+        "observation_map": "H",
+        "rationale": "Directly aligns the observation with hospitalization semantics via an explicit H compartment; avoids imposing an external delay and can represent admission dynamics explicitly.",
+        "structure_name": "SEIHR"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "If the target is dominated by admissions (H) rather than a mixture, I+H can bias level/shape and misattribute changes between I and H.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "More robust observation mapping when admissions reflect a mixture of infectious burden and hospitalized prevalence; can reduce sensitivity to H identifiability while retaining hospitalization linkage.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": ">= 65 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779152332.0,
+          "conversation": null,
+          "created_at": 1779152324.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_0c07d2b287976e39006a0bb5c4bf1c81968bece13ac98589f3",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery pattern and surveillance note that admissions can lag an infection proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a short series.\",\"expected_failure_mode\":\"Delay and waning can be partially confounded, yielding unstable timing/height tradeoffs and mis-timed peaks when the true lag varies within-season.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Alternative shorter reporting/admission lag to capture high peakiness without adding an H compartment; fractional dynamics can flexibly match sharp rises/decays in high-rate series.\",\"expected_failure_mode\":\"If the true lag is closer to 2\u20133 weeks, forecasts may lead the peak and understate the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer lag variant to accommodate slower progression-to-admission in older adults while keeping the same parsimonious SEIRS backbone.\",\"expected_failure_mode\":\"Over-long lag can smear the inferred incidence, producing overly smooth forecasts and delayed peak timing.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the observation with hospitalization semantics via an explicit H compartment; avoids imposing an external delay and can represent admission dynamics explicitly.\",\"expected_failure_mode\":\"H-related rates may be weakly identifiable with only 31 training points, leading to parameter drift and unstable multi-week forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"More robust observation mapping when admissions reflect a mixture of infectious burden and hospitalized prevalence; can reduce sensitivity to H identifiability while retaining hospitalization linkage.\",\"expected_failure_mode\":\"If the target is dominated by admissions (H) rather than a mixture, I+H can bias level/shape and misattribute changes between I and H.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0c07d2b287976e39006a0bb5c550b08196a055bd303d34d888",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 694,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 469,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1163
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery pattern and surveillance note that admissions can lag an infection proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a short series.\",\"expected_failure_mode\":\"Delay and waning can be partially confounded, yielding unstable timing/height tradeoffs and mis-timed peaks when the true lag varies within-season.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Alternative shorter reporting/admission lag to capture high peakiness without adding an H compartment; fractional dynamics can flexibly match sharp rises/decays in high-rate series.\",\"expected_failure_mode\":\"If the true lag is closer to 2\u20133 weeks, forecasts may lead the peak and understate the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer lag variant to accommodate slower progression-to-admission in older adults while keeping the same parsimonious SEIRS backbone.\",\"expected_failure_mode\":\"Over-long lag can smear the inferred incidence, producing overly smooth forecasts and delayed peak timing.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the observation with hospitalization semantics via an explicit H compartment; avoids imposing an external delay and can represent admission dynamics explicitly.\",\"expected_failure_mode\":\"H-related rates may be weakly identifiable with only 31 training points, leading to parameter drift and unstable multi-week forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"More robust observation mapping when admissions reflect a mixture of infectious burden and hospitalized prevalence; can reduce sensitivity to H identifiability while retaining hospitalization linkage.\",\"expected_failure_mode\":\"If the target is dominated by admissions (H) rather than a mixture, I+H can bias level/shape and misattribute changes between I and H.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Matches prior discovery pattern and surveillance note that admissions can lag an infection proxy; SEIRS supports sharp seasonal peaks via waning immunity while remaining parsimonious for a short series.\",\"expected_failure_mode\":\"Delay and waning can be partially confounded, yielding unstable timing/height tradeoffs and mis-timed peaks when the true lag varies within-season.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Alternative shorter reporting/admission lag to capture high peakiness without adding an H compartment; fractional dynamics can flexibly match sharp rises/decays in high-rate series.\",\"expected_failure_mode\":\"If the true lag is closer to 2\u20133 weeks, forecasts may lead the peak and understate the post-peak tail.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Longer lag variant to accommodate slower progression-to-admission in older adults while keeping the same parsimonious SEIRS backbone.\",\"expected_failure_mode\":\"Over-long lag can smear the inferred incidence, producing overly smooth forecasts and delayed peak timing.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Directly aligns the observation with hospitalization semantics via an explicit H compartment; avoids imposing an external delay and can represent admission dynamics explicitly.\",\"expected_failure_mode\":\"H-related rates may be weakly identifiable with only 31 training points, leading to parameter drift and unstable multi-week forecasts.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"More robust observation mapping when admissions reflect a mixture of infectious burden and hospitalized prevalence; can reduce sensitivity to H identifiability while retaining hospitalization linkage.\",\"expected_failure_mode\":\"If the target is dominated by admissions (H) rather than a mixture, I+H can bias level/shape and misattribute changes between I and H.\"}]}",
+  "scientific_claim_allowed": true
+}

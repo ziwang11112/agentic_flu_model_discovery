@@ -1,0 +1,118 @@
+You are a critic for public-health time-series model-template proposals.
+
+This task uses aggregate weekly hospitalization-rate time series only. It does
+not involve lab work, pathogen engineering, transmission optimization,
+individual-level data, clinical advice, or intervention guidance.
+
+Your job is to review candidate templates before numerical fitting.
+
+Do not use test metrics.
+Do not choose final winners.
+Do not invent new structure types.
+Do not write code.
+
+Check:
+- observation-target alignment
+- over-complexity
+- identifiability risk
+- whether delayed_I is more plausible than H for short single-season data
+- whether fractional memory is justified or likely overfitting
+
+Series summary:
+{
+  "current_discovery_patterns": [
+    "SEIRS|fractional=1|obs=delayed_I|delay=2",
+    "SEIRS|fractional=1|obs=I"
+  ],
+  "n_train": 31,
+  "n_val": 10,
+  "peakiness": "high",
+  "rate_scale": "high",
+  "series_name": ">= 65 yr",
+  "target": "weekly hospitalization rate",
+  "validation_mean": 0.72,
+  "validation_std": 0.26,
+  "zero_fraction": 0.0
+}
+
+Surveillance semantics:
+{
+  "mechanistic_note": "Hospital admissions may lag the latent I-state proxy, so delayed_I is a plausible observation structure.",
+  "recommended_observation_maps": [
+    "delayed_I",
+    "H",
+    "I+H"
+  ],
+  "risk_note": "An explicit H compartment may be weakly identifiable in short single-season series.",
+  "target_semantics": "hospitalization_rate"
+}
+
+Candidate proposals:
+{
+  "proposals": [
+    {
+      "delay_weeks": 2,
+      "expected_failure_mode": "Delay may be compensating for other dynamics (e.g., peak width), leading to split-to-split phase sensitivity and weak identifiability of the delay.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Anchor to previous best: fractional SEIRS with a 2-week observation delay to represent admissions lag while keeping dynamics parsimonious for a short, high-peaked series.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 1,
+      "expected_failure_mode": "May shift peaks earlier than observed, producing systematic lead bias and unstable performance across rolling splits if true lag is closer to 2 weeks.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Near-neighborhood delay test to assess robustness of peak timing when the admissions lag is shorter; maintains identical structure to isolate delay effect.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 3,
+      "expected_failure_mode": "May over-lag the peak and smear the decline, degrading fit around turning points and increasing generalization gap if lag is not truly that long.",
+      "fractional": true,
+      "observation_map": "delayed_I",
+      "rationale": "Near-neighborhood delay test to assess robustness when admissions lag is longer; helps probe whether delay is under-identified in this series.",
+      "structure_name": "SEIRS"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "H-state parameters may be weakly identifiable in a short single-season series, causing parameter drift and unstable peak height/width across splits.",
+      "fractional": false,
+      "observation_map": "H",
+      "rationale": "Minimal explicit-hospitalization baseline (H observed) to test whether adding an H compartment improves stability across splits versus delay-only observation, without adding extra mapping complexity.",
+      "structure_name": "SEIHR"
+    },
+    {
+      "delay_weeks": 0,
+      "expected_failure_mode": "Added flexibility may still not resolve H identifiability; could overfit peak sharpness and yield inconsistent rolling-split behavior.",
+      "fractional": true,
+      "observation_map": "H",
+      "rationale": "Fractional SEIHR baseline to allow heavier-tailed/peaky dynamics while still directly observing H; tests whether fractional dynamics reduce peak-timing sensitivity relative to standard SEIHR.",
+      "structure_name": "SEIHR"
+    }
+  ],
+  "series_name": ">= 65 yr"
+}
+
+Return strict JSON:
+{
+  "accepted": [
+    {
+      "proposal_index": 0,
+      "priority": "high",
+      "reason": "..."
+    }
+  ],
+  "rejected": [
+    {
+      "proposal_index": 1,
+      "reason": "..."
+    }
+  ],
+  "suggested_edits": [
+    {
+      "from_proposal_index": 2,
+      "edit": "..."
+    }
+  ]
+}

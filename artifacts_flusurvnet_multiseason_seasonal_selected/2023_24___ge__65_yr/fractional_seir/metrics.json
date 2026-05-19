@@ -1,0 +1,72 @@
+{
+  "best_full_params": {
+    "E0": 0.003214072882007312,
+    "I0": 0.02152297768499013,
+    "R0": 0.0,
+    "S0": 0.9752629494330024,
+    "alpha": 0.9999947544848723,
+    "b0": 3.2345032148893056,
+    "b1": 0.5497931136409524,
+    "b2": -3.9475903157713392,
+    "gamma": 0.1230846316139241,
+    "rho": 28.104639593309326,
+    "sigma": 0.9999998798800014
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 1.0194172349217354,
+    "train": 1.6588491482901806,
+    "train_plus_validation": 1.2905631973885727
+  },
+  "model_name": "fractional_seir",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 1.1369477194712867,
+      "rmse": 1.202836594210751,
+      "smape": 1.0887757811996297
+    },
+    "2": {
+      "mae": 0.42719909176021337,
+      "rmse": 0.49438495300138774,
+      "smape": 0.6355545468946876
+    },
+    "4": {
+      "mae": 0.795430966349252,
+      "rmse": 0.9680819874091788,
+      "smape": 0.8747774467582834
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.7865259258602507,
+    "mean_rmse": 0.8884345115404392
+  },
+  "series_name": "2023-24 / >= 65 yr",
+  "test_metrics": {
+    "mae": 0.13274132160676666,
+    "rmse": 0.15535411952485464,
+    "smape": 0.4817239309684373
+  },
+  "train_metrics": {
+    "mae": 0.8976898978468603,
+    "rmse": 1.286645335919814,
+    "smape": 0.16479934975959465
+  },
+  "validation_metrics": {
+    "mae": 0.4442504882491969,
+    "rmse": 0.5151047846737067,
+    "smape": 0.46106115977077183
+  }
+}

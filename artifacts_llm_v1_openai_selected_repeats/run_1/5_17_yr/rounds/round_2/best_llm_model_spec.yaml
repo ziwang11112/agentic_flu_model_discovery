@@ -1,0 +1,12 @@
+series_name: 5-17 yr
+best_spec:
+  structure_name: SEIR
+  fractional: false
+  observation_map: delayed_I
+  delay_weeks: 2
+selection_score: 0.35443872069741844
+selection_validation_mae: 0.18974570707039223
+selection_rolling_mean_mae: 0.14938829240135884
+provider: openai
+provider_is_mock: false
+scientific_claim_allowed: true

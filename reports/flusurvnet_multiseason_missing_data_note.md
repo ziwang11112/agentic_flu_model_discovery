@@ -1,9 +1,15 @@
 # FluSurv-NET Multi-Season Missing Data Note
 
-Stage 2 was skipped because the expected multi-season FluSurv-NET CSV was not present locally.
+This note is superseded by the completed multi-season FluSurv-NET preparation and audit.
 
-Expected path:
+The expected CSV now exists at:
 
 `data/raw/flusurvnet_multiseason_full.csv`
 
-No multi-season FluSurv-NET audit or model experiment was run. This does not fail the supplemental run; it means cross-season paper claims remain unsupported until the CSV is added and the audit/model stages are rerun.
+Current evidence is recorded in:
+
+- `reports/flusurvnet_multiseason_audit.md`
+- `reports/flusurvnet_multiseason_seasonal_smoke_report.md`
+- `reports/flusurvnet_multiseason_seasonal_selected_report.md`
+
+The seasonal benchmark should still be framed as a cross-season robustness supplement, not as a direct previous-season-to-future-season transfer forecast.

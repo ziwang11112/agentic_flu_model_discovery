@@ -1,0 +1,19 @@
+series_name,best_test_model,best_test_mae,best_rolling_model,best_rolling_mean_mae
+2018-19 / 0-4 yr,fractional_seir,2.212395566791162,constrained_structure_discovery,1.217003865016978
+2018-19 / >= 65 yr,deterministic_seir,4.4090268404487185,delayed_observation_seir,7.700620065936461
+2018-19 / Overall,delayed_observation_seir,1.0110270126538026,constrained_structure_discovery,1.7190373693272456
+2019-20 / 0-4 yr,probabilistic_seir,1.410665582836895,constrained_structure_discovery,2.130049133914221
+2019-20 / >= 65 yr,hospitalized_seihr,7.149214821440728,deterministic_seir,6.6316363431386165
+2019-20 / Overall,probabilistic_seir,1.3224966942532657,constrained_structure_discovery,1.25799152991221
+2021-22 / 0-4 yr,constrained_structure_discovery,0.40996507791699394,constrained_structure_discovery,0.46070827343948145
+2021-22 / >= 65 yr,constrained_structure_discovery,1.0217554298577638,constrained_structure_discovery,1.3125432548972409
+2021-22 / Overall,constrained_structure_discovery,0.29266699205355784,constrained_structure_discovery,0.46347010200687305
+2022-23 / 0-4 yr,constrained_structure_discovery,0.1961997036672737,fractional_seir,0.19885852776817467
+2022-23 / >= 65 yr,probabilistic_seir,0.3514031885287414,deterministic_seir,0.40335627332414203
+2022-23 / Overall,fractional_seir,0.1574761659113825,constrained_structure_discovery,0.1596835019685847
+2023-24 / 0-4 yr,constrained_structure_discovery,0.10015058559390311,constrained_structure_discovery,0.15788525394776384
+2023-24 / >= 65 yr,constrained_structure_discovery,0.13167464476341037,delayed_observation_seir,0.23368927507763212
+2023-24 / Overall,deterministic_seir,0.0349501866599087,deterministic_seir,0.0773963967565236
+2024-25 / 0-4 yr,constrained_structure_discovery,0.32997616723063433,constrained_structure_discovery,2.1829533218336437
+2024-25 / >= 65 yr,probabilistic_seir,0.42875098187747834,constrained_structure_discovery,9.000687090899502
+2024-25 / Overall,constrained_structure_discovery,0.23580241395248666,constrained_structure_discovery,1.5419080295639926

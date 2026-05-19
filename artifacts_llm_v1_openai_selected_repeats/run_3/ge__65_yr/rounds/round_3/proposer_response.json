@@ -1,0 +1,198 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "Delay may still be weakly identified and compensate for misspecified generation time; can shift peaks rather than truly sharpen them, leading to split instability if timing differs across seasons.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Primary candidate matching the previous best spec. Fractional SEIRS can sharpen rise/fall while retaining parsimonious immunity-waning dynamics; a 2-week observation lag aligns with hospitalization timing without over-sweeping delay values, aiming for more stable peak timing across rolling splits.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Over-lagging can systematically delay peaks and broaden tails; may underpredict early surge and overpredict late-season persistence, especially if true lag is closer to 1\u20132 weeks.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Near-neighbor lag around the best region to test whether a slightly longer admissions lag improves peak alignment for high-peak, high-scale elderly series while keeping the same robust SEIRS fractional backbone.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Likely to lead peaks relative to observed hospitalizations (timing bias) and may require parameter compensation that distorts amplitude/width, especially in high-peak seasons.",
+        "fractional": true,
+        "observation_map": "I",
+        "rationale": "Comparator without explicit observation lag to reduce non-identifiability and rolling-split variability. If fractional dynamics already capture rapid transients, direct I mapping may yield more stable timing than delayed_I when lag is not consistent across splits.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "H compartment may be weakly identifiable with limited weeks, causing over-parameterization and split instability; I+H can blur mechanistic meaning and may dampen sharp peaks or misattribute timing between I and H.",
+        "fractional": false,
+        "observation_map": "I+H",
+        "rationale": "Single secondary comparator that modifies observation mapping to better reflect hospitalization-rate semantics without relying on an explicit fixed delay. Using I+H can act as a crude smoothing/lag proxy for admissions timing while avoiding a pure H-only mapping that may be too rigid in short series.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": ">= 65 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779152747.0,
+          "conversation": null,
+          "created_at": 1779152737.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_02435b26aa27270a006a0bb76137b48190902fd2c3e250e482",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Primary candidate matching the previous best spec. Fractional SEIRS can sharpen rise/fall while retaining parsimonious immunity-waning dynamics; a 2-week observation lag aligns with hospitalization timing without over-sweeping delay values, aiming for more stable peak timing across rolling splits.\",\"expected_failure_mode\":\"Delay may still be weakly identified and compensate for misspecified generation time; can shift peaks rather than truly sharpen them, leading to split instability if timing differs across seasons.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Near-neighbor lag around the best region to test whether a slightly longer admissions lag improves peak alignment for high-peak, high-scale elderly series while keeping the same robust SEIRS fractional backbone.\",\"expected_failure_mode\":\"Over-lagging can systematically delay peaks and broaden tails; may underpredict early surge and overpredict late-season persistence, especially if true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Comparator without explicit observation lag to reduce non-identifiability and rolling-split variability. If fractional dynamics already capture rapid transients, direct I mapping may yield more stable timing than delayed_I when lag is not consistent across splits.\",\"expected_failure_mode\":\"Likely to lead peaks relative to observed hospitalizations (timing bias) and may require parameter compensation that distorts amplitude/width, especially in high-peak seasons.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Single secondary comparator that modifies observation mapping to better reflect hospitalization-rate semantics without relying on an explicit fixed delay. Using I+H can act as a crude smoothing/lag proxy for admissions timing while avoiding a pure H-only mapping that may be too rigid in short series.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with limited weeks, causing over-parameterization and split instability; I+H can blur mechanistic meaning and may dampen sharp peaks or misattribute timing between I and H.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_02435b26aa27270a006a0bb761c3d48190934f7528825f9d95",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1157,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 494,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1651
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Primary candidate matching the previous best spec. Fractional SEIRS can sharpen rise/fall while retaining parsimonious immunity-waning dynamics; a 2-week observation lag aligns with hospitalization timing without over-sweeping delay values, aiming for more stable peak timing across rolling splits.\",\"expected_failure_mode\":\"Delay may still be weakly identified and compensate for misspecified generation time; can shift peaks rather than truly sharpen them, leading to split instability if timing differs across seasons.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Near-neighbor lag around the best region to test whether a slightly longer admissions lag improves peak alignment for high-peak, high-scale elderly series while keeping the same robust SEIRS fractional backbone.\",\"expected_failure_mode\":\"Over-lagging can systematically delay peaks and broaden tails; may underpredict early surge and overpredict late-season persistence, especially if true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Comparator without explicit observation lag to reduce non-identifiability and rolling-split variability. If fractional dynamics already capture rapid transients, direct I mapping may yield more stable timing than delayed_I when lag is not consistent across splits.\",\"expected_failure_mode\":\"Likely to lead peaks relative to observed hospitalizations (timing bias) and may require parameter compensation that distorts amplitude/width, especially in high-peak seasons.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Single secondary comparator that modifies observation mapping to better reflect hospitalization-rate semantics without relying on an explicit fixed delay. Using I+H can act as a crude smoothing/lag proxy for admissions timing while avoiding a pure H-only mapping that may be too rigid in short series.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with limited weeks, causing over-parameterization and split instability; I+H can blur mechanistic meaning and may dampen sharp peaks or misattribute timing between I and H.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Primary candidate matching the previous best spec. Fractional SEIRS can sharpen rise/fall while retaining parsimonious immunity-waning dynamics; a 2-week observation lag aligns with hospitalization timing without over-sweeping delay values, aiming for more stable peak timing across rolling splits.\",\"expected_failure_mode\":\"Delay may still be weakly identified and compensate for misspecified generation time; can shift peaks rather than truly sharpen them, leading to split instability if timing differs across seasons.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Near-neighbor lag around the best region to test whether a slightly longer admissions lag improves peak alignment for high-peak, high-scale elderly series while keeping the same robust SEIRS fractional backbone.\",\"expected_failure_mode\":\"Over-lagging can systematically delay peaks and broaden tails; may underpredict early surge and overpredict late-season persistence, especially if true lag is closer to 1\u20132 weeks.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Comparator without explicit observation lag to reduce non-identifiability and rolling-split variability. If fractional dynamics already capture rapid transients, direct I mapping may yield more stable timing than delayed_I when lag is not consistent across splits.\",\"expected_failure_mode\":\"Likely to lead peaks relative to observed hospitalizations (timing bias) and may require parameter compensation that distorts amplitude/width, especially in high-peak seasons.\"},{\"structure_name\":\"SEIHR\",\"fractional\":false,\"observation_map\":\"I+H\",\"delay_weeks\":0,\"rationale\":\"Single secondary comparator that modifies observation mapping to better reflect hospitalization-rate semantics without relying on an explicit fixed delay. Using I+H can act as a crude smoothing/lag proxy for admissions timing while avoiding a pure H-only mapping that may be too rigid in short series.\",\"expected_failure_mode\":\"H compartment may be weakly identifiable with limited weeks, causing over-parameterization and split instability; I+H can blur mechanistic meaning and may dampen sharp peaks or misattribute timing between I and H.\"}]}",
+  "scientific_claim_allowed": true
+}

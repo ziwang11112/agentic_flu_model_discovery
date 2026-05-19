@@ -92,6 +92,12 @@ def _parse_bool(value: Any) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
+def _nullable_float(value: Any) -> float | None:
+    if value is None or pd.isna(value):
+        return None
+    return float(value)
+
+
 def _parse_leakage_status(report_path: Path) -> str:
     if not report_path.exists():
         return "MISSING"
@@ -229,7 +235,11 @@ def _load_repeat_rows(repeat_id: int) -> list[dict[str, Any]]:
         selected_spec = str(row["v1_best_spec"])
         v1_score = float(row["v1_best_score"])
         v0_score = float(row["v0_best_score"])
-        nonllm_score = float(row["nonllm_best_score"])
+        nonllm_score = _nullable_float(row["nonllm_best_score"])
+        v1_minus_nonllm_score = None if nonllm_score is None else v1_score - nonllm_score
+        v1_better_than_nonllm = None if nonllm_score is None else bool(v1_score < nonllm_score)
+        v1_minus_nonllm_test_mae = _nullable_float(row.get("v1_minus_nonllm_test_mae"))
+        v1_minus_nonllm_rolling_mae = _nullable_float(row.get("v1_minus_nonllm_rolling_mae"))
         proposal_count = int(counts.get(series_name, {}).get("proposal_count", 0))
         hard_valid_count = int(counts.get(series_name, {}).get("hard_valid_count", 0))
         valid_rate = None if proposal_count == 0 else hard_valid_count / proposal_count
@@ -243,9 +253,17 @@ def _load_repeat_rows(repeat_id: int) -> list[dict[str, Any]]:
                 "v0_score": v0_score,
                 "nonllm_score": nonllm_score,
                 "v1_minus_v0_score": v1_score - v0_score,
-                "v1_minus_nonllm_score": v1_score - nonllm_score,
+                "v1_minus_nonllm_score": v1_minus_nonllm_score,
                 "v1_better_than_v0": bool(v1_score < v0_score),
-                "v1_better_than_nonllm": bool(v1_score < nonllm_score),
+                "v1_better_than_nonllm": v1_better_than_nonllm,
+                "v1_minus_nonllm_test_mae": v1_minus_nonllm_test_mae,
+                "v1_minus_nonllm_rolling_mae": v1_minus_nonllm_rolling_mae,
+                "v1_better_than_nonllm_test_mae": None
+                if v1_minus_nonllm_test_mae is None
+                else bool(v1_minus_nonllm_test_mae < 0),
+                "v1_better_than_nonllm_rolling_mae": None
+                if v1_minus_nonllm_rolling_mae is None
+                else bool(v1_minus_nonllm_rolling_mae < 0),
                 "proposal_count": proposal_count,
                 "hard_valid_count": hard_valid_count,
                 "valid_rate": valid_rate,
@@ -259,16 +277,23 @@ def _load_repeat_rows(repeat_id: int) -> list[dict[str, Any]]:
 def _build_structure_stability(summary: pd.DataFrame) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     for series_name, subset in summary.groupby("series_name", sort=True):
+        nonllm_score_available = subset["v1_better_than_nonllm"].dropna()
         rows.append(
             {
                 "series_name": series_name,
                 "repeats": int(subset["repeat_id"].nunique()),
                 "v1_over_v0_rate": float(subset["v1_better_than_v0"].mean()),
-                "v1_over_nonllm_rate": float(subset["v1_better_than_nonllm"].mean()),
+                "v1_over_nonllm_score_rate": None
+                if nonllm_score_available.empty
+                else float(nonllm_score_available.mean()),
                 "mean_v1_score": float(subset["v1_score"].mean()),
                 "std_v1_score": float(subset["v1_score"].std(ddof=1)) if len(subset) > 1 else 0.0,
                 "mean_v1_minus_v0": float(subset["v1_minus_v0_score"].mean()),
-                "mean_v1_minus_nonllm": float(subset["v1_minus_nonllm_score"].mean()),
+                "mean_v1_minus_nonllm_score": None
+                if subset["v1_minus_nonllm_score"].dropna().empty
+                else float(subset["v1_minus_nonllm_score"].mean()),
+                "mean_v1_minus_nonllm_test_mae": float(subset["v1_minus_nonllm_test_mae"].mean()),
+                "mean_v1_minus_nonllm_rolling_mae": float(subset["v1_minus_nonllm_rolling_mae"].mean()),
                 "dominant_selected_spec": _dominant(subset["selected_spec"]),
                 "dominant_observation_map": _dominant(subset["selected_observation_map"]),
                 "dominant_fractional": _dominant(subset["selected_fractional"]),
@@ -317,7 +342,9 @@ def _markdown_table(frame: pd.DataFrame, columns: list[str]) -> list[str]:
         values = []
         for column in columns:
             value = row[column]
-            if isinstance(value, float):
+            if pd.isna(value):
+                values.append("n/a")
+            elif isinstance(value, float):
                 values.append(f"{value:.3f}")
             else:
                 values.append(str(value))
@@ -350,14 +377,18 @@ def _write_aggregate_report(summary: pd.DataFrame, stability: pd.DataFrame, vali
         "",
         "## Structure Stability",
         "",
+        "The non-LLM score-rate column is `n/a` when the reference discovery candidate budget/score is unavailable. Non-LLM test and rolling deltas below are descriptive MAE differences, not matched-budget efficiency evidence.",
+        "",
     ]
     columns = [
         "series_name",
         "repeats",
         "v1_over_v0_rate",
-        "v1_over_nonllm_rate",
+        "v1_over_nonllm_score_rate",
         "mean_v1_score",
         "std_v1_score",
+        "mean_v1_minus_nonllm_test_mae",
+        "mean_v1_minus_nonllm_rolling_mae",
         "dominant_selected_spec",
         "mean_valid_rate",
     ]

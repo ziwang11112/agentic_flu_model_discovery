@@ -1,0 +1,5 @@
+series_name,round_id,proposal_id,provider,provider_is_mock,scientific_claim_allowed,raw_structure_name,raw_fractional,raw_observation_map,raw_delay_weeks,schema_valid,hard_valid,invalid_reason,critic_priority,critic_risk_flags,evaluated
+0-4 yr,2,0,openai,False,True,SEIRS,True,delayed_I,0,True,True,,low,"Delay=0 is less consistent with the stated mechanistic note that admissions may lag the latent I proxy; for hospitalization-rate targets, contemporaneous infections are a weaker observation alignment. With fractional dynamics retained, this adds flexibility without addressing the primary semantic mismatch, increasing risk of compensatory parameter behavior (identifiability/overfitting) to correct phase.",True
+0-4 yr,2,1,openai,False,True,SEIRS,True,delayed_I,1,True,True,,high,,True
+0-4 yr,2,2,openai,False,True,SEIRS,True,delayed_I,2,True,True,,medium,,True
+0-4 yr,2,3,openai,False,True,SEIRS,False,delayed_I,1,True,True,,high,,True

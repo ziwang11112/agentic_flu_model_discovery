@@ -1,0 +1,61 @@
+{
+  "age_prior_penalty": -0.01,
+  "complexity_penalty": 0.195,
+  "complexity_penalty_compartments": 0.08,
+  "complexity_penalty_delay": 0.015,
+  "complexity_penalty_fractional": 0.0,
+  "complexity_penalty_h_observation": 0.0,
+  "complexity_penalty_observation": 0.0,
+  "complexity_penalty_params": 0.09,
+  "complexity_penalty_recurrence": 0.01,
+  "delay_weeks": 3,
+  "fractional": false,
+  "multi_split_blocks": 2,
+  "multi_split_penalty": 0.0622008292334584,
+  "multi_split_val_mean_mae": 0.789230705013517,
+  "multi_split_val_std_mae": 0.1244016584669168,
+  "num_compartments": 4,
+  "num_free_params": 9,
+  "observation_family": "delayed",
+  "observation_map": "delayed_I",
+  "params": {
+    "E0": 0.021526742781222807,
+    "I0": 0.013562934941505506,
+    "R0": 0.0,
+    "S0": 0.9649103222772718,
+    "b0": 1.9600085081276717,
+    "b1": 2.4004748031016345,
+    "b2": -1.0374999233473057,
+    "fractional": 0.0,
+    "gamma": 0.62219994197032,
+    "omega": 0.4668813077089651,
+    "rho": 12.383423830062654,
+    "sigma": 0.9802266633386746
+  },
+  "rolling_val_error_std": 0.32850646786204385,
+  "rolling_val_mean_mae": 0.7717905983796101,
+  "rolling_val_mean_rmse": 0.8391237526932723,
+  "rolling_val_metrics": {
+    "1": {
+      "mae": 0.7744528657478201,
+      "rmse": 0.8320249945670173,
+      "smape": 0.19937457811726547
+    },
+    "2": {
+      "mae": 0.7691283310114,
+      "rmse": 0.8462225108195274,
+      "smape": 0.19370722709795274
+    }
+  },
+  "round": 2,
+  "score": 1.102132827819384,
+  "spec_key": "SEIRS|fractional=0|obs=delayed_I|delay=3",
+  "stability_penalty": 0.06570129357240877,
+  "structure_name": "SEIRS",
+  "train_mae": 0.15831821067119517,
+  "train_objective": 0.18922047827045654,
+  "train_rmse": 0.21091211472541962,
+  "val_mae": 0.7631618455186328,
+  "val_rmse": 0.8077166109553824,
+  "val_smape": 0.1964070755994772
+}

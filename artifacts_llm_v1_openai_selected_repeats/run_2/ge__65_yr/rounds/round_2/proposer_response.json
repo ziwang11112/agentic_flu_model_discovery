@@ -1,0 +1,206 @@
+{
+  "attempt_count": 1,
+  "payload": {
+    "proposals": [
+      {
+        "delay_weeks": 2,
+        "expected_failure_mode": "If the true lag varies within-season, a fixed 2-week delay can cause phase errors around the peak and degrade rolling stability.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Anchor to the previously best and most stable neighborhood: fractional SEIRS supports sharp peaks while delayed_I(2) matches the hospitalization lag semantics without adding an explicit H compartment.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Systematic timing mismatch (hospitalizations lag infections) can shift peaks early and bias amplitude, especially near rapid rise/decline.",
+        "fractional": true,
+        "observation_map": "I",
+        "rationale": "Parsimonious fallback to test whether the series is effectively contemporaneous with an infection proxy; fractional dynamics retained for high peakiness while removing delay sensitivity.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 1,
+        "expected_failure_mode": "May under-lag the target, producing early peaks and compensatory parameter drift that increases split sensitivity.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Adjacent-delay exploration around the robust delay=2 to check for slightly shorter lead\u2013lag while staying within the constrained stability-focused search band.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 3,
+        "expected_failure_mode": "Known risk of delay overfit: delay=3 can lock onto a particular phase shift and show strong rolling degradation across splits.",
+        "fractional": true,
+        "observation_map": "delayed_I",
+        "rationale": "Upper-adjacent delay to probe whether a longer lag is needed in this older-age hospitalization series, while keeping structure and fractional dynamics fixed to limit instability sources.",
+        "structure_name": "SEIRS"
+      },
+      {
+        "delay_weeks": 0,
+        "expected_failure_mode": "Weak identifiability in short series can cause unstable allocation between I and H, leading to timing/shape mismatch and higher split-to-split variability.",
+        "fractional": true,
+        "observation_map": "H",
+        "rationale": "Deprioritized but included as a mechanistic check: explicit hospitalization compartment with fractional dynamics may capture peak sharpness while mapping directly to the hospitalization-rate target without composite observations.",
+        "structure_name": "SEIHR"
+      }
+    ],
+    "series_name": ">= 65 yr"
+  },
+  "provider": "openai",
+  "provider_is_mock": false,
+  "raw_response": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "raw_response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1779151412.0,
+          "conversation": null,
+          "created_at": 1779151403.0,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "id": "resp_04df6610ae5704cb006a0bb22bc24481a0af913ebe669594cd",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "gpt-5.2-2025-12-11",
+          "moderation": null,
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor to the previously best and most stable neighborhood: fractional SEIRS supports sharp peaks while delayed_I(2) matches the hospitalization lag semantics without adding an explicit H compartment.\",\"expected_failure_mode\":\"If the true lag varies within-season, a fixed 2-week delay can cause phase errors around the peak and degrade rolling stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Parsimonious fallback to test whether the series is effectively contemporaneous with an infection proxy; fractional dynamics retained for high peakiness while removing delay sensitivity.\",\"expected_failure_mode\":\"Systematic timing mismatch (hospitalizations lag infections) can shift peaks early and bias amplitude, especially near rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adjacent-delay exploration around the robust delay=2 to check for slightly shorter lead\u2013lag while staying within the constrained stability-focused search band.\",\"expected_failure_mode\":\"May under-lag the target, producing early peaks and compensatory parameter drift that increases split sensitivity.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Upper-adjacent delay to probe whether a longer lag is needed in this older-age hospitalization series, while keeping structure and fractional dynamics fixed to limit instability sources.\",\"expected_failure_mode\":\"Known risk of delay overfit: delay=3 can lock onto a particular phase shift and show strong rolling degradation across splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Deprioritized but included as a mechanistic check: explicit hospitalization compartment with fractional dynamics may capture peak sharpness while mapping directly to the hospitalization-rate target without composite observations.\",\"expected_failure_mode\":\"Weak identifiability in short series can cause unstable allocation between I and H, leading to timing/shape mismatch and higher split-to-split variability.\"}]}",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_04df6610ae5704cb006a0bb22cde8881a0827543d73e582b25",
+              "phase": null,
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "in_memory",
+          "reasoning": {
+            "effort": "none",
+            "generate_summary": null,
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "status": "completed",
+          "store": true,
+          "temperature": 0.0,
+          "text": {
+            "format": {
+              "description": null,
+              "name": "structure_proposals",
+              "schema_": {
+                "additionalProperties": false,
+                "properties": {
+                  "proposals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "delay_weeks": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "type": "integer"
+                        },
+                        "expected_failure_mode": {
+                          "type": "string"
+                        },
+                        "fractional": {
+                          "type": "boolean"
+                        },
+                        "observation_map": {
+                          "enum": [
+                            "I",
+                            "H",
+                            "I+H",
+                            "delayed_I"
+                          ],
+                          "type": "string"
+                        },
+                        "rationale": {
+                          "type": "string"
+                        },
+                        "structure_name": {
+                          "enum": [
+                            "SIR",
+                            "SEIR",
+                            "SEIRS",
+                            "SEIHR",
+                            "SEIAR"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "structure_name",
+                        "fractional",
+                        "observation_map",
+                        "delay_weeks",
+                        "rationale",
+                        "expected_failure_mode"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "series_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "series_name",
+                  "proposals"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 1161,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 470,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1631
+          },
+          "user": null
+        },
+        "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor to the previously best and most stable neighborhood: fractional SEIRS supports sharp peaks while delayed_I(2) matches the hospitalization lag semantics without adding an explicit H compartment.\",\"expected_failure_mode\":\"If the true lag varies within-season, a fixed 2-week delay can cause phase errors around the peak and degrade rolling stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Parsimonious fallback to test whether the series is effectively contemporaneous with an infection proxy; fractional dynamics retained for high peakiness while removing delay sensitivity.\",\"expected_failure_mode\":\"Systematic timing mismatch (hospitalizations lag infections) can shift peaks early and bias amplitude, especially near rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adjacent-delay exploration around the robust delay=2 to check for slightly shorter lead\u2013lag while staying within the constrained stability-focused search band.\",\"expected_failure_mode\":\"May under-lag the target, producing early peaks and compensatory parameter drift that increases split sensitivity.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Upper-adjacent delay to probe whether a longer lag is needed in this older-age hospitalization series, while keeping structure and fractional dynamics fixed to limit instability sources.\",\"expected_failure_mode\":\"Known risk of delay overfit: delay=3 can lock onto a particular phase shift and show strong rolling degradation across splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Deprioritized but included as a mechanistic check: explicit hospitalization compartment with fractional dynamics may capture peak sharpness while mapping directly to the hospitalization-rate target without composite observations.\",\"expected_failure_mode\":\"Weak identifiability in short series can cause unstable allocation between I and H, leading to timing/shape mismatch and higher split-to-split variability.\"}]}"
+      }
+    ]
+  },
+  "raw_response_text": "{\"series_name\":\">= 65 yr\",\"proposals\":[{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":2,\"rationale\":\"Anchor to the previously best and most stable neighborhood: fractional SEIRS supports sharp peaks while delayed_I(2) matches the hospitalization lag semantics without adding an explicit H compartment.\",\"expected_failure_mode\":\"If the true lag varies within-season, a fixed 2-week delay can cause phase errors around the peak and degrade rolling stability.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"I\",\"delay_weeks\":0,\"rationale\":\"Parsimonious fallback to test whether the series is effectively contemporaneous with an infection proxy; fractional dynamics retained for high peakiness while removing delay sensitivity.\",\"expected_failure_mode\":\"Systematic timing mismatch (hospitalizations lag infections) can shift peaks early and bias amplitude, especially near rapid rise/decline.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":1,\"rationale\":\"Adjacent-delay exploration around the robust delay=2 to check for slightly shorter lead\u2013lag while staying within the constrained stability-focused search band.\",\"expected_failure_mode\":\"May under-lag the target, producing early peaks and compensatory parameter drift that increases split sensitivity.\"},{\"structure_name\":\"SEIRS\",\"fractional\":true,\"observation_map\":\"delayed_I\",\"delay_weeks\":3,\"rationale\":\"Upper-adjacent delay to probe whether a longer lag is needed in this older-age hospitalization series, while keeping structure and fractional dynamics fixed to limit instability sources.\",\"expected_failure_mode\":\"Known risk of delay overfit: delay=3 can lock onto a particular phase shift and show strong rolling degradation across splits.\"},{\"structure_name\":\"SEIHR\",\"fractional\":true,\"observation_map\":\"H\",\"delay_weeks\":0,\"rationale\":\"Deprioritized but included as a mechanistic check: explicit hospitalization compartment with fractional dynamics may capture peak sharpness while mapping directly to the hospitalization-rate target without composite observations.\",\"expected_failure_mode\":\"Weak identifiability in short series can cause unstable allocation between I and H, leading to timing/shape mismatch and higher split-to-split variability.\"}]}",
+  "scientific_claim_allowed": true
+}

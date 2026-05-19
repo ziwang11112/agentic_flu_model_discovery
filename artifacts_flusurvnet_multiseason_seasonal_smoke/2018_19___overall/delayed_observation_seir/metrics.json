@@ -1,0 +1,63 @@
+{
+  "best_full_params": {
+    "E0": 9.2541552021698e-06,
+    "I0": 0.0001190099691895253,
+    "R0": 0.0,
+    "S0": 0.9998717358756083,
+    "b0": 6.112860963180639,
+    "b1": -7.892699820713791,
+    "b2": 1.0059684747239543,
+    "delay": 0,
+    "gamma": 5.044036239506297e-05,
+    "rho": 3.60017271881466,
+    "sigma": 0.9943091044198582
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 8
+  },
+  "fit_objectives": {
+    "full_series": 1.6977909905754491,
+    "train": 0.05292500889726344,
+    "train_plus_validation": 0.10470651873434664
+  },
+  "model_name": "delayed_observation_seir",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 1.7344863277241083,
+      "rmse": 1.9446312659953082,
+      "smape": 0.6207380250202169
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 1.7344863277241083,
+    "mean_rmse": 1.9446312659953082
+  },
+  "selected_delay": 0,
+  "series_name": "2018-19 / Overall",
+  "test_metrics": {
+    "mae": 3.1476580168821267,
+    "rmse": 3.4661697312349995,
+    "smape": 1.0044603030556163
+  },
+  "train_metrics": {
+    "mae": 0.18525833734938385,
+    "rmse": 0.2300543342732245,
+    "smape": 0.6170594296071272
+  },
+  "validation_metrics": {
+    "mae": 2.1717120135379417,
+    "rmse": 2.3081349419134725,
+    "smape": 0.6140538278251529
+  }
+}

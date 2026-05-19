@@ -1,0 +1,140 @@
+{
+  "best_full_params": {
+    "E0": 0.032656469149445304,
+    "I0": 0.02077129938749009,
+    "R0": 0.0,
+    "S0": 0.9465722314630647,
+    "b0": -0.6951232840870069,
+    "b1": 3.8451391245956748,
+    "b2": 1.0223486385734217,
+    "fractional": 0.0,
+    "gamma": 0.598139219657848,
+    "omega": 0.6678364965283379,
+    "rho": 12.040698861463394,
+    "sigma": 0.955474980661384
+  },
+  "best_spec": {
+    "delay_weeks": 3,
+    "fractional": false,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 0.4373304617584046,
+    "train": 0.704941124573697,
+    "train_plus_validation": 0.2993111593012058
+  },
+  "model_name": "constrained_structure_discovery",
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.9473210934596549,
+      "rmse": 1.0606598598539116,
+      "smape": 0.4049396805372959
+    },
+    "2": {
+      "mae": 1.1886516393437132,
+      "rmse": 1.3166719424366187,
+      "smape": 0.5240648713357745
+    },
+    "4": {
+      "mae": 1.5150388622475663,
+      "rmse": 1.7169169913208224,
+      "smape": 0.6567210948970204
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 1.217003865016978,
+    "mean_rmse": 1.364749597870451
+  },
+  "search_best_record": {
+    "age_prior_penalty": -0.01,
+    "complexity_penalty": 0.195,
+    "complexity_penalty_compartments": 0.08,
+    "complexity_penalty_delay": 0.015,
+    "complexity_penalty_fractional": 0.0,
+    "complexity_penalty_h_observation": 0.0,
+    "complexity_penalty_observation": 0.0,
+    "complexity_penalty_params": 0.09,
+    "complexity_penalty_recurrence": 0.01,
+    "delay_weeks": 3,
+    "fractional": false,
+    "multi_split_blocks": 2,
+    "multi_split_penalty": 0.0622008292334584,
+    "multi_split_val_mean_mae": 0.789230705013517,
+    "multi_split_val_std_mae": 0.1244016584669168,
+    "num_compartments": 4,
+    "num_free_params": 9,
+    "observation_family": "delayed",
+    "observation_map": "delayed_I",
+    "params": {
+      "E0": 0.021526742781222807,
+      "I0": 0.013562934941505506,
+      "R0": 0.0,
+      "S0": 0.9649103222772718,
+      "b0": 1.9600085081276717,
+      "b1": 2.4004748031016345,
+      "b2": -1.0374999233473057,
+      "fractional": 0.0,
+      "gamma": 0.62219994197032,
+      "omega": 0.4668813077089651,
+      "rho": 12.383423830062654,
+      "sigma": 0.9802266633386746
+    },
+    "rolling_val_error_std": 0.32850646786204385,
+    "rolling_val_mean_mae": 0.7717905983796101,
+    "rolling_val_mean_rmse": 0.8391237526932723,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.7744528657478201,
+        "rmse": 0.8320249945670173,
+        "smape": 0.19937457811726547
+      },
+      "2": {
+        "mae": 0.7691283310114,
+        "rmse": 0.8462225108195274,
+        "smape": 0.19370722709795274
+      }
+    },
+    "round": 2,
+    "score": 1.102132827819384,
+    "spec_key": "SEIRS|fractional=0|obs=delayed_I|delay=3",
+    "stability_penalty": 0.06570129357240877,
+    "structure_name": "SEIRS",
+    "train_mae": 0.15831821067119517,
+    "train_objective": 0.18922047827045654,
+    "train_rmse": 0.21091211472541962,
+    "val_mae": 0.7631618455186328,
+    "val_rmse": 0.8077166109553824,
+    "val_smape": 0.1964070755994772
+  },
+  "series_name": "2018-19 / 0-4 yr",
+  "test_metrics": {
+    "mae": 2.2280621316296774,
+    "rmse": 2.4787691341231266,
+    "smape": 0.9035892540809672
+  },
+  "train_metrics": {
+    "mae": 0.586886121933214,
+    "rmse": 0.8119872831771214,
+    "smape": 0.3843361999455671
+  },
+  "validation_metrics": {
+    "mae": 0.4030053393712083,
+    "rmse": 0.48518886219006774,
+    "smape": 0.10110497313520032
+  }
+}

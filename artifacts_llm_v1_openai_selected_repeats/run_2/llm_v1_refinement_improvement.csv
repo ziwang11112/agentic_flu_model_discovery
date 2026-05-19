@@ -1,0 +1,4 @@
+series_name,rounds_completed,initial_round_best_score,final_round_best_score,absolute_score_improvement,improved_flag,early_stop_flag,provider,provider_is_mock,scientific_claim_allowed
+0-4 yr,2,0.34689082201962507,0.34689082201962507,0.0,False,True,openai,False,True
+5-17 yr,3,0.30815257625538983,0.29347927955484115,0.014673296700548677,True,True,openai,False,True
+>= 65 yr,2,0.5064129126973504,0.5064129126973504,0.0,False,True,openai,False,True

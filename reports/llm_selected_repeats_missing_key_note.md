@@ -1,5 +1,10 @@
 # LLM Selected Repeats Missing Key Note
 
-Stage 5 was skipped because `OPENAI_API_KEY` was not present in the current shell environment.
+This note is superseded for the current workspace: `.env` has been updated, the selected-repeat key-load check passes through dotenv, and the selected OpenAI live repeats have now completed.
 
-No selected OpenAI live repeats were attempted. Run this stage only after non-API diagnostics and data audits pass and a valid `OPENAI_API_KEY` is available.
+Current outputs:
+
+- `reports/llm_v1_openai_selected_repeat_report.md`
+- `artifacts_llm_v1_openai_selected_repeats_summary/live_repeat_summary.csv`
+- `artifacts_llm_v1_openai_selected_repeats_summary/live_repeat_structure_stability.csv`
+- `artifacts_llm_v1_openai_selected_repeats_summary/live_repeat_validity_summary.csv`
