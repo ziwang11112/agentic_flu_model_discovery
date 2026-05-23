@@ -63,6 +63,56 @@ def _forecast_frame(
     return frame
 
 
+def _max_abs_finite(values: np.ndarray) -> float:
+    array = np.asarray(values, dtype=float)
+    if array.size == 0:
+        return 0.0
+    if np.any(np.isinf(array)):
+        return float("inf")
+    finite_abs = np.abs(array[np.isfinite(array)])
+    if finite_abs.size == 0:
+        return float("nan")
+    return float(np.max(finite_abs))
+
+
+def _observed_scale(y: np.ndarray) -> float:
+    array = np.asarray(y, dtype=float)
+    finite_abs = np.abs(array[np.isfinite(array)])
+    if finite_abs.size == 0:
+        return 1.0
+    return max(float(np.max(finite_abs)), 1.0)
+
+
+def _prediction_diagnostics(
+    y: np.ndarray,
+    test_predictions: np.ndarray,
+    full_predictions: np.ndarray,
+    train_success: bool,
+    train_plus_validation_success: bool,
+) -> dict[str, Any]:
+    test_array = np.asarray(test_predictions, dtype=float)
+    full_array = np.asarray(full_predictions, dtype=float)
+    max_abs_test_prediction = _max_abs_finite(test_array)
+    max_abs_full_prediction = _max_abs_finite(full_array)
+    has_nonfinite_prediction = not bool(np.all(np.isfinite(test_array)) and np.all(np.isfinite(full_array)))
+    has_negative_prediction = bool(np.any(test_array < 0.0) or np.any(full_array < 0.0))
+    test_prediction_exceeds_100x_observed_max = bool(max_abs_test_prediction > 100.0 * _observed_scale(y))
+    numerical_failure_flag = bool(
+        has_nonfinite_prediction
+        or test_prediction_exceeds_100x_observed_max
+        or not train_success
+        or not train_plus_validation_success
+    )
+    return {
+        "max_abs_test_prediction": max_abs_test_prediction,
+        "max_abs_full_prediction": max_abs_full_prediction,
+        "has_nonfinite_prediction": has_nonfinite_prediction,
+        "has_negative_prediction": has_negative_prediction,
+        "test_prediction_exceeds_100x_observed_max": test_prediction_exceeds_100x_observed_max,
+        "numerical_failure_flag": numerical_failure_flag,
+    }
+
+
 def run_model_family(
     model_factory: Callable[[], BaseEpidemicModel],
     series_name: str,
@@ -258,6 +308,7 @@ def run_model_family(
 
     summary = {
         "model_name": train_model.model_name,
+        "model_family": "epidemic_model",
         "series_name": series_name,
         "complexity": {
             "num_free_params": train_fit.param_count,
@@ -277,6 +328,21 @@ def run_model_family(
             "train_plus_validation": trainval_fit.objective,
             "full_series": full_fit.objective,
         },
+        "fit_status": {
+            "train_success": bool(train_fit.success),
+            "train_message": train_fit.message,
+            "train_plus_validation_success": bool(trainval_fit.success),
+            "train_plus_validation_message": trainval_fit.message,
+            "full_success": bool(full_fit.success),
+            "full_message": full_fit.message,
+        },
+        "numerical_diagnostics": _prediction_diagnostics(
+            y=y,
+            test_predictions=test_predictions,
+            full_predictions=full_predictions,
+            train_success=bool(train_fit.success),
+            train_plus_validation_success=bool(trainval_fit.success),
+        ),
         "best_full_params": full_fit.params,
     }
     if calibration_report is not None:
@@ -415,6 +481,7 @@ def run_discovery_family(
     )
     summary = run_result["summary"]
     summary["model_name"] = "constrained_structure_discovery"
+    summary["model_family"] = "structure_discovery"
     summary["best_spec"] = {
         "structure_name": outcome.best_spec.structure_name,
         "fractional": outcome.best_spec.fractional,

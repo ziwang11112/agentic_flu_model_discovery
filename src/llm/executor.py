@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -29,7 +30,8 @@ from src.utils.io import ensure_dir, write_json, write_yaml
 
 
 def _stable_seed(seed: int, key: str) -> int:
-    return abs(hash(f"{seed}:{key}")) % (2**32 - 1)
+    digest = hashlib.sha256(f"{seed}:{key}".encode("utf-8")).digest()
+    return int.from_bytes(digest[:8], byteorder="big", signed=False) % (2**32 - 1)
 
 
 def evaluate_llm_candidate_specs(

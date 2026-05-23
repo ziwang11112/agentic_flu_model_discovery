@@ -10,13 +10,27 @@ from src.plotting.robustness_plots import plot_metric_bars, plot_metric_heatmap
 
 
 MODEL_DIRECTORIES = {
+    "last_observed",
+    "rolling_mean_2wk",
+    "rolling_mean_4wk",
+    "arima_auto_small",
+    "lagged_ridge",
+    "lagged_gradient_boosting",
     "deterministic_seir",
     "probabilistic_seir",
     "hospitalized_seihr",
     "delayed_observation_seir",
     "fractional_seir",
     "constrained_structure_discovery",
+    "equal_weight_point_ensemble",
 }
+
+
+def _artifact_relative_path(path: Path, artifact_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(artifact_root.resolve()))
+    except ValueError:
+        return str(path)
 
 
 def collect_benchmark_model_summary(artifact_root: Path) -> pd.DataFrame:
@@ -29,9 +43,12 @@ def collect_benchmark_model_summary(artifact_root: Path) -> pd.DataFrame:
             continue
 
         data = json.loads(metrics_path.read_text(encoding="utf-8"))
+        fit_status = data.get("fit_status", {})
+        numerical_diagnostics = data.get("numerical_diagnostics", {})
         row: dict[str, object] = {
             "series_name": data["series_name"],
             "model_name": data["model_name"],
+            "model_family": data.get("model_family"),
             "test_mae": data["test_metrics"]["mae"],
             "test_rmse": data["test_metrics"]["rmse"],
             "test_smape": data["test_metrics"]["smape"],
@@ -39,7 +56,13 @@ def collect_benchmark_model_summary(artifact_root: Path) -> pd.DataFrame:
             "rolling_mean_rmse": data["rolling_origin_summary"]["mean_rmse"],
             "num_free_params": data["complexity"]["num_free_params"],
             "num_compartments": data["complexity"]["num_compartments"],
-            "artifact_dir": str(metrics_path.parent),
+            "artifact_dir": _artifact_relative_path(metrics_path.parent, artifact_root),
+            "numerical_failure_flag": numerical_diagnostics.get("numerical_failure_flag"),
+            "max_abs_test_prediction": numerical_diagnostics.get("max_abs_test_prediction"),
+            "max_abs_full_prediction": numerical_diagnostics.get("max_abs_full_prediction"),
+            "train_success": fit_status.get("train_success"),
+            "train_plus_validation_success": fit_status.get("train_plus_validation_success"),
+            "full_success": fit_status.get("full_success"),
         }
 
         best_spec = data.get("best_spec")
@@ -180,7 +203,7 @@ def collect_probabilistic_calibration_summary(artifact_root: Path) -> pd.DataFra
                             "uncertainty_draws": report.get("uncertainty_draws"),
                             "interval_calibration_method": report.get("interval_calibration_method"),
                             "interval_calibration_scale": scale_map.get(level, shared_scale),
-                            "artifact_dir": str(calibration_path.parent),
+                            "artifact_dir": _artifact_relative_path(calibration_path.parent, artifact_root),
                         }
                     )
 
@@ -226,7 +249,7 @@ def collect_probabilistic_calibration_summary(artifact_root: Path) -> pd.DataFra
                     "split": "test",
                     "calibration_kind": "raw",
                     "interval_calibration_scale": scale_map.get(level, shared_scale),
-                    "artifact_dir": str(forecast_path.parent),
+                    "artifact_dir": _artifact_relative_path(forecast_path.parent, artifact_root),
                 }
             )
 

@@ -10,6 +10,7 @@ from typing import Any
 import pandas as pd
 import yaml
 
+from src.baselines.forecasting import FORECAST_BASELINE_NAMES, create_forecast_baseline
 from src.data.loader import (
     SEASON_MODE_POOLED,
     build_flu_series_frames,
@@ -20,6 +21,7 @@ from src.data.loader import (
 )
 from src.data.split import make_chronological_split
 from src.discovery.search import SearchConfig
+from src.evaluation.baseline_pipeline import run_equal_weight_point_ensemble_family, run_forecast_baseline_family
 from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family
 from src.evaluation.reporting import write_benchmark_reports
 from src.models.base import FitConfig
@@ -31,9 +33,29 @@ from src.models.seir_probabilistic import ProbabilisticSEIRModel
 from src.plotting.plots import plot_model_comparison
 from src.utils.io import ensure_dir, write_json
 from src.utils.logging_utils import configure_logging
+from src.utils.paths import repo_relative_path
 from src.utils.random import set_global_seed
 
 logger = logging.getLogger(__name__)
+
+
+CORE_BENCHMARK_MODELS = [
+    "deterministic_seir",
+    "probabilistic_seir",
+    "hospitalized_seihr",
+    "delayed_observation_seir",
+    "fractional_seir",
+    "constrained_structure_discovery",
+]
+
+MODEL_SEED_OFFSETS = {
+    "deterministic_seir": 0,
+    "probabilistic_seir": 11,
+    "hospitalized_seihr": 17,
+    "delayed_observation_seir": 19,
+    "fractional_seir": 23,
+    "constrained_structure_discovery": 37,
+}
 
 
 def _load_config(path: Path) -> dict[str, Any]:
@@ -112,6 +134,118 @@ def _slugify(text: str) -> str:
     )
 
 
+def _benchmark_model_names(config: dict[str, Any]) -> list[str]:
+    configured = config.get("benchmark", {}).get("models")
+    if configured is None:
+        return list(CORE_BENCHMARK_MODELS)
+
+    model_names = [str(value) for value in configured]
+    if "equal_weight_point_ensemble" in model_names and model_names[-1] != "equal_weight_point_ensemble":
+        logger.warning("Moving equal_weight_point_ensemble to the end of benchmark.models so member artifacts exist.")
+        model_names = [name for name in model_names if name != "equal_weight_point_ensemble"]
+        model_names.append("equal_weight_point_ensemble")
+    return model_names
+
+
+def _model_seed(base_seed: int, model_name: str, position: int) -> int:
+    return base_seed + MODEL_SEED_OFFSETS.get(model_name, position * 101)
+
+
+def _run_one_model(
+    *,
+    model_name: str,
+    series_name: str,
+    y,
+    split,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    if model_name in FORECAST_BASELINE_NAMES:
+        return run_forecast_baseline_family(
+            baseline_factory=lambda model_name=model_name, seed=seed: create_forecast_baseline(model_name, seed=seed),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "equal_weight_point_ensemble":
+        return run_equal_weight_point_ensemble_family(
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "deterministic_seir":
+        return run_model_family(
+            model_factory=lambda: DeterministicSEIRModel(fit_config),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "probabilistic_seir":
+        return run_model_family(
+            model_factory=lambda: ProbabilisticSEIRModel(fit_config),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "hospitalized_seihr":
+        return run_model_family(
+            model_factory=lambda: HospitalizedSEIHRModel(fit_config),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "delayed_observation_seir":
+        return run_delayed_observation_family(
+            series_name=series_name,
+            y=y,
+            split=split,
+            fit_config=fit_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "fractional_seir":
+        return run_model_family(
+            model_factory=lambda: FractionalSEIRModel(fit_config),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "constrained_structure_discovery":
+        return run_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    raise ValueError(f"Unsupported benchmark model: {model_name}")
+
+
 def _run_series_benchmark(
     series_name: str,
     series_frame: pd.DataFrame,
@@ -120,6 +254,7 @@ def _run_series_benchmark(
     artifact_root: Path,
     horizons: list[int],
     seed: int,
+    model_names: list[str],
 ) -> pd.DataFrame:
     y = series_frame["WEEKLY RATE"].to_numpy(dtype=float)
     split = make_chronological_split(len(y))
@@ -135,108 +270,26 @@ def _run_series_benchmark(
     )
 
     results = []
-    logger.info("Running model=deterministic_seir series=%s", series_name)
-    deterministic = run_model_family(
-        model_factory=lambda: DeterministicSEIRModel(fit_config),
-        series_name=series_name,
-        y=y,
-        split=split,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "deterministic_seir",
-        seed=seed,
-    )
-    results.append(deterministic["comparison_row"])
-    logger.info(
-        "Completed model=deterministic_seir series=%s test_mae=%.6f",
-        series_name,
-        deterministic["comparison_row"]["test_mae"],
-    )
-
-    logger.info("Running model=probabilistic_seir series=%s", series_name)
-    probabilistic = run_model_family(
-        model_factory=lambda: ProbabilisticSEIRModel(fit_config),
-        series_name=series_name,
-        y=y,
-        split=split,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "probabilistic_seir",
-        seed=seed + 11,
-    )
-    results.append(probabilistic["comparison_row"])
-    logger.info(
-        "Completed model=probabilistic_seir series=%s test_mae=%.6f",
-        series_name,
-        probabilistic["comparison_row"]["test_mae"],
-    )
-
-    logger.info("Running model=hospitalized_seihr series=%s", series_name)
-    hospitalized = run_model_family(
-        model_factory=lambda: HospitalizedSEIHRModel(fit_config),
-        series_name=series_name,
-        y=y,
-        split=split,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "hospitalized_seihr",
-        seed=seed + 17,
-    )
-    results.append(hospitalized["comparison_row"])
-    logger.info(
-        "Completed model=hospitalized_seihr series=%s test_mae=%.6f",
-        series_name,
-        hospitalized["comparison_row"]["test_mae"],
-    )
-
-    logger.info("Running model=delayed_observation_seir series=%s", series_name)
-    delayed = run_delayed_observation_family(
-        series_name=series_name,
-        y=y,
-        split=split,
-        fit_config=fit_config,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "delayed_observation_seir",
-        seed=seed + 19,
-    )
-    results.append(delayed["comparison_row"])
-    logger.info(
-        "Completed model=delayed_observation_seir series=%s test_mae=%.6f",
-        series_name,
-        delayed["comparison_row"]["test_mae"],
-    )
-
-    logger.info("Running model=fractional_seir series=%s", series_name)
-    fractional = run_model_family(
-        model_factory=lambda: FractionalSEIRModel(fit_config),
-        series_name=series_name,
-        y=y,
-        split=split,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "fractional_seir",
-        seed=seed + 23,
-    )
-    results.append(fractional["comparison_row"])
-    logger.info(
-        "Completed model=fractional_seir series=%s test_mae=%.6f",
-        series_name,
-        fractional["comparison_row"]["test_mae"],
-    )
-
-    logger.info("Running model=constrained_structure_discovery series=%s", series_name)
-    discovery = run_discovery_family(
-        y=y,
-        series_name=series_name,
-        split=split,
-        fit_config=fit_config,
-        search_config=search_config,
-        horizons=horizons,
-        artifact_dir=series_artifact_root / "constrained_structure_discovery",
-        seed=seed + 37,
-    )
-    results.append(discovery["comparison_row"])
-    logger.info(
-        "Completed model=constrained_structure_discovery series=%s test_mae=%.6f",
-        series_name,
-        discovery["comparison_row"]["test_mae"],
-    )
+    for position, model_name in enumerate(model_names):
+        logger.info("Running model=%s series=%s", model_name, series_name)
+        result = _run_one_model(
+            model_name=model_name,
+            series_name=series_name,
+            y=y,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=series_artifact_root / model_name,
+            seed=_model_seed(seed, model_name, position),
+        )
+        results.append(result["comparison_row"])
+        logger.info(
+            "Completed model=%s series=%s test_mae=%.6f",
+            model_name,
+            series_name,
+            result["comparison_row"]["test_mae"],
+        )
 
     leaderboard = pd.DataFrame(results).sort_values(["test_mae", "test_rmse"], ascending=[True, True]).reset_index(drop=True)
     leaderboard.insert(0, "series_name", series_name)
@@ -299,6 +352,7 @@ def main() -> None:
     fit_config = _fit_config(config)
     search_config = _search_config(config)
     horizons = [int(value) for value in config["evaluation"]["horizons"]]
+    model_names = _benchmark_model_names(config)
     artifact_root = ensure_dir(repo_root / config["artifacts"]["root_dir"])
 
     benchmark_leaderboards = []
@@ -334,6 +388,7 @@ def main() -> None:
             artifact_root=series_artifact_parent,
             horizons=horizons,
             seed=series_seed,
+            model_names=model_names,
         )
         benchmark_leaderboards.append(board)
         combined_so_far = pd.concat(benchmark_leaderboards, ignore_index=True)
@@ -351,12 +406,15 @@ def main() -> None:
         {
             "seed": int(config["seed"]),
             "series_evaluated": combined_board["series_name"].unique().tolist(),
-            "leaderboard_path": str(artifact_root / "benchmark_leaderboard.csv"),
-            "summary_path": str(artifact_root / "benchmark_model_summary.csv"),
-            "winners_path": str(artifact_root / "benchmark_series_winners.csv"),
-            "recommendation_path": str(artifact_root / "age_group_recommendation.csv"),
-            "v3_summary_path": str(artifact_root / "v3_result_summary.md"),
-            "probabilistic_calibration_path": str(artifact_root / "probabilistic_calibration_summary.csv"),
+            "leaderboard_path": repo_relative_path(artifact_root / "benchmark_leaderboard.csv", repo_root),
+            "summary_path": repo_relative_path(artifact_root / "benchmark_model_summary.csv", repo_root),
+            "winners_path": repo_relative_path(artifact_root / "benchmark_series_winners.csv", repo_root),
+            "recommendation_path": repo_relative_path(artifact_root / "age_group_recommendation.csv", repo_root),
+            "v3_summary_path": repo_relative_path(artifact_root / "v3_result_summary.md", repo_root),
+            "probabilistic_calibration_path": repo_relative_path(
+                artifact_root / "probabilistic_calibration_summary.csv",
+                repo_root,
+            ),
         },
         artifact_root / "run_summary.json",
     )

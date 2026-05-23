@@ -19,6 +19,7 @@ if str(REPO_ROOT) not in sys.path:
 os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "agentic_flu_model_discovery_matplotlib"))
 
 from run_experiment import _fit_config, _search_config, _slugify  # noqa: E402
+from src.baselines.forecasting import FORECAST_BASELINE_NAMES, create_forecast_baseline  # noqa: E402
 from src.data.loader import (  # noqa: E402
     SEASON_MODE_SEPARATE,
     build_flu_series_frames,
@@ -28,6 +29,7 @@ from src.data.loader import (  # noqa: E402
     save_processed_outputs,
 )
 from src.data.split import make_chronological_split  # noqa: E402
+from src.evaluation.baseline_pipeline import run_equal_weight_point_ensemble_family, run_forecast_baseline_family  # noqa: E402
 from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family  # noqa: E402
 from src.evaluation.reporting import write_benchmark_reports  # noqa: E402
 from src.models.seihr_hospitalized import HospitalizedSEIHRModel  # noqa: E402
@@ -38,6 +40,7 @@ from src.models.seir_probabilistic import ProbabilisticSEIRModel  # noqa: E402
 from src.plotting.plots import plot_model_comparison  # noqa: E402
 from src.utils.io import ensure_dir, write_json  # noqa: E402
 from src.utils.logging_utils import configure_logging  # noqa: E402
+from src.utils.paths import repo_relative_path  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +82,15 @@ def _parse_series_name(series_name: str) -> tuple[str, str]:
 
 
 def _model_names(config: dict[str, Any]) -> list[str]:
-    return [str(value) for value in config.get("benchmark", {}).get("models", DEFAULT_MODELS)]
+    configured = config.get("benchmark", {}).get("models")
+    if configured is None:
+        return list(DEFAULT_MODELS)
+    model_names = [str(value) for value in configured]
+    if "equal_weight_point_ensemble" in model_names and model_names[-1] != "equal_weight_point_ensemble":
+        logger.warning("Moving equal_weight_point_ensemble to the end of benchmark.models so member artifacts exist.")
+        model_names = [name for name in model_names if name != "equal_weight_point_ensemble"]
+        model_names.append("equal_weight_point_ensemble")
+    return model_names
 
 
 def _selected_series_filter(config: dict[str, Any]) -> set[str]:
@@ -98,6 +109,25 @@ def _run_one_model(
     artifact_dir: Path,
     seed: int,
 ) -> dict[str, Any]:
+    if model_name in FORECAST_BASELINE_NAMES:
+        return run_forecast_baseline_family(
+            baseline_factory=lambda model_name=model_name, seed=seed: create_forecast_baseline(model_name, seed=seed),
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "equal_weight_point_ensemble":
+        return run_equal_weight_point_ensemble_family(
+            series_name=series_name,
+            y=y,
+            split=split,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
     if model_name == "deterministic_seir":
         return run_model_family(
             model_factory=lambda: DeterministicSEIRModel(fit_config),
@@ -286,7 +316,7 @@ def write_multiseason_report(
         "This benchmark evaluates each completed FluSurv-NET season as its own within-season trajectory.",
         "It is intended as a cross-season robustness supplement, not as a direct previous-season-to-future-season transfer forecast.",
         "",
-        f"Artifact root: `{artifact_root}`",
+        f"Artifact root: `{repo_relative_path(artifact_root, REPO_ROOT)}`",
         f"Completed seasons included: {', '.join(seasons)}",
         f"Models: {', '.join(models)}",
         "",
@@ -378,15 +408,18 @@ def main() -> None:
         {
             "seed": int(config.get("seed", 42)),
             "data_source": "FluSurv-NET RESP-NET transformed multi-season CSV",
-            "completed_seasons_path": str(completed_path),
+            "completed_seasons_path": repo_relative_path(completed_path, REPO_ROOT),
             "seasons": seasons,
             "models": _model_names(config),
             "series_evaluated": combined["series_name"].unique().tolist(),
-            "leaderboard_path": str(artifact_root / "benchmark_leaderboard.csv"),
-            "summary_path": str(artifact_root / "benchmark_model_summary.csv"),
-            "winners_path": str(artifact_root / "benchmark_series_winners.csv"),
-            "recommendation_path": str(artifact_root / "age_group_recommendation.csv"),
-            "seasonal_modes_path": str(artifact_root / "multiseason_age_recommendation_modes.csv"),
+            "leaderboard_path": repo_relative_path(artifact_root / "benchmark_leaderboard.csv", REPO_ROOT),
+            "summary_path": repo_relative_path(artifact_root / "benchmark_model_summary.csv", REPO_ROOT),
+            "winners_path": repo_relative_path(artifact_root / "benchmark_series_winners.csv", REPO_ROOT),
+            "recommendation_path": repo_relative_path(artifact_root / "age_group_recommendation.csv", REPO_ROOT),
+            "seasonal_modes_path": repo_relative_path(
+                artifact_root / "multiseason_age_recommendation_modes.csv",
+                REPO_ROOT,
+            ),
             "calibration_rows": int(len(calibration)),
             "summary_rows": int(len(summary)),
             "winner_rows": int(len(winners)),
