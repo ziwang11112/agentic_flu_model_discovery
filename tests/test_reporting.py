@@ -86,6 +86,15 @@ def test_reporting_collects_summary_and_winners(tmp_path: Path) -> None:
     assert recommendations.loc[recommendations["series_name"] == "0-4 yr", "decision_type"].item() == "consensus"
 
 
+def test_reporting_includes_discovery_ablation_directories(tmp_path: Path) -> None:
+    _write_metrics(tmp_path, "Overall", "random_structure_discovery", test_mae=0.11, rolling_mean_mae=0.12, discovery_structure_name="SEIR")
+    _write_metrics(tmp_path, "Overall", "validation_only_structure_selection", test_mae=0.13, rolling_mean_mae=0.14, discovery_structure_name="SIR")
+
+    summary = collect_benchmark_model_summary(tmp_path)
+
+    assert set(summary["model_name"].tolist()) == {"random_structure_discovery", "validation_only_structure_selection"}
+
+
 def test_collect_probabilistic_calibration_summary(tmp_path: Path) -> None:
     _write_metrics(tmp_path, "Overall", "probabilistic_seir", test_mae=0.12, rolling_mean_mae=0.13)
     _write_probabilistic_trace(tmp_path, "Overall")

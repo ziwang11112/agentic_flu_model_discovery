@@ -172,13 +172,14 @@ def run_equal_weight_point_ensemble_family(
     horizons: list[int],
     artifact_dir: Path,
     seed: int,
+    ensemble_members: list[str] | None = None,
 ) -> dict[str, Any]:
     """Average point forecasts from existing, numerically healthy member artifacts."""
     del seed
     ensure_dir(artifact_dir)
     values = np.asarray(y, dtype=float)
     member_root = artifact_dir.parent
-    valid_members, excluded_members = _collect_valid_ensemble_members(member_root, artifact_dir.name)
+    valid_members, excluded_members = _collect_valid_ensemble_members(member_root, artifact_dir.name, ensemble_members)
 
     if not valid_members:
         result = run_forecast_baseline_family(
@@ -198,6 +199,7 @@ def run_equal_weight_point_ensemble_family(
                 "fallback_model": "last_observed",
                 "valid_members": [],
                 "excluded_members": excluded_members,
+                "ensemble_members_configured": ensemble_members,
             }
         )
         write_json(summary, artifact_dir / "metrics.json")
@@ -264,6 +266,7 @@ def run_equal_weight_point_ensemble_family(
             "excluded_members": excluded_members,
             "fallback_used": fallback_used,
             "fallback_model": valid_members[0]["model_name"] if fallback_used else None,
+            "ensemble_members_configured": ensemble_members,
         },
     }
     write_json(summary, artifact_dir / "metrics.json")
@@ -336,13 +339,21 @@ def _write_optional_plots(
         logger.warning("Plotting skipped for model=%s artifact_dir=%s error=%s", model_name, artifact_dir, exc)
 
 
-def _collect_valid_ensemble_members(member_root: Path, ensemble_dir_name: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def _collect_valid_ensemble_members(
+    member_root: Path,
+    ensemble_dir_name: str,
+    ensemble_members: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    allowed_members = None if ensemble_members is None else set(ensemble_members)
     valid_members: list[dict[str, Any]] = []
     excluded_members: list[dict[str, Any]] = []
     for metrics_path in sorted(member_root.glob("*/metrics.json")):
         model_name = metrics_path.parent.name
         if model_name == ensemble_dir_name:
             excluded_members.append({"model_name": model_name, "reason": "self"})
+            continue
+        if allowed_members is not None and model_name not in allowed_members:
+            excluded_members.append({"model_name": model_name, "reason": "not_in_ensemble_members"})
             continue
         forecast_path = metrics_path.parent / "forecast_trace.csv"
         rolling_path = metrics_path.parent / "rolling_origin_forecasts.csv"

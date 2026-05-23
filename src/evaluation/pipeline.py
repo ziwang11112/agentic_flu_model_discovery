@@ -11,7 +11,16 @@ from scipy.stats import t as student_t
 
 from src.data.split import ChronologicalSplit
 from src.discovery.model import DiscoveryCompartmentModel
-from src.discovery.search import SearchConfig, discovery_regularization_config, run_structure_search
+from src.discovery.search import (
+    SearchConfig,
+    discovery_regularization_config,
+    run_exhaustive_structure_search,
+    run_no_observation_search,
+    run_no_stability_structure_search,
+    run_random_structure_search,
+    run_structure_search,
+    run_validation_only_structure_selection,
+)
 from src.evaluation.metrics import interval_level_summary, point_metrics, summarise_probabilistic_metrics
 from src.evaluation.metrics import learn_conformal_interval_scales, learn_interval_scales, scale_interval_map
 from src.evaluation.rolling import mean_rolling_metric, rolling_metrics_by_horizon, rolling_origin_forecasts
@@ -494,3 +503,219 @@ def run_discovery_family(
     run_result["summary"] = summary
     run_result["comparison_row"]["model_name"] = "constrained_structure_discovery"
     return run_result
+
+
+def _run_search_outcome_family(
+    *,
+    model_name: str,
+    outcome,
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    plot_leaderboard(outcome.leaderboard, artifact_dir / "leaderboard.png")
+    plot_structure_diagram(outcome.best_spec, artifact_dir / "best_structure.png")
+    regularization_config = discovery_regularization_config(search_config)
+
+    def model_factory() -> BaseEpidemicModel:
+        return DiscoveryCompartmentModel(outcome.best_spec, fit_config, regularization_config)
+
+    run_result = run_model_family(
+        model_factory=model_factory,
+        series_name=series_name,
+        y=y,
+        split=split,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    summary = run_result["summary"]
+    summary["model_name"] = model_name
+    summary["model_family"] = "structure_discovery_ablation"
+    summary["best_spec"] = {
+        "structure_name": outcome.best_spec.structure_name,
+        "fractional": outcome.best_spec.fractional,
+        "observation_map": outcome.best_spec.observation_map,
+        "delay_weeks": int(outcome.best_spec.delay_weeks),
+    }
+    summary["search_best_record"] = outcome.best_record
+    write_json(summary, artifact_dir / "metrics.json")
+
+    run_result["summary"] = summary
+    run_result["comparison_row"]["model_name"] = model_name
+    return run_result
+
+
+def run_random_discovery_family(
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    ensure_dir(artifact_dir)
+    outcome = run_random_structure_search(
+        series_name=series_name,
+        y_train=y[split.train_slice],
+        y_val=y[split.val_slice],
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    return _run_search_outcome_family(
+        model_name="random_structure_discovery",
+        outcome=outcome,
+        y=y,
+        series_name=series_name,
+        split=split,
+        fit_config=fit_config,
+        search_config=search_config,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed + 307,
+    )
+
+
+def run_exhaustive_discovery_family(
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    ensure_dir(artifact_dir)
+    outcome = run_exhaustive_structure_search(
+        series_name=series_name,
+        y_train=y[split.train_slice],
+        y_val=y[split.val_slice],
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    return _run_search_outcome_family(
+        model_name="exhaustive_structure_discovery",
+        outcome=outcome,
+        y=y,
+        series_name=series_name,
+        split=split,
+        fit_config=fit_config,
+        search_config=search_config,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed + 307,
+    )
+
+
+def run_validation_only_discovery_family(
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    ensure_dir(artifact_dir)
+    outcome = run_validation_only_structure_selection(
+        series_name=series_name,
+        y_train=y[split.train_slice],
+        y_val=y[split.val_slice],
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    return _run_search_outcome_family(
+        model_name="validation_only_structure_selection",
+        outcome=outcome,
+        y=y,
+        series_name=series_name,
+        split=split,
+        fit_config=fit_config,
+        search_config=search_config,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed + 307,
+    )
+
+
+def run_no_observation_search_discovery_family(
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    ensure_dir(artifact_dir)
+    outcome = run_no_observation_search(
+        series_name=series_name,
+        y_train=y[split.train_slice],
+        y_val=y[split.val_slice],
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    return _run_search_outcome_family(
+        model_name="no_observation_search_discovery",
+        outcome=outcome,
+        y=y,
+        series_name=series_name,
+        split=split,
+        fit_config=fit_config,
+        search_config=search_config,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed + 307,
+    )
+
+
+def run_no_stability_discovery_family(
+    y: np.ndarray,
+    series_name: str,
+    split: ChronologicalSplit,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    horizons: list[int],
+    artifact_dir: Path,
+    seed: int,
+) -> dict[str, Any]:
+    ensure_dir(artifact_dir)
+    outcome = run_no_stability_structure_search(
+        series_name=series_name,
+        y_train=y[split.train_slice],
+        y_val=y[split.val_slice],
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+    )
+    return _run_search_outcome_family(
+        model_name="no_stability_discovery",
+        outcome=outcome,
+        y=y,
+        series_name=series_name,
+        split=split,
+        fit_config=fit_config,
+        search_config=search_config,
+        horizons=horizons,
+        artifact_dir=artifact_dir,
+        seed=seed + 307,
+    )

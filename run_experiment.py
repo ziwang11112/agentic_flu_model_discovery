@@ -22,7 +22,16 @@ from src.data.loader import (
 from src.data.split import make_chronological_split
 from src.discovery.search import SearchConfig
 from src.evaluation.baseline_pipeline import run_equal_weight_point_ensemble_family, run_forecast_baseline_family
-from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family
+from src.evaluation.pipeline import (
+    run_delayed_observation_family,
+    run_discovery_family,
+    run_exhaustive_discovery_family,
+    run_model_family,
+    run_no_observation_search_discovery_family,
+    run_no_stability_discovery_family,
+    run_random_discovery_family,
+    run_validation_only_discovery_family,
+)
 from src.evaluation.reporting import write_benchmark_reports
 from src.models.base import FitConfig
 from src.models.seihr_hospitalized import HospitalizedSEIHRModel
@@ -120,6 +129,18 @@ def _search_config(config: dict[str, Any]) -> SearchConfig:
         age_prior_simple_bonus=float(discovery["age_prior_simple_bonus"]),
         age_prior_recurrence_bonus=float(discovery["age_prior_recurrence_bonus"]),
         age_prior_fractional_bonus=float(discovery["age_prior_fractional_bonus"]),
+        random_candidate_budget=(
+            None
+            if discovery.get("random_candidate_budget") is None
+            else int(discovery["random_candidate_budget"])
+        ),
+        random_repeats=int(discovery.get("random_repeats", 1)),
+        exhaustive_max_candidates=(
+            None
+            if discovery.get("exhaustive_max_candidates") is None
+            else int(discovery["exhaustive_max_candidates"])
+        ),
+        allow_truncated_exhaustive=bool(discovery.get("allow_truncated_exhaustive", False)),
     )
 
 
@@ -147,6 +168,13 @@ def _benchmark_model_names(config: dict[str, Any]) -> list[str]:
     return model_names
 
 
+def _benchmark_ensemble_members(config: dict[str, Any]) -> list[str] | None:
+    configured = config.get("benchmark", {}).get("ensemble_members")
+    if configured is None:
+        return None
+    return [str(value) for value in configured]
+
+
 def _model_seed(base_seed: int, model_name: str, position: int) -> int:
     return base_seed + MODEL_SEED_OFFSETS.get(model_name, position * 101)
 
@@ -162,6 +190,7 @@ def _run_one_model(
     horizons: list[int],
     artifact_dir: Path,
     seed: int,
+    ensemble_members: list[str] | None = None,
 ) -> dict[str, Any]:
     if model_name in FORECAST_BASELINE_NAMES:
         return run_forecast_baseline_family(
@@ -181,6 +210,7 @@ def _run_one_model(
             horizons=horizons,
             artifact_dir=artifact_dir,
             seed=seed,
+            ensemble_members=ensemble_members,
         )
     if model_name == "deterministic_seir":
         return run_model_family(
@@ -243,6 +273,61 @@ def _run_one_model(
             artifact_dir=artifact_dir,
             seed=seed,
         )
+    if model_name == "random_structure_discovery":
+        return run_random_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "exhaustive_structure_discovery":
+        return run_exhaustive_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "validation_only_structure_selection":
+        return run_validation_only_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "no_observation_search_discovery":
+        return run_no_observation_search_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "no_stability_discovery":
+        return run_no_stability_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
     raise ValueError(f"Unsupported benchmark model: {model_name}")
 
 
@@ -255,6 +340,7 @@ def _run_series_benchmark(
     horizons: list[int],
     seed: int,
     model_names: list[str],
+    ensemble_members: list[str] | None,
 ) -> pd.DataFrame:
     y = series_frame["WEEKLY RATE"].to_numpy(dtype=float)
     split = make_chronological_split(len(y))
@@ -282,6 +368,7 @@ def _run_series_benchmark(
             horizons=horizons,
             artifact_dir=series_artifact_root / model_name,
             seed=_model_seed(seed, model_name, position),
+            ensemble_members=ensemble_members,
         )
         results.append(result["comparison_row"])
         logger.info(
@@ -353,6 +440,7 @@ def main() -> None:
     search_config = _search_config(config)
     horizons = [int(value) for value in config["evaluation"]["horizons"]]
     model_names = _benchmark_model_names(config)
+    ensemble_members = _benchmark_ensemble_members(config)
     artifact_root = ensure_dir(repo_root / config["artifacts"]["root_dir"])
 
     benchmark_leaderboards = []
@@ -389,6 +477,7 @@ def main() -> None:
             horizons=horizons,
             seed=series_seed,
             model_names=model_names,
+            ensemble_members=ensemble_members,
         )
         benchmark_leaderboards.append(board)
         combined_so_far = pd.concat(benchmark_leaderboards, ignore_index=True)

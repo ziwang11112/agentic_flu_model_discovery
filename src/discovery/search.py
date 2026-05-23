@@ -10,6 +10,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from src.discovery.candidates import enumerate_valid_structure_specs
 from src.discovery.model import DiscoveryCompartmentModel, DiscoveryRegularizationConfig
 from src.discovery.rules import StructureSpec, generate_neighbors, observation_family, validate_structure
 from src.evaluation.metrics import point_metrics
@@ -51,6 +52,10 @@ class SearchConfig:
     age_prior_simple_bonus: float = 0.01
     age_prior_recurrence_bonus: float = 0.01
     age_prior_fractional_bonus: float = 0.005
+    random_candidate_budget: int | None = None
+    random_repeats: int = 1
+    exhaustive_max_candidates: int | None = None
+    allow_truncated_exhaustive: bool = False
 
 
 @dataclass
@@ -171,6 +176,450 @@ def age_structure_prior_penalty(
     return 0.0
 
 
+def _score_policy_metadata(policy: str) -> dict[str, Any]:
+    if policy == "stability_aware":
+        return {
+            "score_formula": "multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty",
+            "score_used_val_mae": False,
+            "score_used_multi_split": True,
+            "score_used_stability": True,
+            "score_used_complexity": True,
+            "score_used_age_prior": True,
+        }
+    if policy == "validation_only":
+        return {
+            "score_formula": "val_mae",
+            "score_used_val_mae": True,
+            "score_used_multi_split": False,
+            "score_used_stability": False,
+            "score_used_complexity": False,
+            "score_used_age_prior": False,
+        }
+    if policy == "no_stability":
+        return {
+            "score_formula": "multi_split_mean_mae + multi_split_penalty + complexity_penalty + age_prior_penalty",
+            "score_used_val_mae": False,
+            "score_used_multi_split": True,
+            "score_used_stability": False,
+            "score_used_complexity": True,
+            "score_used_age_prior": True,
+        }
+    raise ValueError(f"Unsupported discovery score policy: {policy}")
+
+
+def _score_candidate(
+    *,
+    policy: str,
+    val_mae: float,
+    multi_split_mean_mae: float,
+    multi_split_penalty: float,
+    stability_penalty: float,
+    complexity_penalty: float,
+    age_prior_penalty: float,
+) -> float:
+    if policy == "stability_aware":
+        return float(multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty)
+    if policy == "validation_only":
+        return float(val_mae)
+    if policy == "no_stability":
+        return float(multi_split_mean_mae + multi_split_penalty + complexity_penalty + age_prior_penalty)
+    raise ValueError(f"Unsupported discovery score policy: {policy}")
+
+
+def evaluate_structure_candidate(
+    *,
+    series_name: str,
+    spec: StructureSpec,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    regularization_config: DiscoveryRegularizationConfig,
+    seed: int,
+    score_policy: str = "stability_aware",
+    round_idx: int | None = None,
+    repeat_idx: int | None = None,
+) -> dict[str, Any]:
+    """Fit and score one valid discovery candidate using train/validation data only."""
+    validation = validate_structure(spec)
+    if not validation.valid:
+        raise ValueError(f"Invalid discovery structure {spec.spec_key}: {validation.reason}")
+
+    seed_key = f"{repeat_idx}:{spec.spec_key}" if repeat_idx is not None else spec.spec_key
+    candidate_rng = np.random.default_rng(_stable_seed(seed, seed_key))
+    combined_series = np.concatenate([y_train, y_val])
+    model_factory = lambda: DiscoveryCompartmentModel(spec, fit_config, regularization_config)
+
+    model = model_factory()
+    fit_result = model.fit(y_train, candidate_rng)
+    rollout = model.simulate(fit_result.raw_params, len(combined_series))
+    train_pred = rollout.predictions[: len(y_train)]
+    val_pred = rollout.predictions[len(y_train) :]
+    train_metrics = point_metrics(y_train, train_pred)
+    val_metrics = point_metrics(y_val, val_pred)
+
+    rolling_frame = rolling_origin_forecasts(
+        model_factory=model_factory,
+        y=combined_series,
+        horizons=list(search_config.rolling_horizons),
+        seed=_stable_seed(seed + 991, seed_key),
+        initial_train_size=len(y_train),
+    )
+    rolling_metrics = rolling_metrics_by_horizon(rolling_frame)
+    rolling_mean_mae = mean_rolling_metric(rolling_frame, "mae")
+    rolling_mean_rmse = mean_rolling_metric(rolling_frame, "rmse")
+    blocked_summary = rolling_blocked_metric_summary(
+        rolling_frame,
+        metric_name="mae",
+        num_blocks=search_config.multi_split_blocks,
+    )
+    multi_split_mean_mae = blocked_summary["mean"]
+    multi_split_std_mae = blocked_summary["std"]
+    rolling_error_std = rolling_error_stability(rolling_frame)
+    multi_split_penalty = search_config.score_multi_split_std_weight * multi_split_std_mae
+    stability_penalty = search_config.score_stability_weight * rolling_error_std
+    complexity_components = discovery_complexity_penalty_components(
+        spec=spec,
+        param_count=fit_result.param_count,
+        num_compartments=len(model.compartment_names),
+        search_config=search_config,
+    )
+    complexity_penalty = float(complexity_components["complexity_penalty"])
+    age_prior_penalty = age_structure_prior_penalty(series_name, spec, search_config)
+    score = _score_candidate(
+        policy=score_policy,
+        val_mae=val_metrics["mae"],
+        multi_split_mean_mae=multi_split_mean_mae,
+        multi_split_penalty=multi_split_penalty,
+        stability_penalty=stability_penalty,
+        complexity_penalty=complexity_penalty,
+        age_prior_penalty=age_prior_penalty,
+    )
+    score_metadata = _score_policy_metadata(score_policy)
+
+    record = {
+        "round": round_idx,
+        "repeat": repeat_idx,
+        "record_key": f"{repeat_idx}:{spec.spec_key}" if repeat_idx is not None else spec.spec_key,
+        "spec_key": spec.spec_key,
+        "structure_name": spec.structure_name,
+        "fractional": spec.fractional,
+        "observation_map": spec.observation_map,
+        "delay_weeks": int(spec.delay_weeks),
+        "observation_family": observation_family(spec),
+        "num_free_params": fit_result.param_count,
+        "num_compartments": len(model.compartment_names),
+        "train_objective": fit_result.objective,
+        "train_mae": train_metrics["mae"],
+        "train_rmse": train_metrics["rmse"],
+        "val_mae": val_metrics["mae"],
+        "val_rmse": val_metrics["rmse"],
+        "val_smape": val_metrics["smape"],
+        "rolling_val_mean_mae": rolling_mean_mae,
+        "rolling_val_mean_rmse": rolling_mean_rmse,
+        "multi_split_blocks": search_config.multi_split_blocks,
+        "multi_split_val_mean_mae": multi_split_mean_mae,
+        "multi_split_val_std_mae": multi_split_std_mae,
+        "multi_split_penalty": multi_split_penalty,
+        "rolling_val_error_std": rolling_error_std,
+        "rolling_val_metrics": rolling_metrics,
+        "stability_penalty": stability_penalty,
+        "complexity_penalty": complexity_penalty,
+        "complexity_penalty_params": complexity_components["param_penalty"],
+        "complexity_penalty_compartments": complexity_components["compartment_penalty"],
+        "complexity_penalty_fractional": complexity_components["fractional_penalty"],
+        "complexity_penalty_observation": complexity_components["observation_penalty"],
+        "complexity_penalty_h_observation": complexity_components["h_observation_penalty"],
+        "complexity_penalty_delay": complexity_components["delay_penalty"],
+        "complexity_penalty_recurrence": complexity_components["recurrence_penalty"],
+        "age_prior_penalty": age_prior_penalty,
+        "score_policy": score_policy,
+        "score_formula": score_metadata["score_formula"],
+        "score": score,
+        "score_used_val_mae": score_metadata["score_used_val_mae"],
+        "score_used_multi_split": score_metadata["score_used_multi_split"],
+        "score_used_stability": score_metadata["score_used_stability"],
+        "score_used_complexity": score_metadata["score_used_complexity"],
+        "score_used_age_prior": score_metadata["score_used_age_prior"],
+        "params": fit_result.params,
+    }
+    return record
+
+
+def _search_outcome_from_records(
+    *,
+    records: list[dict[str, Any]],
+    artifact_dir: Path,
+    search_metadata: dict[str, Any] | None = None,
+) -> SearchOutcome:
+    if not records:
+        raise RuntimeError("Structure discovery did not evaluate any valid candidate.")
+
+    leaderboard = pd.DataFrame.from_records(records).sort_values(
+        ["score", "spec_key", "record_key"],
+        ascending=[True, True, True],
+    ).reset_index(drop=True)
+    best_record = _json_safe(dict(leaderboard.iloc[0].to_dict()))
+    if search_metadata:
+        best_record["search_metadata"] = search_metadata
+        for key, value in search_metadata.items():
+            if key not in leaderboard.columns:
+                leaderboard[key] = value
+
+    best_spec = StructureSpec(
+        structure_name=str(best_record["structure_name"]),
+        fractional=bool(best_record["fractional"]),
+        observation_map=str(best_record["observation_map"]),
+        delay_weeks=int(best_record.get("delay_weeks", 0)),
+    )
+
+    ensure_dir(artifact_dir)
+    leaderboard.to_csv(artifact_dir / "leaderboard.csv", index=False)
+    write_json(best_record, artifact_dir / "best_model_spec.json")
+    write_yaml(best_record, artifact_dir / "best_model_spec.yaml")
+    logger.info("Search finished best_spec=%s leaderboard=%s", best_spec.spec_key, artifact_dir / "leaderboard.csv")
+    return SearchOutcome(best_spec=best_spec, leaderboard=leaderboard, best_record=best_record)
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, np.generic):
+        return value.item()
+    try:
+        if not isinstance(value, (dict, list, tuple, np.ndarray)) and pd.isna(value):
+            return None
+    except (TypeError, ValueError):
+        pass
+    return value
+
+
+def _evaluate_candidate_list(
+    *,
+    series_name: str,
+    candidates: list[StructureSpec],
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+    score_policy: str,
+    search_name: str,
+    search_metadata: dict[str, Any] | None = None,
+) -> SearchOutcome:
+    ensure_dir(artifact_dir)
+    regularization_config = discovery_regularization_config(search_config)
+    records: list[dict[str, Any]] = []
+    metadata = dict(search_metadata or {})
+    metadata.setdefault("search_name", search_name)
+    metadata.setdefault("score_policy", score_policy)
+    metadata.setdefault("candidate_count", int(len(candidates)))
+
+    for index, spec in enumerate(candidates, start=1):
+        logger.info("Search candidate start search=%s index=%d spec=%s", search_name, index, spec.spec_key)
+        record = evaluate_structure_candidate(
+            series_name=series_name,
+            spec=spec,
+            y_train=y_train,
+            y_val=y_val,
+            fit_config=fit_config,
+            search_config=search_config,
+            regularization_config=regularization_config,
+            seed=seed,
+            score_policy=score_policy,
+            round_idx=1,
+        )
+        records.append(record)
+
+    return _search_outcome_from_records(records=records, artifact_dir=artifact_dir, search_metadata=metadata)
+
+
+def run_exhaustive_structure_search(
+    series_name: str,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+    score_policy: str = "stability_aware",
+    search_name: str = "exhaustive_structure_discovery",
+) -> SearchOutcome:
+    """Evaluate every valid structure spec, with optional guardrails."""
+    universe = enumerate_valid_structure_specs()
+    max_candidates = search_config.exhaustive_max_candidates
+    truncated = False
+    if max_candidates is not None and len(universe) > max_candidates:
+        if not search_config.allow_truncated_exhaustive:
+            raise ValueError(
+                f"Exhaustive discovery candidate universe has {len(universe)} candidates, "
+                f"exceeding exhaustive_max_candidates={max_candidates}."
+            )
+        universe = universe[: int(max_candidates)]
+        truncated = True
+
+    return _evaluate_candidate_list(
+        series_name=series_name,
+        candidates=universe,
+        y_train=y_train,
+        y_val=y_val,
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+        score_policy=score_policy,
+        search_name=search_name,
+        search_metadata={
+            "candidate_universe_size": int(len(enumerate_valid_structure_specs())),
+            "candidate_budget_actual": int(len(universe)),
+            "exhaustive_max_candidates": max_candidates,
+            "allow_truncated_exhaustive": bool(search_config.allow_truncated_exhaustive),
+            "truncated": bool(truncated),
+        },
+    )
+
+
+def run_validation_only_structure_selection(
+    series_name: str,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+) -> SearchOutcome:
+    """Select from the full grammar using validation MAE only."""
+    return run_exhaustive_structure_search(
+        series_name=series_name,
+        y_train=y_train,
+        y_val=y_val,
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+        score_policy="validation_only",
+        search_name="validation_only_structure_selection",
+    )
+
+
+def run_no_observation_search(
+    series_name: str,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+) -> SearchOutcome:
+    """Select from specs restricted to direct infectious observation."""
+    candidates = [spec for spec in enumerate_valid_structure_specs() if spec.observation_map == "I"]
+    return _evaluate_candidate_list(
+        series_name=series_name,
+        candidates=candidates,
+        y_train=y_train,
+        y_val=y_val,
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+        score_policy="stability_aware",
+        search_name="no_observation_search_discovery",
+        search_metadata={
+            "candidate_universe_size": int(len(enumerate_valid_structure_specs())),
+            "candidate_budget_actual": int(len(candidates)),
+            "observation_map_filter": "I",
+        },
+    )
+
+
+def run_no_stability_structure_search(
+    series_name: str,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+) -> SearchOutcome:
+    """Select from the full grammar while excluding the rolling stability penalty from score."""
+    return run_exhaustive_structure_search(
+        series_name=series_name,
+        y_train=y_train,
+        y_val=y_val,
+        fit_config=fit_config,
+        search_config=search_config,
+        artifact_dir=artifact_dir,
+        seed=seed,
+        score_policy="no_stability",
+        search_name="no_stability_discovery",
+    )
+
+
+def run_random_structure_search(
+    series_name: str,
+    y_train: np.ndarray,
+    y_val: np.ndarray,
+    fit_config: FitConfig,
+    search_config: SearchConfig,
+    artifact_dir: Path,
+    seed: int,
+) -> SearchOutcome:
+    """Evaluate a deterministic random sample of valid structure specs."""
+    ensure_dir(artifact_dir)
+    universe = enumerate_valid_structure_specs()
+    requested_budget = search_config.random_candidate_budget
+    fallback_budget = min(len(universe), search_config.beam_width * search_config.max_rounds * 3)
+    budget = fallback_budget if requested_budget is None else min(int(requested_budget), len(universe))
+    repeats = max(1, int(search_config.random_repeats))
+    regularization_config = discovery_regularization_config(search_config)
+    records: list[dict[str, Any]] = []
+
+    for repeat_idx in range(repeats):
+        rng = np.random.default_rng(_stable_seed(seed, f"random_structure_discovery:{repeat_idx}"))
+        indices = rng.permutation(len(universe))[:budget]
+        for draw_idx, candidate_index in enumerate(indices, start=1):
+            spec = universe[int(candidate_index)]
+            logger.info(
+                "Random search candidate start repeat=%d draw=%d spec=%s",
+                repeat_idx,
+                draw_idx,
+                spec.spec_key,
+            )
+            record = evaluate_structure_candidate(
+                series_name=series_name,
+                spec=spec,
+                y_train=y_train,
+                y_val=y_val,
+                fit_config=fit_config,
+                search_config=search_config,
+                regularization_config=regularization_config,
+                seed=seed,
+                score_policy="stability_aware",
+                round_idx=draw_idx,
+                repeat_idx=repeat_idx,
+            )
+            record["random_draw_index"] = int(draw_idx)
+            records.append(record)
+
+    metadata = {
+        "search_name": "random_structure_discovery",
+        "candidate_budget_requested": requested_budget,
+        "candidate_budget_actual": int(budget),
+        "candidate_universe_size": int(len(universe)),
+        "random_repeats": int(repeats),
+        "random_seed": int(seed),
+    }
+    for record in records:
+        record.update(metadata)
+
+    return _search_outcome_from_records(records=records, artifact_dir=artifact_dir, search_metadata=metadata)
+
+
 def run_structure_search(
     series_name: str,
     y_train: np.ndarray,
@@ -227,103 +676,35 @@ def run_structure_search(
             any_new = True
             candidate_start = time.perf_counter()
             logger.info("Search candidate start round=%d spec=%s", round_idx, spec.spec_key)
-            candidate_seed = _stable_seed(seed, spec.spec_key)
-            candidate_rng = np.random.default_rng(candidate_seed)
-            combined_series = np.concatenate([y_train, y_val])
-            model_factory = lambda: DiscoveryCompartmentModel(spec, fit_config, regularization_config)
-
-            model = model_factory()
-            fit_result = model.fit(y_train, candidate_rng)
-            rollout = model.simulate(fit_result.raw_params, len(combined_series))
-            train_pred = rollout.predictions[: len(y_train)]
-            val_pred = rollout.predictions[len(y_train) :]
-            train_metrics = point_metrics(y_train, train_pred)
-            val_metrics = point_metrics(y_val, val_pred)
-
-            rolling_frame = rolling_origin_forecasts(
-                model_factory=model_factory,
-                y=combined_series,
-                horizons=list(search_config.rolling_horizons),
-                seed=_stable_seed(seed + 991, spec.spec_key),
-                initial_train_size=len(y_train),
-            )
-            rolling_metrics = rolling_metrics_by_horizon(rolling_frame)
-            rolling_mean_mae = mean_rolling_metric(rolling_frame, "mae")
-            rolling_mean_rmse = mean_rolling_metric(rolling_frame, "rmse")
-            blocked_summary = rolling_blocked_metric_summary(
-                rolling_frame,
-                metric_name="mae",
-                num_blocks=search_config.multi_split_blocks,
-            )
-            multi_split_mean_mae = blocked_summary["mean"]
-            multi_split_std_mae = blocked_summary["std"]
-            rolling_error_std = rolling_error_stability(rolling_frame)
-            multi_split_penalty = search_config.score_multi_split_std_weight * multi_split_std_mae
-            stability_penalty = search_config.score_stability_weight * rolling_error_std
-            complexity_components = discovery_complexity_penalty_components(
+            record = evaluate_structure_candidate(
+                series_name=series_name,
                 spec=spec,
-                param_count=fit_result.param_count,
-                num_compartments=len(model.compartment_names),
+                y_train=y_train,
+                y_val=y_val,
+                fit_config=fit_config,
                 search_config=search_config,
+                regularization_config=regularization_config,
+                seed=seed,
+                score_policy="stability_aware",
+                round_idx=round_idx,
             )
-            complexity_penalty = float(complexity_components["complexity_penalty"])
-            age_prior_penalty = age_structure_prior_penalty(series_name, spec, search_config)
-            score = multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty
-
-            record = {
-                "round": round_idx,
-                "spec_key": spec.spec_key,
-                "structure_name": spec.structure_name,
-                "fractional": spec.fractional,
-                "observation_map": spec.observation_map,
-                "delay_weeks": int(spec.delay_weeks),
-                "observation_family": observation_family(spec),
-                "num_free_params": fit_result.param_count,
-                "num_compartments": len(model.compartment_names),
-                "train_objective": fit_result.objective,
-                "train_mae": train_metrics["mae"],
-                "train_rmse": train_metrics["rmse"],
-                "val_mae": val_metrics["mae"],
-                "val_rmse": val_metrics["rmse"],
-                "val_smape": val_metrics["smape"],
-                "rolling_val_mean_mae": rolling_mean_mae,
-                "rolling_val_mean_rmse": rolling_mean_rmse,
-                "multi_split_blocks": search_config.multi_split_blocks,
-                "multi_split_val_mean_mae": multi_split_mean_mae,
-                "multi_split_val_std_mae": multi_split_std_mae,
-                "multi_split_penalty": multi_split_penalty,
-                "rolling_val_error_std": rolling_error_std,
-                "rolling_val_metrics": rolling_metrics,
-                "stability_penalty": stability_penalty,
-                "complexity_penalty": complexity_penalty,
-                "complexity_penalty_params": complexity_components["param_penalty"],
-                "complexity_penalty_compartments": complexity_components["compartment_penalty"],
-                "complexity_penalty_fractional": complexity_components["fractional_penalty"],
-                "complexity_penalty_observation": complexity_components["observation_penalty"],
-                "complexity_penalty_h_observation": complexity_components["h_observation_penalty"],
-                "complexity_penalty_delay": complexity_components["delay_penalty"],
-                "complexity_penalty_recurrence": complexity_components["recurrence_penalty"],
-                "age_prior_penalty": age_prior_penalty,
-                "score": score,
-                "params": fit_result.params,
-            }
             evaluated_records[spec.spec_key] = record
             logger.info(
                 "Search candidate done round=%d spec=%s score=%.6f multi_split_mae=%.6f multi_split_std=%.6f rolling_mae=%.6f stability=%.6f val_mae=%.6f age_prior=%.4f elapsed=%.1fs",
                 round_idx,
                 spec.spec_key,
-                score,
-                multi_split_mean_mae,
-                multi_split_std_mae,
-                rolling_mean_mae,
-                rolling_error_std,
-                val_metrics["mae"],
-                age_prior_penalty,
+                record["score"],
+                record["multi_split_val_mean_mae"],
+                record["multi_split_val_std_mae"],
+                record["rolling_val_mean_mae"],
+                record["rolling_val_error_std"],
+                record["val_mae"],
+                record["age_prior_penalty"],
                 time.perf_counter() - candidate_start,
             )
 
-            if score < best_score:
-                best_score = score
+            if record["score"] < best_score:
+                best_score = record["score"]
                 best_record = record
 
         for spec in beam:

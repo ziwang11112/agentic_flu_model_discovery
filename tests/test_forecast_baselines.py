@@ -93,6 +93,31 @@ def test_equal_weight_ensemble_excludes_failed_members_and_aligns_rolling_foreca
     assert rolling["prediction"].tolist() == [17.0]
 
 
+def test_equal_weight_ensemble_respects_configured_members(tmp_path: Path) -> None:
+    y = np.asarray([10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0])
+    split = ChronologicalSplit(train_end=3, val_end=5, n_obs=len(y))
+    series_root = tmp_path / "Overall"
+    _write_member_artifacts(series_root, "deterministic_seir", y, offset=1.0, target_rows=[5], failure=False)
+    _write_member_artifacts(series_root, "random_structure_discovery", y, offset=100.0, target_rows=[5], failure=False)
+
+    result = run_equal_weight_point_ensemble_family(
+        series_name="Overall",
+        y=y,
+        split=split,
+        horizons=[1],
+        artifact_dir=series_root / "equal_weight_point_ensemble",
+        seed=42,
+        ensemble_members=["deterministic_seir"],
+    )
+
+    metadata = result["summary"]["baseline_metadata"]
+    assert metadata["valid_members"] == ["deterministic_seir"]
+    assert any(
+        item["model_name"] == "random_structure_discovery" and item["reason"] == "not_in_ensemble_members"
+        for item in metadata["excluded_members"]
+    )
+
+
 def _write_member_artifacts(
     series_root: Path,
     model_name: str,

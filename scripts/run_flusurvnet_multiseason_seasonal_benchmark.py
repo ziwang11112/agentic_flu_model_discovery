@@ -30,7 +30,16 @@ from src.data.loader import (  # noqa: E402
 )
 from src.data.split import make_chronological_split  # noqa: E402
 from src.evaluation.baseline_pipeline import run_equal_weight_point_ensemble_family, run_forecast_baseline_family  # noqa: E402
-from src.evaluation.pipeline import run_delayed_observation_family, run_discovery_family, run_model_family  # noqa: E402
+from src.evaluation.pipeline import (  # noqa: E402
+    run_delayed_observation_family,
+    run_discovery_family,
+    run_exhaustive_discovery_family,
+    run_model_family,
+    run_no_observation_search_discovery_family,
+    run_no_stability_discovery_family,
+    run_random_discovery_family,
+    run_validation_only_discovery_family,
+)
 from src.evaluation.reporting import write_benchmark_reports  # noqa: E402
 from src.models.seihr_hospitalized import HospitalizedSEIHRModel  # noqa: E402
 from src.models.seir_delayed_observation import DelayedObservationSEIRModel  # noqa: E402
@@ -97,6 +106,13 @@ def _selected_series_filter(config: dict[str, Any]) -> set[str]:
     return {str(value) for value in config.get("benchmark", {}).get("series", [])}
 
 
+def _ensemble_members(config: dict[str, Any]) -> list[str] | None:
+    configured = config.get("benchmark", {}).get("ensemble_members")
+    if configured is None:
+        return None
+    return [str(value) for value in configured]
+
+
 def _run_one_model(
     *,
     model_name: str,
@@ -108,6 +124,7 @@ def _run_one_model(
     horizons: list[int],
     artifact_dir: Path,
     seed: int,
+    ensemble_members: list[str] | None = None,
 ) -> dict[str, Any]:
     if model_name in FORECAST_BASELINE_NAMES:
         return run_forecast_baseline_family(
@@ -127,6 +144,7 @@ def _run_one_model(
             horizons=horizons,
             artifact_dir=artifact_dir,
             seed=seed,
+            ensemble_members=ensemble_members,
         )
     if model_name == "deterministic_seir":
         return run_model_family(
@@ -189,6 +207,61 @@ def _run_one_model(
             artifact_dir=artifact_dir,
             seed=seed,
         )
+    if model_name == "random_structure_discovery":
+        return run_random_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "exhaustive_structure_discovery":
+        return run_exhaustive_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "validation_only_structure_selection":
+        return run_validation_only_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "no_observation_search_discovery":
+        return run_no_observation_search_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
+    if model_name == "no_stability_discovery":
+        return run_no_stability_discovery_family(
+            y=y,
+            series_name=series_name,
+            split=split,
+            fit_config=fit_config,
+            search_config=search_config,
+            horizons=horizons,
+            artifact_dir=artifact_dir,
+            seed=seed,
+        )
     raise ValueError(f"Unsupported model for FluSurv-NET multi-season benchmark: {model_name}")
 
 
@@ -207,6 +280,7 @@ def _run_series(
     y = series_frame["WEEKLY RATE"].to_numpy(dtype=float)
     series_root = ensure_dir(artifact_root / _slugify(series_name))
     series_frame.to_csv(series_root / "input_series.csv", index=False)
+    ensemble_members = _ensemble_members(config)
 
     results: list[dict[str, Any]] = []
     for offset, model_name in enumerate(_model_names(config)):
@@ -221,6 +295,7 @@ def _run_series(
             horizons=horizons,
             artifact_dir=series_root / model_name,
             seed=seed + offset * 101,
+            ensemble_members=ensemble_members,
         )
         results.append(result["comparison_row"])
 

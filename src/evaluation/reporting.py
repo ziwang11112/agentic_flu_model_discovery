@@ -22,6 +22,11 @@ MODEL_DIRECTORIES = {
     "delayed_observation_seir",
     "fractional_seir",
     "constrained_structure_discovery",
+    "random_structure_discovery",
+    "exhaustive_structure_discovery",
+    "validation_only_structure_selection",
+    "no_observation_search_discovery",
+    "no_stability_discovery",
     "equal_weight_point_ensemble",
 }
 
