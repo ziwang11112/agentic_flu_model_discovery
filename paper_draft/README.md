@@ -15,6 +15,14 @@ Main entry point:
 
 - `main.tex`
 
+Frozen result provenance:
+
+- main config: `configs/discovery_ablation.yaml`
+- artifact root: `artifacts_discovery_ablation`
+- main report: `reports/baseline_ablation_report.md`
+- result artifact commit: `09c93188e319aa51933f6029260fff2f3a09cd03`
+- paper integration commit: `3608b641dc45ab35a347059ef53567371ce62f1e`
+
 If `latexmk` is available, compile from this directory with:
 
 ```bash

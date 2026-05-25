@@ -7,6 +7,7 @@ This manifest freezes the discovery ablation result package for paper interpreta
 - Phase 0/1 implementation commit: `7ef36e574a84e0ceef784ce676ef87b6802d9e75`
 - Phase 2/3 implementation commit: `7d8ae4e48bf001ec24daacd413b7f403eb8c4392`
 - Result artifact commit: `09c93188e319aa51933f6029260fff2f3a09cd03`
+- Paper integration commit: `3608b641dc45ab35a347059ef53567371ce62f1e`
 - Branch: `codex-supplemental-experiment-results`
 
 ## Main Run

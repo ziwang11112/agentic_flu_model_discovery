@@ -20,6 +20,8 @@ This repository studies weekly influenza hospitalization-rate forecasting with i
 - Numerical failure flags are retained for transparency. Flagged rows remain in descriptive artifacts but are not used to support positive claims.
 - The frozen result manifest is [`reports/result_freeze_manifest.md`](reports/result_freeze_manifest.md), and the paper-oriented interpretation is [`reports/discovery_ablation_interpretation.md`](reports/discovery_ablation_interpretation.md).
 
+Frozen result provenance: main config `configs/discovery_ablation.yaml`, artifact root `artifacts_discovery_ablation`, main report `reports/baseline_ablation_report.md`, result artifact commit `09c93188e319aa51933f6029260fff2f3a09cd03`, and paper integration commit `3608b641dc45ab35a347059ef53567371ce62f1e`.
+
 ## Result Preview
 
 Overall-series model comparison:
