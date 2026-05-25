@@ -23,6 +23,15 @@ Frozen result provenance:
 - result artifact commit: `09c93188e319aa51933f6029260fff2f3a09cd03`
 - paper integration commit: `3608b641dc45ab35a347059ef53567371ce62f1e`
 
+Generated paper figures live under `figures/`. They can be rebuilt from frozen
+CSV artifacts with:
+
+```bash
+python ../scripts/build_paper_figures.py
+```
+
+The figure index is `../reports/paper_figure_index.md`.
+
 If `latexmk` is available, compile from this directory with:
 
 ```bash
