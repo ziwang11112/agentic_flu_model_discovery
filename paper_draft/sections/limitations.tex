@@ -22,6 +22,17 @@ Random search uses an explicit budget and seed. Conclusions should therefore
 be framed as evidence about this controlled discovery space rather than about
 all possible epidemic model structures.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_discovery_ablation_matrix.pdf}
+\caption{Supplementary discovery-ablation matrix. Cell values show
+rolling-origin MAE for same-grammar discovery variants, ranked within each age
+stratum by color. The figure is diagnostic evidence about the frozen grammar
+and budget, not a single-global-winner claim. Flagged
+cells are retained for transparency.}
+\label{fig:discovery-ablation-matrix}
+\end{figure}
+
 \paragraph{Objective dependence.}
 Held-out test MAE and rolling-origin MAE do not always select the same model.
 The results are best interpreted through objective-aware recommendations:
@@ -34,6 +45,15 @@ artifact tables so that optimizer and prediction-scale issues remain visible.
 These flagged rows are not removed from descriptive summaries, but they are
 not used to support positive claims. In particular, any statement involving a
 flagged model-series row should be treated as descriptive and caveated.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig5_numerical_failure_audit.pdf}
+\caption{Numerical failure flags by model family. Flagged rows are retained in
+the frozen artifacts for transparency and are not used to support positive
+claims.}
+\label{fig:numerical-failure-audit}
+\end{figure}
 
 \paragraph{Retrospective, dataset-specific evidence.}
 The strongest positive result is concentrated in the pediatric

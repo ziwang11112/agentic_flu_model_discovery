@@ -17,6 +17,16 @@ recommendation table derived from
 table reports both held-out test and rolling-origin winners because these
 objectives do not always agree.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_recommendation_map.pdf}
+\caption{Age- and objective-aware model recommendations from the frozen
+discovery-ablation run. Different age strata favor different model families
+and different evaluation objectives. The figure therefore supports
+objective-aware recommendation rather than a single global winner claim.}
+\label{fig:recommendation-map}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \small
@@ -85,12 +95,24 @@ error by \num{0.0564} on average for \texttt{0-4 yr}, with a bootstrap
 
 \subsection{Observation-search ablation evidence}
 
-Table~\ref{tab:observation-search-impact} compares
+Figure~\ref{fig:observation-search-impact} and
+Table~\ref{tab:observation-search-impact} compare
 \texttt{constrained\_structure\_discovery} with
 \texttt{no\_observation\_search\_discovery}. Positive deltas mean the
 observation-fixed ablation has higher error, so constrained discovery is
 better. The full table is
 \texttt{artifacts\_discovery\_ablation/observation\_search\_impact\_table.csv}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig2_observation_search_impact.pdf}
+\caption{Impact of observation-map search. Positive values mean that the
+observation-fixed ablation has higher error than constrained discovery. The
+clearest positive signal is in the pediatric strata, especially
+\texttt{0-4 yr}, where observation-aware constrained discovery selects a
+delayed infectious observation map and improves rolling-origin stability.}
+\label{fig:observation-search-impact}
+\end{figure}
 
 \begin{table}[H]
 \centering
@@ -136,6 +158,19 @@ These results are useful because they show that the benchmark is not tuned to
 force a discovery win. The discovery machinery identifies useful structure in
 selected strata, but it also exposes cases where simple forecasting or manual
 epidemic baselines are sufficient.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_paired_rolling_forest.pdf}
+\caption{Post-hoc paired rolling-origin comparisons against constrained
+discovery. Points show the mean rolling absolute-error difference
+(\emph{challenger minus constrained discovery}) and intervals show bootstrap
+95\% confidence intervals after aligning forecasts by series, horizon, and
+target week. Positive values favor constrained discovery; negative values
+favor the challenger. These comparisons summarize evidence after model
+selection and are not used for model selection.}
+\label{fig:paired-rolling-forest}
+\end{figure}
 
 \subsection{Objective-dependent recommendations}
 
