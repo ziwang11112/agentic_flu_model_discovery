@@ -9,6 +9,7 @@ Current sections:
 - `sections/method.tex`
 - `sections/experiments.tex`
 - `sections/results.tex`
+- `sections/limitations.tex`
 
 Main entry point:
 

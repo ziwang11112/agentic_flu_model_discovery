@@ -2,306 +2,167 @@
 
 \subsection{Main empirical takeaway}
 
-The strongest overall conclusion is not that one model family wins everywhere.
-Instead, the benchmark supports \emph{age-aware model selection under
-structural and observation uncertainty}. Strong hand-designed baselines remain
-competitive or superior for several series, while constrained discovery is
-clearly useful for selected age groups. Observation structure also matters:
-once the discovery grammar is allowed to search over delayed observation, it
-selects \texttt{delayed\_I} in multiple age groups, but it still does not
-select \texttt{H} or \texttt{I+H} in the current single-season benchmark.
+The frozen discovery-ablation package does not support a claim that one model
+dominates every stratum. Instead, it supports a more conservative and more
+useful conclusion: model choice is age-dependent and objective-dependent.
+Observation-aware constrained discovery is most compelling for the pediatric
+\texttt{0-4 yr} series, while adult strata often favor simple forecasting
+baselines or hand-specified epidemic models.
 
-\subsection{Observation-aware multi-seed point-forecast results}
+\subsection{No single global winner}
 
-Table~\ref{tab:obs-aware-summary} summarizes the current observation-aware
-five-seed aggregate. The table is based on
-\texttt{artifacts\_multiseed\_age\_robustness\_observation/} and reflects the
-latest non-LLM control benchmark.
+Table~\ref{tab:frozen-recommendations} summarizes the paper-ready
+recommendation table derived from
+\texttt{artifacts\_discovery\_ablation/paper\_recommendation\_table.csv}. The
+table reports both held-out test and rolling-origin winners because these
+objectives do not always agree.
 
 \begin{table}[H]
 \centering
-\caption{Observation-aware five-seed recommendation summary. The
-recommendation column reports the modal recommendation over seeds, while the
-``best test'' and ``best rolling'' columns summarize which model family most
-often wins the held-out test split and rolling-origin evaluation.}
-\label{tab:obs-aware-summary}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.45cm} >{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{2.7cm} >{\raggedright\arraybackslash}p{2.7cm} X}
+\small
+\caption{Frozen recommendation summary from the discovery-ablation run. The
+recommended model is the benchmark policy output, not a claim of universal
+dominance.}
+\label{tab:frozen-recommendations}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.35cm}
+>{\raggedright\arraybackslash}p{3.1cm}
+>{\raggedright\arraybackslash}p{2.25cm}
+>{\raggedright\arraybackslash}p{2.8cm}
+>{\raggedright\arraybackslash}p{2.8cm}
+X}
 \toprule
-Series & Recommended model & Best test pattern & Best rolling pattern & Interpretation \\
+Series & Recommended model & Decision type & Best test model & Best rolling model & Selected discovery structure \\
 \midrule
-Overall & \texttt{deterministic\_seir} & \texttt{delayed\_observation\_seir} wins $4/5$ seeds & split between deterministic and delayed baselines & Observation-aware manual baselines dominate discovery on the overall aggregate. \\
-0--4 yr & \texttt{constrained\_structure\_discovery} & discovery wins $5/5$ seeds & discovery wins $5/5$ seeds & Clearest stable discovery success case in the repository. \\
-5--17 yr & \texttt{constrained\_structure\_discovery} & discovery wins $4/5$ seeds & \texttt{probabilistic\_seir} wins $5/5$ seeds & Strong held-out discovery result, but rolling-origin stability still favors the probabilistic baseline. \\
-18--49 yr & \texttt{deterministic\_seir} & split across deterministic, delayed, and hospitalized baselines & deterministic wins $3/5$ seeds & Discovery is not competitive; the relevant comparison is among strong manual baselines. \\
-50--64 yr & \texttt{delayed\_observation\_seir} & \texttt{hospitalized\_seihr} wins $3/5$ seeds & delayed baseline wins $4/5$ seeds & Fair hospitalization-aware baselines largely replace discovery as the main story. \\
-$\geq$65 yr & \texttt{deterministic\_seir} & deterministic wins $3/5$ seeds & discovery wins $4/5$ seeds & The older-adult series remains split-sensitive between held-out and rolling-origin criteria. \\
+Overall & \texttt{delayed\_observation\_seir} & test preferred &
+\texttt{delayed\_observation\_seir} & \texttt{arima\_auto\_small} & -- \\
+\texttt{0-4 yr} & \texttt{constrained\_structure\_discovery} &
+stability preferred & \texttt{arima\_auto\_small} &
+\texttt{constrained\_structure\_discovery} &
+\texttt{SEIRS}, \texttt{delayed\_I}, delay 1 \\
+\texttt{5-17 yr} & \texttt{rolling\_mean\_2wk} & balanced tradeoff &
+\texttt{arima\_auto\_small} & \texttt{no\_stability\_discovery} & -- \\
+\texttt{18-49 yr} & \texttt{arima\_auto\_small} & consensus &
+\texttt{arima\_auto\_small} & \texttt{arima\_auto\_small} & -- \\
+\texttt{50-64 yr} & \texttt{exhaustive\_structure\_discovery} &
+balanced tradeoff & \texttt{validation\_only\_structure\_selection} &
+\texttt{delayed\_observation\_seir} & \texttt{SIR}, \texttt{I}, delay 0 \\
+\texttt{>= 65 yr} & \texttt{validation\_only\_structure\_selection} &
+stability preferred & \texttt{fractional\_seir} &
+\texttt{validation\_only\_structure\_selection} &
+\texttt{SEIRS}, \texttt{I}, delay 0 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The numerical aggregate reinforces this qualitative view. For the overall
-series, \texttt{delayed\_observation\_seir} achieves mean test
-MAE~\num{0.035056}, outperforming \texttt{deterministic\_seir}
-(\num{0.035205}) and discovery (\num{0.036967}). For \texttt{0-4 yr},
-discovery remains decisively best with mean test MAE~\num{0.090596} and mean
-rolling MAE~\num{0.123344}. In contrast, for \texttt{50-64 yr},
-\texttt{hospitalized\_seihr} wins held-out test most often while
-\texttt{delayed\_observation\_seir} dominates rolling-origin MAE, making this
-age group far less of a clean discovery-wins case than it appeared before the
-fair-baseline expansion.
+As an unfiltered descriptive average across the six frozen series,
+\texttt{constrained\_structure\_discovery} has the lowest mean test MAE
+(\num{0.0561}), followed closely by
+\texttt{validation\_only\_structure\_selection} (\num{0.0562}). This aggregate
+is not used as a global-win claim because some rows are numerically flagged
+and because series-level winners differ. For example, the \texttt{Overall}
+held-out split favors \texttt{delayed\_observation\_seir}, while
+\texttt{18-49 yr} favors \texttt{arima\_auto\_small} under both test and
+rolling-origin metrics.
 
-\begin{figure}[H]
-\centering
-\begin{subfigure}[t]{0.49\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{../artifacts_multiseed_age_robustness_observation/multiseed_test_mae_errorbars.png}
-  \caption{Held-out test MAE across five seeds.}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.49\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{../artifacts_multiseed_age_robustness_observation/multiseed_rolling_mae_errorbars.png}
-  \caption{Rolling-origin MAE across five seeds.}
-\end{subfigure}
-\caption{Observation-aware five-seed robustness plots. Error bars summarize
-between-seed variability.}
-\label{fig:obs-aware-multiseed}
-\end{figure}
+\subsection{Pediatric 0-4 yr is the strongest positive discovery finding}
 
-\subsection{Objective-aware policy interpretation}
+The clearest positive discovery result is the pediatric \texttt{0-4 yr}
+series. The benchmark recommends
+\texttt{constrained\_structure\_discovery} as the stability-preferred model,
+and the rolling-origin winner is also
+\texttt{constrained\_structure\_discovery}. The selected structure is
+\texttt{SEIRS} with a delayed infectious observation map
+\texttt{delayed\_I} and delay 1.
 
-The five-seed aggregate also benefits from a tie-aware policy layer. Rather
-than forcing a single recommendation whenever one mean error is numerically
-smallest, we define a practical tie separately for held-out test MAE and
-rolling-origin MAE:
-\[
-|m - m^\star| \leq \max(0.001, 0.02 m^\star),
-\]
-where $m^\star$ is the best mean metric for the current series and objective.
-Within each tie set, models are ranked by win rate, between-seed variability,
-parameter count, and simplicity priority. This produces
-\texttt{test\_policy\_model}, \texttt{rolling\_policy\_model}, and, when
-possible, a shared \texttt{parsimony\_policy\_model}.
+This is the strongest setting for the observation-aware discovery story
+because the selected delayed-observation structure is not merely a more complex
+variant of a manual SEIR baseline: it is selected by the constrained grammar
+and remains favorable under rolling-origin evaluation. The paired
+rolling-origin comparison further supports this interpretation. Against the
+observation-fixed ablation, constrained discovery reduces rolling absolute
+error by \num{0.0564} on average for \texttt{0-4 yr}, with a bootstrap
+95\% confidence interval from \num{0.0173} to \num{0.1082}.
 
-This policy layer changes how the benchmark should be interpreted. It shows
-that $4/6$ series have different held-out-test and rolling-origin policy
-winners, but only two series remain fully objective-dependent with no shared
-parsimonious compromise. The clean cases are still informative:
-\texttt{0--4 yr} remains a discovery win under both objectives, while
-\texttt{18--49 yr} collapses to a deterministic recommendation once practical
-ties are acknowledged. More interestingly, \texttt{Overall} becomes a
-practical tie between \texttt{deterministic\_seir} and
-\texttt{delayed\_observation\_seir}, with the deterministic model preferred as
-the simpler shared compromise. Likewise, \texttt{50--64 yr} has different test
-and rolling winners, yet discovery remains inside both tie sets and therefore
-survives as the parsimonious compromise even after fair hospitalization-aware
-baselines are added.
+\subsection{Observation-search ablation evidence}
 
-The implication is that the current non-LLM benchmark should be described not
-only as age-aware but also as objective-aware. Some series genuinely reward one
-model over another, but several series are better interpreted as practical ties
-whose final recommendation depends on whether the user prioritizes held-out
-split accuracy, rolling-origin stability, or model simplicity.
-
-\subsection{Discovery structure and observation semantics}
-
-Table~\ref{tab:discovery-structures} summarizes the structures selected by the
-observation-aware discovery grammar over five seeds.
+Table~\ref{tab:observation-search-impact} compares
+\texttt{constrained\_structure\_discovery} with
+\texttt{no\_observation\_search\_discovery}. Positive deltas mean the
+observation-fixed ablation has higher error, so constrained discovery is
+better. The full table is
+\texttt{artifacts\_discovery\_ablation/observation\_search\_impact\_table.csv}.
 
 \begin{table}[H]
 \centering
-\caption{Selected discovery structures in the observation-aware five-seed
-benchmark. Frequencies are computed over the five random seeds.}
-\label{tab:discovery-structures}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.45cm} >{\raggedright\arraybackslash}p{4.4cm} >{\raggedright\arraybackslash}p{1.6cm} X}
+\small
+\caption{Impact of disabling observation-map search. Positive deltas favor
+constrained discovery. The \texttt{>= 65 yr} discovery rows include numerical
+failure flags and should be interpreted descriptively rather than as positive
+evidence.}
+\label{tab:observation-search-impact}
+\begin{tabular}{lcccc}
 \toprule
-Series & Dominant selected structure(s) & Frequency & Interpretation \\
+Series & $\Delta$ test MAE & $\Delta$ rolling MAE & Constrained obs. & Fixed obs. \\
 \midrule
-Overall & \texttt{SIR|fractional=0|obs=I} & $1.0$ & Discovery stays simple when richer observation maps are unnecessary. \\
-0--4 yr & \texttt{SEIRS|obs=I} plus delayed variants with delay $1$ and $2$ & $0.6$ for \texttt{obs=I}; $0.4$ delayed combined & Discovery remains structure-rich and occasionally uses delayed observation in children. \\
-5--17 yr & \texttt{SEIRS} family with \texttt{obs=I}, \texttt{delayed\_I|delay=2}, and \texttt{delayed\_I|delay=3} & mixed & Discovery explores delay here, but the selected family remains SEIRS in every seed. \\
-18--49 yr & \texttt{SIR|fractional=0|obs=I} & $1.0$ & Observation search does not force extra complexity for this adult group. \\
-50--64 yr & \texttt{SIR|fractional=0|obs=I} & $1.0$ & Even after observation-grammar expansion, discovery selects the same simple latent structure. \\
-$\geq$65 yr & \texttt{SEIRS|fractional=1|obs=delayed\_I|delay=2} and \texttt{SEIRS|fractional=1|obs=I} & $0.6$ delayed, $0.4$ \texttt{I} & Older adults are the strongest case where delayed observation emerges stably from discovery. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Two points are especially important.
-
-\paragraph{Delayed observation emerges without LLMs.}
-The expanded grammar now allows the non-LLM discovery loop to recover explicit
-observation delay. In the current benchmark, \texttt{delayed\_I} is selected in
-children and older adults, including $3/5$ seeds for the
-$\geq$65-yr series.
-
-\paragraph{Hospitalization observation is not selected.}
-No selected discovery winner uses \texttt{obs=H} or \texttt{obs=I+H}. This
-does not imply that hospitalization-aware observation is universally useless:
-the manual \texttt{hospitalized\_seihr} baseline remains competitive in several
-age groups. Rather, it means that in the current proof-of-concept season, the
-non-LLM search finds stronger evidence for delayed infectious observation than
-for directly observing the hospitalized compartment.
-
-\subsection{Age-prior ablation}
-
-The observation-aware no-age-prior multi-seed rerun produced the same:
-\begin{itemize}[leftmargin=1.5em]
-\item \texttt{multiseed\_model\_summary.csv},
-\item \texttt{multiseed\_age\_group\_recommendation.csv}, and
-\item \texttt{multiseed\_discovery\_structure\_frequency.csv}
-\end{itemize}
-as the corresponding age-prior-enabled run.
-
-More concretely, the derived comparison tables show:
-\begin{itemize}[leftmargin=1.5em]
-\item no change in recommended model mode for any of the six series,
-\item no change in dominant discovery structure for any series,
-\item no change in dominant observation-map mode for any series,
-\item no change in dominant delay mode for any series, and
-\item zero difference in aggregate discovery test MAE and aggregate discovery
-rolling MAE for all six series.
-\end{itemize}
-
-This result matters because it rules out a simple confound: the delayed
-observation structures are not appearing merely because the search was given an
-age-specific structural preference. Instead, the current evidence suggests that
-the observation-aware discovery results are driven by the data and the
-validation-based search objective rather than by the age prior.
-
-\subsection{Uncertainty calibration}
-
-Although the main emphasis of the current paper core is on point forecasting,
-the uncertainty pipeline is already mature enough to report a stable default.
-Benchmark-level conformal calibration compares five calibration kinds and three
-validation-only winner rules. The current selected rule is the balanced
-\texttt{v3} rule.
-
-\begin{table}[H]
-\centering
-\caption{Comparison of validation-only conformal winner rules. Lower is better
-for all three metrics.}
-\label{tab:conformal-rules}
-\begin{tabular}{lccc}
-\toprule
-Rule & Mean absolute coverage gap & Mean interval score & Mean width \\
-\midrule
-v1 & \num{0.189394} & \num{0.460618} & \num{0.451670} \\
-v2 & \num{0.183838} & \num{0.484247} & \num{0.473100} \\
-v3 & \num{0.184343} & \num{0.465319} & \num{0.456298} \\
+Overall & \num{0.0333} & \num{0.0100} & \texttt{I} & \texttt{I} \\
+\texttt{0-4 yr} & \num{0.0026} & \num{0.0573} & \texttt{delayed\_I} & \texttt{I} \\
+\texttt{5-17 yr} & \num{0.0491} & \num{0.0519} & \texttt{delayed\_I} & \texttt{I} \\
+\texttt{18-49 yr} & \num{-0.0000} & \num{-0.0000} & \texttt{I} & \texttt{I} \\
+\texttt{50-64 yr} & \num{-0.0002} & \num{0.0017} & \texttt{I} & \texttt{I} \\
+\texttt{>= 65 yr} & \num{-0.0017} & \num{0.0573} & \texttt{I} & \texttt{I} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The practical interpretation is that v1 is too interval-score-driven, v2 is
-too coverage-gap-driven, and v3 provides the best current compromise. This is
-why the repository now treats benchmark-level conformal v3 as the default
-uncertainty postprocessor while keeping point-forecast selection separate.
+The observation-search effect is therefore not uniform. In several adult
+series, both constrained and fixed-observation searches select \texttt{I},
+producing little or no difference. In pediatric strata, especially
+\texttt{0-4 yr}, allowing the search to choose delayed infectious observation
+materially improves rolling-origin stability.
 
-\subsection{LLM engineering and live-provider validation status}
+\subsection{Adult strata remain competitive for simple and manual baselines}
 
-The repository has now moved beyond the non-LLM-only phase and contains three
-LLM layers: V0 proposal-only, V1 mock iterative refinement, and a clean
-two-series V1 live-provider smoke run. Their interpretation must remain
-careful. Mock-provider artifacts validate the orchestration and artifact
-protocol; live-provider artifacts begin to test whether a real model can
-produce useful structure proposals under the same no-test-leakage and hard
-validation constraints.
+The adult groups are important negative evidence against overclaiming. The
+\texttt{18-49 yr} series is best served by \texttt{arima\_auto\_small} in both
+the held-out test split and rolling-origin evaluation. In paired rolling-origin
+comparison, \texttt{arima\_auto\_small} has lower rolling absolute error than
+constrained discovery for \texttt{18-49 yr}, with mean difference
+\num{-0.0487} and a 95\% interval from \num{-0.0641} to \num{-0.0323}. On the
+\texttt{Overall} series, \texttt{arima\_auto\_small} is also stronger by
+rolling-origin MAE, while \texttt{delayed\_observation\_seir} is the best
+held-out test model.
 
-These LLM runs sit on top of a non-LLM benchmark that is already substantially
-hardened: it includes fair hospitalization-aware manual baselines,
-observation-aware discovery grammar, five-seed robustness analysis,
-no-age-prior ablations with identical aggregate outcomes, an objective-aware
-policy layer, and a fixed benchmark-level conformal postprocessor.
+These results are useful because they show that the benchmark is not tuned to
+force a discovery win. The discovery machinery identifies useful structure in
+selected strata, but it also exposes cases where simple forecasting or manual
+epidemic baselines are sufficient.
 
-\paragraph{LLM-V0.}
-The one-round proposal-only layer exercises the full pipeline: prompt-safe
-summary construction, proposer JSON output, critic annotation, hard validation,
-numerical execution, and structured comparison against the non-LLM reference
-discovery artifacts. This establishes that an LLM proposal layer can be
-inserted without changing the benchmark executor or exposing proposer/critic
-prompts to test-derived information.
+\subsection{Objective-dependent recommendations}
 
-\paragraph{LLM-V1 mock validation.}
-The iterative refinement layer runs end-to-end in mock mode. Across the six
-series, round-aware artifacts are produced for each proposer/critic round,
-including proposal audits, validation/rolling leaderboards, analyst feedback,
-and refinement traces. The V1 artifact validator confirms that the frozen
-\texttt{artifacts\_llm\_v1/} tree contains the required global and per-round
-files, that round-level prompts and traces do not contain banned test-derived
-terms, that round-level leaderboards exclude test columns, and that the report
-contains the required mock-provider disclaimer. These mock results are
-engineering smoke tests only and should not be interpreted as evidence of LLM
-reasoning quality.
+Several series have different test and rolling winners. The \texttt{50-64 yr}
+series has \texttt{validation\_only\_structure\_selection} as the best test
+model, but \texttt{delayed\_observation\_seir} as the best rolling-origin
+model. The \texttt{>= 65 yr} series has \texttt{fractional\_seir} as the best
+test model and \texttt{validation\_only\_structure\_selection} as the best
+rolling model. The \texttt{Overall} series similarly splits between
+\texttt{delayed\_observation\_seir} on test MAE and
+\texttt{arima\_auto\_small} on rolling-origin MAE.
 
-\paragraph{LLM-V1 live-provider all-series freeze.}
-After the two-series smoke run, LLM-V1 was run with a live provider on all six
-benchmark series under
-\texttt{artifacts\_llm\_v1\_openai\_all\_series\_freeze/}. The artifact
-validator passed: six series directories, 15 total rounds, and 171 files were
-checked, with no leakage failures and no forbidden test-metric columns in
-round-level leaderboards. Across all series, the provider generated 71 raw
-proposals; 69 were schema-valid, hard-valid, and evaluated, giving an aggregate
-evaluated proposal rate of \num{0.972}.
+The appropriate paper claim is therefore objective-aware and age-aware:
+recommendations should state whether the priority is a fixed held-out split,
+rolling-origin stability, or interpretability. The frozen artifacts support
+this policy framing more strongly than a single leaderboard winner.
 
-\begin{table}[H]
-\centering
-\caption{Clean all-series live-provider LLM-V1 freeze results. Scores are
-validation/rolling-selected composite scores. Test MAE is reported only after
-the final candidate is selected. Candidate budgets are not matched, so these
-numbers should not be interpreted as efficiency evidence.}
-\label{tab:llm-v1-live-freeze}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{4.4cm} c c c c X}
-\toprule
-Series & Selected V1 structure & Round & V1 score & V0 score & Non-LLM score & Interpretation \\
-\midrule
-Overall & \texttt{SEIR|fractional=0|obs=delayed\_I|delay=1} & 1 & \num{0.369973} & \num{0.317918} & \num{0.317918} & V1 proposes delayed observation but does not improve over the simpler V0/non-LLM SIR reference. \\
-0--4 yr & \texttt{SEIRS|fractional=0|obs=I} & 2 & \num{0.341377} & \num{0.346885} & \num{0.344818} & V1 improves over both V0 and the non-LLM reference score, with round-two refinement. \\
-5--17 yr & \texttt{SEIRS|fractional=0|obs=delayed\_I|delay=2} & 2 & \num{0.288766} & \num{0.335852} & \num{0.273314} & V1 improves over V0 but remains worse than non-LLM discovery. Refinement still improves the V1 trajectory. \\
-18--49 yr & \texttt{SEIR|fractional=0|obs=delayed\_I|delay=2} & 1 & \num{0.325325} & \num{0.250177} & \num{0.260602} & V1 overcomplicates a series where simple \texttt{SIR|obs=I} remains stronger. \\
-50--64 yr & \texttt{SEIR|fractional=0|obs=I} & 3 & \num{0.266879} & \num{0.222208} & \num{0.222209} & Refinement improves V1 internally, but not enough to beat the simple SIR references. \\
-$\geq$65 yr & \texttt{SEIRS|fractional=1|obs=delayed\_I|delay=1} & 1 & \num{0.530717} & \num{0.536832} & \num{0.493660} & V1 improves over V0 but not over non-LLM discovery, which selects the same family with delay 2. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\subsection{Numerical failure audit}
 
-Refinement improved the V1 validation/rolling score for three of six series:
-\texttt{0--4 yr} improved from \num{0.434743} to \num{0.341377},
-\texttt{5--17 yr} improved from \num{0.323247} to \num{0.288766}, and
-\texttt{50--64 yr} improved from \num{0.273996} to \num{0.266879}. The other
-three series selected a round-one candidate and stopped without improvement.
+The frozen summary retains numerical diagnostics for every model-series row.
+There are 11 flagged rows among 108 model-series evaluations. The most common
+flagged model is \texttt{hospitalized\_seihr}, with five flagged series. The
+flagged rows are listed in
+\texttt{artifacts\_discovery\_ablation/numerical\_failure\_summary.csv} and
+summarized in \texttt{reports/numerical\_failure\_audit.md}.
 
-\paragraph{Interpretation boundary.}
-The live all-series freeze supports a limited feasibility claim: a live
-provider can generate mostly hard-valid, semantically aligned structures under
-the current leakage guard, and V1 refinement can improve the validation/rolling
-objective in selected age groups. It does not support a global claim that
-LLM-V1 beats non-LLM discovery. V1 improves over V0 on three of six series, but
-it improves over the non-LLM reference score only for \texttt{0--4 yr}. The
-observation-aware non-LLM discovery baseline remains the stronger overall
-reference.
-
-\subsection{Implications for the next phase}
-
-The next phase should therefore not return to micro-tuning the non-LLM search
-space. That groundwork is already strong. The live-provider all-series freeze
-also shows that the current agentic loop is operational, but not yet clearly
-superior to the non-LLM constrained search.
-
-The practical order is:
-\begin{enumerate}[leftmargin=1.5em]
-\item treat the current all-series live-provider result as the first frozen
-LLM-V1 evidence set;
-\item avoid claiming global LLM dominance over non-LLM discovery;
-\item use the result to motivate better candidate-budget matching and stronger
-live-provider prompt/critic variants; and
-\item only then decide whether a revised live-provider loop is strong enough
-for a paper-level performance claim.
-\end{enumerate}
-
-In other words, the current contribution already supports the agentic claim at
-the engineering-method level:
-\emph{validation-feedback-driven structure refinement under hard mechanistic
-constraints}. The live-provider result strengthens the feasibility argument,
-but the performance claim should remain conservative because the non-LLM
-observation-aware discovery baseline remains highly competitive.
+Models flagged for numerical instability are retained for transparency but are
+not used to support positive claims. This is particularly relevant for any
+interpretation involving the flagged \texttt{>= 65 yr} constrained-discovery
+row.

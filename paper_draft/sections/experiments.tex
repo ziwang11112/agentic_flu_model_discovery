@@ -5,224 +5,126 @@
 We study weekly influenza hospitalization-rate forecasting using a
 FluSurv-NET CSV export. The benchmark reads the raw file with
 \texttt{skiprows=2}, removes non-tabular disclaimer rows with missing
-\texttt{WEEK} or \texttt{YEAR.1}, sorts chronologically by year and week, and
-creates a continuous time index. The primary target series is the weekly
-hospitalization rate for the \emph{Entire Network} catchment with all other
-metadata fields set to \emph{Overall}. We also evaluate five age-stratified
-series: \texttt{0-4 yr}, \texttt{5-17 yr}, \texttt{18-49 yr},
-\texttt{50-64 yr}, and \texttt{>= 65 yr}.
-
-All epidemic models operate in normalized population units with latent
-compartment states summing approximately to one, except for numerical
-deviations controlled by explicit mass-conservation penalties.
-
-\subsection{Chronological splits and metrics}
+\texttt{WEEK} or \texttt{YEAR.1}, sorts observations chronologically by year
+and week, and creates a continuous weekly time index. The primary series is
+the weekly hospitalization rate for the \emph{Entire Network} catchment with
+all other metadata fields set to \emph{Overall}. We also evaluate five
+age-stratified series: \texttt{0-4 yr}, \texttt{5-17 yr},
+\texttt{18-49 yr}, \texttt{50-64 yr}, and \texttt{>= 65 yr}.
 
 For each series, we use a chronological split with the first $60\%$ of weeks
-for training, the next $20\%$ for validation, and the last $20\%$ for test.
-In addition to fixed held-out test evaluation, we run rolling-origin
-forecasting at horizons $1$, $2$, and $4$ weeks ahead.
+for training, the next $20\%$ for validation, and the last $20\%$ for held-out
+test evaluation. In addition to fixed test evaluation, we compute
+rolling-origin forecasts at horizons $1$, $2$, and $4$ weeks ahead. The primary
+point metrics are MAE, RMSE, and sMAPE; probabilistic models also report
+interval and likelihood diagnostics when available.
 
-Point-forecast evaluation uses:
-\begin{itemize}[leftmargin=1.5em]
-\item mean absolute error (MAE),
-\item root mean squared error (RMSE), and
-\item sMAPE.
-\end{itemize}
+\subsection{Frozen result package}
 
-For probabilistic forecasts, we also track negative log-likelihood, empirical
-interval coverage, average interval width, and interval score. Uncertainty
-calibration is handled separately at the benchmark level and does not modify
-point forecasts.
+The discovery-ablation results used in this draft are frozen in the branch
+\texttt{codex-supplemental-experiment-results}. The implementation commit is
+\texttt{7d8ae4e48bf001ec24daacd413b7f403eb8c4392}; the result artifact commit
+is \texttt{09c93188e319aa51933f6029260fff2f3a09cd03}. The result-freeze
+manifest is \texttt{reports/result\_freeze\_manifest.md}.
 
-\subsection{Model families}
+The main result configuration is
+\texttt{configs/discovery\_ablation.yaml}. It writes artifacts under
+\texttt{artifacts\_discovery\_ablation/}, including
+\texttt{benchmark\_model\_summary.csv},
+\texttt{benchmark\_series\_winners.csv},
+\texttt{age\_group\_recommendation.csv}, and
+\texttt{paired\_rolling\_error\_comparison.csv}. Paper-ready compact tables
+are derived from those frozen artifacts without rerunning experiments.
 
-The benchmark currently compares six model families:
+\subsection{Model families and opt-in forecasting baselines}
+
+The historical default benchmark remains unchanged: when
+\texttt{benchmark.models} is absent, the repository runs only the six original
+core models:
 \begin{enumerate}[leftmargin=1.5em]
-\item \texttt{deterministic\_seir}: a seasonal discrete-time SEIR baseline with
-observation model $\hat{y}_t = \rho I_t$.
-\item \texttt{probabilistic\_seir}: the same latent dynamics with Student-$t$
-observations and bootstrap-based uncertainty.
-\item \texttt{fractional\_seir}: a fractional-order extension with shared order
-$\alpha \in [0.7, 1.0]$.
-\item \texttt{hospitalized\_seihr}: a hospitalization-aware baseline with
-compartments $(S,E,I,H,R)$ and observation model $\hat{y}_t = \rho H_t$.
-\item \texttt{delayed\_observation\_seir}: standard SEIR dynamics with delayed
-observation $\hat{y}_t = \rho I_{t-d}$, where $d \in \{0,1,2,3\}$ is chosen by
-validation MAE only.
-\item \texttt{constrained\_structure\_discovery}: a non-LLM propose-fit-verify-
-refine search over a small epidemic grammar.
+\item \texttt{deterministic\_seir},
+\item \texttt{probabilistic\_seir},
+\item \texttt{hospitalized\_seihr},
+\item \texttt{delayed\_observation\_seir},
+\item \texttt{fractional\_seir}, and
+\item \texttt{constrained\_structure\_discovery}.
 \end{enumerate}
 
-The manual \texttt{hospitalized\_seihr} baseline was corrected in the current
-round to allow both direct recovery $I \rightarrow R$ and hospitalization
-$I \rightarrow H \rightarrow R$, rather than forcing every infectious
-individual through the hospitalized compartment.
-
-\subsection{Observation-aware constrained discovery}
-
-The discovery procedure searches over both latent structure and observation
-semantics. The allowed compartment templates are:
-\[
-\texttt{SIR}, \texttt{SEIR}, \texttt{SEIRS}, \texttt{SEIHR}, \texttt{SEIAR}.
-\]
-
-The current grammar also supports:
+The frozen discovery-ablation configuration is opt-in and explicitly adds
+standard forecasting baselines:
 \begin{itemize}[leftmargin=1.5em]
-\item a fractional toggle,
-\item observation maps \texttt{I}, \texttt{H}, \texttt{I+H}, and
-\texttt{delayed\_I},
-\item observation delays of $1$, $2$, or $3$ weeks for
-\texttt{delayed\_I}.
+\item persistence and rolling means:
+\texttt{last\_observed}, \texttt{rolling\_mean\_2wk}, and
+\texttt{rolling\_mean\_4wk};
+\item small validation-selected ARIMA:
+\texttt{arima\_auto\_small};
+\item lagged regression baselines:
+\texttt{lagged\_ridge} and \texttt{lagged\_gradient\_boosting}; and
+\item an explicit \texttt{equal\_weight\_point\_ensemble}.
 \end{itemize}
+The ensemble is restricted by \texttt{benchmark.ensemble\_members} so that it
+does not accidentally average discovery-ablation variants.
 
-Structural validity rules enforce biologically plausible infection flow,
-eventual recovery, no isolated compartments, and compatibility between
-observation maps and available compartments. For example, \texttt{obs=H} and
-\texttt{obs=I+H} are only valid when an $H$ compartment exists, while
-\texttt{obs=delayed\_I} requires an $I$ compartment.
+\subsection{Discovery-specific ablations}
 
-The discovery loop is programmatic rather than language-model-driven. Starting
-from \texttt{SEIR}, the procedure repeatedly:
-\begin{enumerate}[leftmargin=1.5em]
-\item proposes one-hop neighbors,
-\item validates each candidate structure,
-\item fits valid candidates,
-\item scores them on validation and rolling-origin behavior,
-\item retains the top beam, and
-\item stops early when the search stagnates.
-\end{enumerate}
+The constrained discovery model searches a bounded epidemic grammar over
+latent structures, fractional dynamics, observation maps, and delayed
+observation. The candidate structures are drawn from
+\texttt{SIR}, \texttt{SEIR}, \texttt{SEIRS}, \texttt{SEIHR}, and
+\texttt{SEIAR}; observation maps include \texttt{I}, \texttt{H},
+\texttt{I+H}, and \texttt{delayed\_I}. Validity rules reject observation maps
+whose required compartments are absent.
 
-To keep the search space controlled, delayed-observation neighbors are only
-generated from \texttt{SIR}, \texttt{SEIR}, and \texttt{SEIRS}, while
-\texttt{SEIHR} candidates prioritize \texttt{obs=I}, \texttt{obs=H}, and
-\texttt{obs=I+H}. Complexity scoring includes penalties for additional free
-parameters, compartments, recurrence, fractional order, observation-map
-complexity, and delayed observation length.
+The frozen ablation run evaluates five discovery-specific alternatives:
+\begin{description}[leftmargin=1.5em]
+\item[\texttt{random\_structure\_discovery}] randomly samples the same grammar
+under an explicit candidate budget and records the requested budget, actual
+budget, universe size, repeats, and seed.
+\item[\texttt{exhaustive\_structure\_discovery}] evaluates the full valid
+candidate universe for the current grammar. In the frozen run this universe has
+44 candidates, below the configured guard of 200.
+\item[\texttt{validation\_only\_structure\_selection}] selects strictly by
+validation MAE. Complexity and age-prior penalties are recorded as diagnostics
+but are not used in the score.
+\item[\texttt{no\_observation\_search\_discovery}] uses the stability-aware
+score but restricts the candidate universe to \texttt{observation\_map=I}.
+\item[\texttt{no\_stability\_discovery}] keeps multi-split, complexity, and
+age-prior terms but removes the rolling stability penalty from the score.
+\end{description}
 
-\subsection{Seeds, robustness, and ablations}
+Every discovery leaderboard records the score policy, score formula, component
+metrics, penalties, and boolean flags indicating which components enter the
+score. The selected structure is then evaluated by the same final model-family
+pipeline as the core epidemic models.
 
-The main robustness analysis uses five seeds:
+\subsection{No-leakage evaluation design}
+
+All selection decisions use only training, validation, and rolling-validation
+information. ARIMA order selection uses validation MAE only and is refit on
+train-plus-validation before test evaluation. Discovery structure selection
+uses candidate scores computed from training and validation windows. Delayed
+observation delay selection is validation-only. Held-out test metrics are
+computed only after the model specification or baseline hyperparameter choice
+has been fixed.
+
+The paired rolling-origin comparison is post-hoc reporting rather than model
+selection. It loads frozen model artifacts, identifies \texttt{series\_name}
+and \texttt{model\_name} from each \texttt{metrics.json}, and aligns rolling
+forecasts by \texttt{series\_name}, \texttt{horizon}, and \texttt{target\_t}.
+The reported sign convention is
 \[
-\{0, 1, 2, 42, 2024\}.
+\Delta = \text{MAE}_{\text{challenger}} -
+         \text{MAE}_{\text{constrained discovery}},
 \]
-For each seed, we rerun the full age-stratified benchmark and aggregate mean
-performance, standard deviations, and win rates.
+so positive values indicate lower rolling absolute error for constrained
+discovery.
 
-We also ran two ablations relevant to the current paper narrative.
+\subsection{Numerical diagnostics}
 
-\paragraph{Age-prior ablation.}
-The discovery score contains an optional age-specific prior over structure
-families. A single-seed age-prior ablation and a five-seed observation-aware
-no-age-prior rerun both showed identical selected structures and identical
-aggregate model summaries relative to the age-prior-enabled run. In the
-observation-aware multi-seed setting, the ablation also leaves the dominant
-observation map and dominant delay mode unchanged for every series. This
-strongly suggests that the current discovery patterns are not being trivially
-forced by the age prior.
-
-\paragraph{Benchmark-level conformal calibration.}
-Probabilistic interval calibration is handled as a separate benchmark-level
-post-processing step, not inside model fitting. Five calibration kinds are
-compared (\texttt{raw}, \texttt{scale\_calibrated},
-\texttt{conformal\_absolute}, \texttt{conformal\_standardized},
-\texttt{conformal\_asymmetric}), and calibration-method selection is based on
-validation only. The current default winner-selection rule is the balanced
-\texttt{v3} rule, which preserves nearly the same coverage gap as the most
-coverage-oriented rule while reducing interval score and width.
-
-\subsection{Implementation details}
-
-All models use multiple random restarts and explicit penalties for negative
-states and mass-conservation violations. The current age-robustness benchmark
-uses six restarts for each train fit, one restart for rolling-origin refits,
-and a maximum of 250 optimization iterations per restart. The discovery beam
-width is five, the maximum number of rounds is twenty, and search uses both
-validation MAE and rolling-origin stability criteria. The codebase is fully
-tested, with plain \texttt{pytest -q} supported via a repository-level
-\texttt{pytest.ini}.
-
-\subsection{LLM-guided comparison protocol}
-
-The repository now contains two LLM-facing layers that sit on top of the
-existing non-LLM benchmark rather than replacing it.
-
-\paragraph{LLM-V0.}
-LLM-V0 is a proposal-only layer. It constructs a prompt-safe series summary,
-adds a static hospitalization-semantics card, asks a proposer for JSON
-structure candidates, asks a critic for annotations, applies the same hard
-validator used by the non-LLM discovery pipeline, and then evaluates all
-hard-valid candidates with the existing numerical executor. It therefore tests
-whether proposal parsing, leakage guards, hard validation, and non-LLM
-executor reuse all work end-to-end.
-
-\paragraph{LLM-V1.}
-LLM-V1 adds iterative refinement. Round 1 matches V0:
-\[
-\texttt{summary} \rightarrow \texttt{semantics} \rightarrow
-\texttt{proposer} \rightarrow \texttt{critic} \rightarrow
-\texttt{hard validator} \rightarrow \texttt{executor}.
-\]
-For rounds $r \geq 2$, a result analyst reads only validation- and
-rolling-derived outputs from round $r-1$ and emits bounded feedback for the
-next proposer call. The proposer is then restricted to small edits around the
-previous best candidate, after which the critic, hard validator, and executor
-run again.
-
-\paragraph{Comparison design.}
-The intended LLM comparison is three-way:
-\begin{enumerate}[leftmargin=1.5em]
-\item \textbf{LLM-V0}: one-shot proposal-only search;
-\item \textbf{LLM-V1}: iterative validation-feedback refinement; and
-\item \textbf{non-LLM constrained discovery}: the observation-aware discovery
-baseline already used throughout the repository.
-\end{enumerate}
-
-This comparison is not meant to ask only whether the LLM achieves a lower test
-MAE. Instead, it asks whether an agentic refinement loop improves proposal
-quality, semantic alignment, and validation-selected candidate quality under
-the same mechanistic constraints and executor.
-
-\paragraph{Prompt-safe inputs and no-test leakage.}
-All LLM-facing inputs are built from prompt-safe summaries. The proposer,
-critic, and analyst are not allowed to see:
-\begin{itemize}[leftmargin=1.5em]
-\item held-out test metrics such as \texttt{test\_mae}, \texttt{test\_rmse},
-or \texttt{test\_smape},
-\item best-test model identifiers,
-\item test-policy recommendations, and
-\item test-winner files such as \texttt{benchmark\_series\_winners}.
-\end{itemize}
-Allowed prompt content includes only series identity, training summary,
-validation summary, rolling validation summary, surveillance semantics, current
-non-test discovery structure modes, and previous-round validation/rolling
-feedback. Held-out test metrics are computed only after the final
-validation/rolling-selected candidate is fixed.
-
-\paragraph{Evaluation metrics.}
-The LLM protocol tracks six classes of outputs:
-\begin{itemize}[leftmargin=1.5em]
-\item \textbf{valid proposal rate}: fraction of raw proposals that become
-hard-valid candidates;
-\item \textbf{candidate efficiency}: number of evaluated candidates relative to
-the non-LLM reference search budget;
-\item \textbf{best validation score}: the best composite
-validation/rolling-oriented discovery score reached in the run;
-\item \textbf{rolling validation MAE}: the mean rolling-origin validation MAE
-of the selected candidate;
-\item \textbf{selected-candidate test MAE}: held-out test MAE computed only
-after the final validation-selected candidate is fixed; and
-\item \textbf{semantic alignment}: whether proposed observation maps are
-consistent with the hospitalization-rate target.
-\end{itemize}
-Efficiency claims are explicitly suppressed unless the LLM and non-LLM budgets
-are matched.
-
-\paragraph{Provider distinction.}
-The LLM stack now supports both \texttt{provider=mock} and
-\texttt{provider=openai}. The mock provider is used for engineering validation:
-schema enforcement, leakage guards, round-aware artifact generation, and
-executor reuse. Live-provider runs are the appropriate setting for scientific
-evaluation, but only after the resulting artifacts are validated and frozen
-under the same protocol. The currently frozen repository artifacts remain
-mock-provider engineering runs.
+The frozen benchmark retains all model-series rows for transparency, including
+rows flagged by numerical diagnostics. The summary table records fit-status
+fields, maximum prediction magnitudes, and a
+\texttt{numerical\_failure\_flag}. Flagged rows are reported in
+\texttt{artifacts\_discovery\_ablation/numerical\_failure\_summary.csv} and
+summarized in \texttt{reports/numerical\_failure\_audit.md}. These rows are not
+used to support positive claims.

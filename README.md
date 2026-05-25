@@ -8,17 +8,17 @@ Can a reproducible propose-fit-verify-refine search over a small epidemic-model 
 
 ## Abstract
 
-This repository studies weekly influenza hospitalization-rate forecasting with interpretable epidemic models under a fully reproducible benchmarking pipeline. Using a FluSurv-NET CSV export, the project compares four model families: a manual deterministic SEIR baseline, a manual probabilistic SEIR with Student-t observations, a manual fractional SEIR, and a constrained structure-discovery procedure over a small epidemic-model grammar. The discovery procedure is programmatic rather than language-model-driven: candidate structures are proposed, checked against biological validity rules, fit to data, ranked on rolling-origin validation behavior, and refined iteratively. On the current proof-of-concept season, the overall series is still best served by strong manual baselines, but constrained discovery is clearly useful for selected age groups. The main practical conclusion is that age-aware model selection and stability-aware discovery are more promising than pursuing a single globally best model family.
+This repository studies weekly influenza hospitalization-rate forecasting with interpretable epidemic models under a reproducible benchmarking pipeline. Using a FluSurv-NET CSV export, the frozen discovery-ablation run compares hand-specified epidemic models, opt-in forecasting baselines, constrained structure discovery, same-grammar discovery ablations, and paired rolling-origin error summaries. The discovery procedure is programmatic rather than language-model-driven: candidate structures are checked against biological validity rules, fit to data, ranked on validation and rolling-origin behavior, and evaluated on held-out test data only after selection is fixed. The current evidence does not support a single globally dominant model family. Instead, it supports age-aware and objective-aware model recommendations under structural and observation uncertainty.
 
 ## Key Findings
 
-- After making observation structure first-class in discovery and rerunning the five-seed benchmark, `0-4 yr` remains the clearest stable win for `constrained_structure_discovery`.
-- Discovery now selects `delayed_I` observation maps in children and older adults, but it does not select `H` or `I+H` in the current season-level benchmark.
-- `Overall` is now best served on held-out test MAE by `delayed_observation_seir`, while `18-49 yr` and `50-64 yr` are more competitive for stronger manual hospitalization-aware baselines than they were in the earlier grammar.
-- `5-17 yr` and `>= 65 yr` remain split-sensitive: discovery often proposes semantically richer delayed-observation structures, but the rolling-origin winner is still different from the held-out test winner.
-- Observation-aware five-seed no-age-prior ablation shows no change in recommended models, selected discovery structures, selected observation maps, delay modes, or aggregate discovery MAE, suggesting the observed delayed-observation pattern is not being trivially forced by the age prior.
-- A tie-aware objective-policy summary shows that `4/6` age groups have different held-out-test and rolling-origin preferences, so several series are better described as practical ties or objective-dependent choices than as single-model wins.
-- The main repository claim is now age-aware model selection under structural and observation uncertainty, not a single globally best model family or a single globally best observation map.
+- Across the six frozen FluSurv-NET series, no model dominates all strata. The appropriate claim is age-aware and objective-aware model recommendation, not discovery-wide or SOTA dominance.
+- Observation-aware constrained discovery is most useful for the pediatric `0-4 yr` series, where the selected `SEIRS` delayed-observation structure improves rolling-origin stability relative to an observation-fixed ablation.
+- Adult strata often favor simpler forecasting baselines or hand-specified epidemic models. For example, `18-49 yr` favors `arima_auto_small`, while the `Overall` held-out split favors `delayed_observation_seir`.
+- Discovery ablations are now frozen for review: `random_structure_discovery`, `exhaustive_structure_discovery`, `validation_only_structure_selection`, `no_observation_search_discovery`, and `no_stability_discovery`.
+- Paired rolling-origin comparisons are reported post hoc by aligning forecasts on `series_name`, `horizon`, and `target_t`; they are not used for model selection.
+- Numerical failure flags are retained for transparency. Flagged rows remain in descriptive artifacts but are not used to support positive claims.
+- The frozen result manifest is [`reports/result_freeze_manifest.md`](reports/result_freeze_manifest.md), and the paper-oriented interpretation is [`reports/discovery_ablation_interpretation.md`](reports/discovery_ablation_interpretation.md).
 
 ## Result Preview
 

@@ -29,11 +29,11 @@
 \begin{abstract}
 This draft captures the current experimental and empirical core of
 \texttt{agentic\_flu\_model\_discovery}. The benchmark compares deterministic,
-probabilistic, fractional, hospitalization-aware, and delayed-observation
-manual baselines against a constrained non-LLM discovery loop over epidemic
-structure and observation maps. The current evidence supports age-aware model
-selection under structural and observation uncertainty rather than a single
-globally dominant model family.
+probabilistic, fractional, hospitalization-aware, delayed-observation, and
+standard forecasting baselines against constrained non-LLM discovery and
+same-grammar discovery ablations. The current frozen evidence supports
+age-aware and objective-aware model selection under structural and observation
+uncertainty rather than a single globally dominant model family.
 \end{abstract}
 
 \tableofcontents
@@ -42,5 +42,6 @@ globally dominant model family.
 \input{sections/method}
 \input{sections/experiments}
 \input{sections/results}
+\input{sections/limitations}
 
 \end{document}
