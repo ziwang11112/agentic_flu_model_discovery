@@ -82,11 +82,19 @@ MODEL_FAMILIES = {
 }
 
 FAMILY_COLORS = {
-    "Forecasting baseline": "#56B4E9",
-    "Manual epidemic baseline": "#E69F00",
-    "Constrained discovery": "#009E73",
-    "Discovery ablation": "#CC79A7",
-    "Ensemble": "#999999",
+    "Forecasting baseline": "#2F6F9F",
+    "Manual epidemic baseline": "#B36B00",
+    "Constrained discovery": "#007A5E",
+    "Discovery ablation": "#9A4D7A",
+    "Ensemble": "#6F6F6F",
+}
+
+FAMILY_FACE_COLORS = {
+    "Forecasting baseline": "#E8F2F8",
+    "Manual epidemic baseline": "#F8EAD1",
+    "Constrained discovery": "#DFF1EA",
+    "Discovery ablation": "#F3E2ED",
+    "Ensemble": "#ECECEC",
 }
 
 FIGURE_CAPTIONS = {
@@ -129,12 +137,18 @@ def _set_style() -> None:
         {
             "figure.dpi": 120,
             "savefig.dpi": 220,
-            "font.size": 10,
-            "axes.titlesize": 14,
+            "font.family": "DejaVu Sans",
+            "font.size": 9.5,
+            "axes.titlesize": 13,
             "axes.labelsize": 11,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
             "legend.fontsize": 9,
+            "axes.edgecolor": "#333333",
+            "axes.linewidth": 0.8,
+            "grid.color": "#CFCFCF",
+            "grid.linewidth": 0.7,
+            "grid.alpha": 0.28,
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
         }
@@ -170,36 +184,57 @@ def build_recommendation_map() -> None:
         ("best_rolling_model", "Best rolling"),
     ]
 
-    fig, ax = plt.subplots(figsize=(10.5, 5.2))
+    fig, ax = plt.subplots(figsize=(10.4, 5.35))
     ax.set_xlim(-1.25, len(columns))
     ax.set_ylim(-0.8, len(df) + 0.4)
     ax.axis("off")
-    ax.set_title("Age- and objective-aware model recommendations", pad=18, weight="bold")
+    ax.set_title("Age- and objective-aware model recommendations", pad=18, weight="semibold")
+    ax.text(
+        0.5,
+        1.005,
+        "Frozen discovery-ablation run; colors identify model families",
+        transform=ax.transAxes,
+        ha="center",
+        va="bottom",
+        fontsize=9,
+        color="#555555",
+    )
 
     for col_idx, (_, label) in enumerate(columns):
-        ax.text(col_idx + 0.5, len(df) - 0.08, label, ha="center", va="bottom", weight="bold")
+        ax.text(col_idx + 0.5, len(df) - 0.08, label, ha="center", va="bottom", weight="semibold")
 
     for row_idx, row in df.iterrows():
         y = len(df) - row_idx - 1
-        ax.text(-0.16, y + 0.5, str(row["series_name"]), ha="right", va="center", weight="bold")
+        ax.text(-0.16, y + 0.5, str(row["series_name"]), ha="right", va="center", weight="semibold")
         for col_idx, (col_name, _) in enumerate(columns):
             model = str(row[col_name])
             family = _family_for_model(model)
             color = FAMILY_COLORS[family]
-            rect = patches.Rectangle(
-                (col_idx + 0.02, y + 0.08),
+            face_color = FAMILY_FACE_COLORS[family]
+            rect = patches.FancyBboxPatch(
+                (col_idx + 0.03, y + 0.1),
                 0.96,
-                0.84,
-                facecolor=color,
-                edgecolor="white",
-                linewidth=1.4,
+                0.8,
+                boxstyle="round,pad=0.012,rounding_size=0.035",
+                facecolor=face_color,
+                edgecolor=color,
+                linewidth=1.15,
             )
             ax.add_patch(rect)
+            stripe = patches.Rectangle(
+                (col_idx + 0.03, y + 0.1),
+                0.045,
+                0.8,
+                facecolor=color,
+                edgecolor=color,
+                linewidth=0,
+            )
+            ax.add_patch(stripe)
             label = "\n".join(wrap(_short_model(model), width=13))
-            ax.text(col_idx + 0.5, y + 0.5, label, ha="center", va="center", color="white", weight="bold")
+            ax.text(col_idx + 0.52, y + 0.5, label, ha="center", va="center", color="#222222", weight="semibold")
 
     legend_handles = [
-        patches.Patch(facecolor=color, edgecolor="none", label=family)
+        patches.Patch(facecolor=FAMILY_FACE_COLORS[family], edgecolor=color, linewidth=1.2, label=family)
         for family, color in FAMILY_COLORS.items()
     ]
     ax.legend(handles=legend_handles, loc="lower center", bbox_to_anchor=(0.5, -0.12), ncol=3, frameon=False)
@@ -214,16 +249,18 @@ def build_observation_search_impact() -> None:
     rolling = df[rolling_col].astype(float).to_numpy()
     test = df[test_col].astype(float).to_numpy()
 
-    fig, ax = plt.subplots(figsize=(9.4, 5.4))
-    colors = np.where(rolling >= 0, "#009E73", "#E69F00")
+    fig, ax = plt.subplots(figsize=(9.4, 5.35))
+    colors = np.where(rolling >= 0, "#4E9F8F", "#C58A32")
     ax.barh(y, rolling, color=colors, alpha=0.88, label="Rolling mean MAE")
-    ax.scatter(test, y, marker="D", color="#0072B2", edgecolor="white", linewidth=0.6, s=54, label="Test MAE")
-    ax.axvline(0, color="black", linewidth=1)
+    ax.scatter(test, y, marker="D", color="#2F5D8C", edgecolor="white", linewidth=0.6, s=52, label="Test MAE")
+    ax.axvline(0, color="#222222", linewidth=1)
     ax.set_yticks(y, df["series_name"].astype(str).tolist())
     ax.invert_yaxis()
     ax.set_xlabel(r"$\Delta$ error: no-observation-search minus constrained discovery")
-    ax.set_title("Impact of observation-map search", weight="bold")
-    ax.grid(axis="x", alpha=0.25)
+    ax.set_title("Impact of observation-map search", weight="semibold")
+    ax.grid(axis="x")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     max_val = max(np.nanmax(np.abs(rolling)), np.nanmax(np.abs(test)), 0.01)
     ax.set_xlim(-0.015, max_val * 1.28)
@@ -239,7 +276,8 @@ def build_observation_search_impact() -> None:
             va="center",
             ha="left",
             fontsize=9,
-            weight="bold",
+            weight="semibold",
+            color="#222222",
         )
     ax.legend(loc="upper right", frameon=False)
     fig.subplots_adjust(bottom=0.2)
@@ -273,7 +311,7 @@ def build_discovery_ablation_matrix() -> None:
     im = ax.imshow(normalized.to_numpy(dtype=float), cmap="cividis", vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(len(SERIES_ORDER)), SERIES_ORDER, rotation=35, ha="right")
     ax.set_yticks(np.arange(len(DISCOVERY_MODEL_ORDER)), [_short_model(m) for m in DISCOVERY_MODEL_ORDER])
-    ax.set_title("Discovery ablations across age strata", weight="bold", pad=14)
+    ax.set_title("Discovery ablations across age strata", weight="semibold", pad=14)
 
     for row_idx, model_name in enumerate(DISCOVERY_MODEL_ORDER):
         for col_idx, series_name in enumerate(SERIES_ORDER):
@@ -281,7 +319,7 @@ def build_discovery_ablation_matrix() -> None:
             flag = bool(flags.loc[model_name, series_name])
             text = "" if pd.isna(value) else f"{value:.3f}{'*' if flag else ''}"
             color = "white" if normalized.loc[model_name, series_name] < 0.45 else "black"
-            ax.text(col_idx, row_idx, text, ha="center", va="center", fontsize=8.5, color=color, weight="bold")
+            ax.text(col_idx, row_idx, text, ha="center", va="center", fontsize=8.4, color=color, weight="semibold")
 
     ax.set_xticks(np.arange(-0.5, len(SERIES_ORDER), 1), minor=True)
     ax.set_yticks(np.arange(-0.5, len(DISCOVERY_MODEL_ORDER), 1), minor=True)
@@ -313,20 +351,24 @@ def build_paired_rolling_forest() -> None:
     low = df["ci95_low"].astype(float).to_numpy()
     high = df["ci95_high"].astype(float).to_numpy()
     xerr = np.vstack([mean - low, high - mean])
-    point_colors = np.where(mean >= 0, "#009E73", "#E69F00")
+    point_colors = np.where(mean >= 0, "#007A5E", "#B36B00")
     labels = [f"{row.series_name}: {_short_model(row.challenger_model)}" for row in df.itertuples()]
 
     fig, ax = plt.subplots(figsize=(10.5, 10.8))
+    group_size = len(FOREST_CHALLENGER_ORDER)
+    for start in range(0, len(df), group_size * 2):
+        ax.axhspan(start - 0.5, min(start + group_size - 0.5, len(df) - 0.5), color="#F6F6F6", zorder=0)
     ax.errorbar(mean, y, xerr=xerr, fmt="none", ecolor="#4D4D4D", elinewidth=1.2, capsize=2.5, zorder=1)
     ax.scatter(mean, y, c=point_colors, s=35, zorder=2, edgecolor="white", linewidth=0.4)
     ax.axvline(0, color="black", linewidth=1)
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
     ax.set_xlabel("Mean rolling absolute-error difference: challenger minus constrained discovery")
-    ax.set_title("Paired rolling-origin comparisons against constrained discovery", weight="bold", pad=14)
-    ax.grid(axis="x", alpha=0.25)
+    ax.set_title("Paired rolling-origin comparisons against constrained discovery", weight="semibold", pad=14)
+    ax.grid(axis="x")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
-    group_size = len(FOREST_CHALLENGER_ORDER)
     for boundary in range(group_size - 0, len(df), group_size):
         ax.axhline(boundary - 0.5, color="#D0D0D0", linewidth=0.8)
     ax.text(
@@ -346,21 +388,24 @@ def build_numerical_failure_audit() -> None:
     flagged = df[df["numerical_failure_flag"].astype(bool)]
     counts = flagged.groupby("model_name").size().sort_values(ascending=False)
 
-    fig, ax = plt.subplots(figsize=(9.5, 4.8))
+    fig, ax = plt.subplots(figsize=(8.8, 4.6))
     if counts.empty:
         ax.text(0.5, 0.5, "No numerical failure flags", ha="center", va="center", transform=ax.transAxes)
         ax.set_axis_off()
     else:
         labels = [_short_model(model) for model in counts.index]
-        x = np.arange(len(counts))
-        ax.bar(x, counts.to_numpy(), color="#999999")
-        ax.set_xticks(x, labels, rotation=35, ha="right")
-        ax.set_ylabel("Flagged rows")
-        ax.set_title("Numerical failure flags by model family", weight="bold", pad=14)
-        ax.grid(axis="y", alpha=0.25)
+        y = np.arange(len(counts))
+        ax.barh(y, counts.to_numpy(), color="#8C8C8C")
+        ax.set_yticks(y, labels)
+        ax.invert_yaxis()
+        ax.set_xlabel("Flagged rows")
+        ax.set_title("Numerical failure flags by model family", weight="semibold", pad=14)
+        ax.grid(axis="x")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
         for idx, count in enumerate(counts.to_numpy()):
-            ax.text(idx, count + 0.05, str(int(count)), ha="center", va="bottom", weight="bold")
-        ax.set_ylim(0, counts.max() + 1)
+            ax.text(count + 0.08, idx, str(int(count)), ha="left", va="center", weight="semibold")
+        ax.set_xlim(0, counts.max() + 1.1)
     _save_figure(fig, "fig5_numerical_failure_audit")
 
 
