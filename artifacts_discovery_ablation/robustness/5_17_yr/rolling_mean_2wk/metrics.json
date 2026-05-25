@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.45,
+    "max_abs_test_prediction": 0.0,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.03333333333333333,
+      "rmse": 0.05345224838248488,
+      "smape": 0.5351473301371437
+    },
+    "2": {
+      "mae": 0.030000000000000006,
+      "rmse": 0.05477225575051661,
+      "smape": 0.5876189583886786
+    },
+    "4": {
+      "mae": 0.044444444444444446,
+      "rmse": 0.06666666666666668,
+      "smape": 0.8740739546666867
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.035925925925925924,
+    "mean_rmse": 0.05829705693322273
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.0,
+    "rmse": 0.0,
+    "smape": 0.0
+  },
+  "train_metrics": {
+    "mae": 0.25967741935483873,
+    "rmse": 0.3604432754799425,
+    "smape": 0.30797869210697615
+  },
+  "validation_metrics": {
+    "mae": 0.09000000000000001,
+    "rmse": 0.10246950765959599,
+    "smape": 1.0171427957768746
+  }
+}

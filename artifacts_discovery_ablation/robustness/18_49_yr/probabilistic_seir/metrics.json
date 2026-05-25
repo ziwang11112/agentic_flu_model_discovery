@@ -1,0 +1,136 @@
+{
+  "best_full_params": {
+    "E0": 0.00549498989419429,
+    "I0": 0.013502241545561414,
+    "R0": 0.0,
+    "S0": 0.9810027685602443,
+    "b0": 4.080989719428783,
+    "b1": -0.8350583545398118,
+    "b2": -3.861609078208749,
+    "gamma": 0.1216733995568838,
+    "obs_scale": 0.12946817723077958,
+    "rho": 4.912425431459026,
+    "sigma": 0.9977999679324504
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": -17.534232009653202,
+    "train": -3.7523220721142283,
+    "train_plus_validation": -7.525354969225938
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "probabilistic_seir",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 3.626054312094314,
+    "max_abs_test_prediction": 0.0909544561109448,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": 0.1492289495474596,
+    "average_interval_width_80": 0.2491275475221009,
+    "average_interval_width_95": 0.3518678294719712,
+    "coverage_50": 0.9090909090909091,
+    "coverage_80": 1.0,
+    "coverage_95": 1.0,
+    "interval_calibration_method": "none",
+    "interval_calibration_scales": {
+      "50": 1.0,
+      "80": 1.0,
+      "95": 1.0
+    },
+    "interval_summary": {
+      "50": {
+        "average_interval_width": 0.1492289495474596,
+        "coverage_gap": 0.40909090909090906,
+        "empirical_coverage": 0.9090909090909091,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 0.2491275475221009,
+        "coverage_gap": 0.19999999999999996,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 0.3518678294719712,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "negative_log_likelihood": -8.9955880424308,
+    "raw_interval_summary": {
+      "50": {
+        "average_interval_width": 0.1492289495474596,
+        "coverage_gap": 0.40909090909090906,
+        "empirical_coverage": 0.9090909090909091,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 0.2491275475221009,
+        "coverage_gap": 0.19999999999999996,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 0.3518678294719712,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "uncertainty_draws": 30,
+    "uncertainty_method": "bootstrap"
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.08968286172833959,
+      "rmse": 0.11743706260433609,
+      "smape": 1.4339416723549137
+    },
+    "2": {
+      "mae": 0.08179366239467464,
+      "rmse": 0.1037497006832889,
+      "smape": 1.4530813194324685
+    },
+    "4": {
+      "mae": 0.0710303300883866,
+      "rmse": 0.08662371590406469,
+      "smape": 1.5131642234098588
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.08083561807046695,
+    "mean_rmse": 0.10260349306389656
+  },
+  "series_name": "18-49 yr",
+  "test_metrics": {
+    "mae": 0.04668927708909911,
+    "rmse": 0.05097802558704968,
+    "smape": 1.8382726198032253
+  },
+  "train_metrics": {
+    "mae": 0.154683830012328,
+    "rmse": 0.23882091207798584,
+    "smape": 0.15842913390322266
+  },
+  "validation_metrics": {
+    "mae": 0.1708083976543239,
+    "rmse": 0.18480190285947856,
+    "smape": 1.0965459930691657
+  }
+}

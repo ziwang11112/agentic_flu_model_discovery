@@ -1,0 +1,76 @@
+round: 1
+repeat: null
+record_key: SEIRS|fractional=0|obs=I
+spec_key: SEIRS|fractional=0|obs=I
+structure_name: SEIRS
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 9
+num_compartments: 4
+train_objective: 0.3592658605035027
+train_mae: 0.3261653707336144
+train_rmse: 0.43460416396661233
+val_mae: 0.15574216006105435
+val_rmse: 0.1881298103454767
+val_smape: 1.0780374730514626
+rolling_val_mean_mae: 0.14185119755643386
+rolling_val_mean_rmse: 0.1688549803375787
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.1433181978845655
+multi_split_val_std_mae: 0.020117137112095066
+multi_split_penalty: 0.010058568556047533
+rolling_val_error_std: 0.09147960818700689
+rolling_val_metrics:
+  '1':
+    mae: 0.15186933913513279
+    rmse: 0.1800581295948605
+    smape: 0.989533204046458
+  '2':
+    mae: 0.14610022147919716
+    rmse: 0.1778710699929832
+    smape: 0.9996962625637162
+  '4':
+    mae: 0.12758403205497165
+    rmse: 0.14863574142489236
+    smape: 1.1589242066370258
+stability_penalty: 0.018295921637401378
+complexity_penalty: 0.18
+complexity_penalty_params: 0.09
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: -0.01
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.34167268807801443
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: -1.355331232992327
+  b1: 3.29799908967939
+  b2: 0.5683885440993693
+  sigma: 0.9489020374837662
+  gamma: 0.3682404102010562
+  omega: 0.23659741528861722
+  rho: 16.268037323635774
+  S0: 0.9672379007838948
+  E0: 0.015102437746993554
+  I0: 0.01765966146911165
+  R0: 0.0
+  fractional: 0.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 10
+  observation_map_filter: I
+  search_name: no_observation_search_discovery
+  score_policy: stability_aware
+  candidate_count: 10

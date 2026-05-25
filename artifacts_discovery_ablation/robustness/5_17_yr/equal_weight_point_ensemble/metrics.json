@@ -1,0 +1,126 @@
+{
+  "baseline_metadata": {
+    "ensemble_members_configured": [
+      "last_observed",
+      "rolling_mean_2wk",
+      "rolling_mean_4wk",
+      "arima_auto_small",
+      "lagged_ridge",
+      "lagged_gradient_boosting",
+      "deterministic_seir",
+      "probabilistic_seir",
+      "hospitalized_seihr",
+      "delayed_observation_seir",
+      "fractional_seir",
+      "constrained_structure_discovery"
+    ],
+    "excluded_members": [
+      {
+        "model_name": "exhaustive_structure_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "no_observation_search_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "no_stability_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "random_structure_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "validation_only_structure_selection",
+        "reason": "not_in_ensemble_members"
+      }
+    ],
+    "fallback_model": null,
+    "fallback_used": false,
+    "valid_members": [
+      "arima_auto_small",
+      "constrained_structure_discovery",
+      "delayed_observation_seir",
+      "deterministic_seir",
+      "fractional_seir",
+      "hospitalized_seihr",
+      "lagged_gradient_boosting",
+      "lagged_ridge",
+      "last_observed",
+      "probabilistic_seir",
+      "rolling_mean_2wk",
+      "rolling_mean_4wk"
+    ]
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ensemble member artifacts loaded",
+    "full_success": true,
+    "train_message": "ensemble member artifacts loaded",
+    "train_plus_validation_message": "ensemble member artifacts loaded",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "point_ensemble",
+  "model_name": "equal_weight_point_ensemble",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.0867897391020325,
+    "max_abs_test_prediction": 0.03527479913218278,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.04554743618278008,
+      "rmse": 0.06399379871072891,
+      "smape": 1.5410800647811167
+    },
+    "2": {
+      "mae": 0.04401017609236718,
+      "rmse": 0.0657758938065075,
+      "smape": 1.5786262335084102
+    },
+    "4": {
+      "mae": 0.051895056874364125,
+      "rmse": 0.0743729820514941,
+      "smape": 1.7359413078341785
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.047150889716503795,
+    "mean_rmse": 0.06804755818957685
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.022109720866553356,
+    "rmse": 0.0230475604874368,
+    "smape": 1.999999021348836
+  },
+  "train_metrics": {
+    "mae": 0.20136550249703514,
+    "rmse": 0.2858398057302006,
+    "smape": 0.25703440670090827
+  },
+  "validation_metrics": {
+    "mae": 0.06147304958354625,
+    "rmse": 0.07604136757371861,
+    "smape": 0.9657658984274151
+  }
+}

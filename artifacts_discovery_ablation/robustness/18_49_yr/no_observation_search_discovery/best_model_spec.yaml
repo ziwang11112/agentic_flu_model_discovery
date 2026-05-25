@@ -1,0 +1,73 @@
+round: 1
+repeat: null
+record_key: SIR|fractional=0|obs=I
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 6
+num_compartments: 3
+train_objective: 0.11823561485308764
+train_mae: 0.17088706467613454
+train_rmse: 0.24508262767506583
+val_mae: 0.14963563670100857
+val_rmse: 0.164275405447193
+val_smape: 1.0375470204505994
+rolling_val_mean_mae: 0.11752254010451245
+rolling_val_mean_rmse: 0.13284861966978265
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.11376884976055789
+multi_split_val_std_mae: 0.04891255847803711
+multi_split_penalty: 0.024456279239018556
+rolling_val_error_std: 0.06187456169506164
+rolling_val_metrics:
+  '1':
+    mae: 0.13147223572844116
+    rmse: 0.1505680368903484
+    smape: 0.9731715618107737
+  '2':
+    mae: 0.11952288098780264
+    rmse: 0.13496335835223564
+    smape: 0.9646023019908943
+  '4':
+    mae: 0.10157250359729353
+    rmse: 0.11301446376676388
+    smape: 0.9761128927231618
+stability_penalty: 0.012374912339012329
+complexity_penalty: 0.12
+complexity_penalty_params: 0.06
+complexity_penalty_compartments: 0.06
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: -0.01
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.2606000413385888
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: 0.06010184076323396
+  b1: 1.3277230695833153
+  b2: -1.4158279155862572
+  gamma: 0.11225642946021637
+  rho: 4.7790551346769305
+  S0: 0.9679784612440447
+  I0: 0.03202153875595525
+  R0: 0.0
+  fractional: 0.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 10
+  observation_map_filter: I
+  search_name: no_observation_search_discovery
+  score_policy: stability_aware
+  candidate_count: 10

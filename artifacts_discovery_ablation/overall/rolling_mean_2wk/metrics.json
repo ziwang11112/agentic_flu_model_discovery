@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 7.9,
+    "max_abs_test_prediction": 0.2,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.03809523809523809,
+      "rmse": 0.06900655593423541,
+      "smape": 0.22108260856544634
+    },
+    "2": {
+      "mae": 0.05500000000000001,
+      "rmse": 0.09219544457292887,
+      "smape": 0.2988034039789039
+    },
+    "4": {
+      "mae": 0.08333333333333333,
+      "rmse": 0.11785113019775792,
+      "smape": 0.44834669529192506
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.05880952380952381,
+    "mean_rmse": 0.09301771023497407
+  },
+  "series_name": "Overall",
+  "test_metrics": {
+    "mae": 0.10909090909090909,
+    "rmse": 0.11281521496355326,
+    "smape": 0.7878787585858599
+  },
+  "train_metrics": {
+    "mae": 0.753225806451613,
+    "rmse": 1.1666397846365322,
+    "smape": 0.2996862155464669
+  },
+  "validation_metrics": {
+    "mae": 0.35,
+    "rmse": 0.35637059362410917,
+    "smape": 0.8399999898777779
+  }
+}

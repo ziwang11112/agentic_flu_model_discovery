@@ -1,0 +1,80 @@
+round: 14
+repeat: 0
+record_key: 0:SIR|fractional=0|obs=I
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 6
+num_compartments: 3
+train_objective: 0.384527920030719
+train_mae: 0.42061259498345016
+train_rmse: 0.5456316902375284
+val_mae: 0.1018071086687586
+val_rmse: 0.14970229074733335
+val_smape: 0.2985831488949676
+rolling_val_mean_mae: 0.07405628782334174
+rolling_val_mean_rmse: 0.1069545612255313
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.06978027761045019
+multi_split_val_std_mae: 0.054443992152838176
+multi_split_penalty: 0.027221996076419088
+rolling_val_error_std: 0.07605411888895232
+rolling_val_metrics:
+  '1':
+    mae: 0.09801232425926636
+    rmse: 0.14684943836883807
+    smape: 0.29288868971755677
+  '2':
+    mae: 0.07625507854035286
+    rmse: 0.11843337913546238
+    smape: 0.2529602264855819
+  '4':
+    mae: 0.047901460670405994
+    rmse: 0.05558086617229344
+    smape: 0.18952804267898518
+stability_penalty: 0.015210823777790464
+complexity_penalty: 0.12
+complexity_penalty_params: 0.06
+complexity_penalty_compartments: 0.06
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: -0.01
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.22221309746465973
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: 0.6474413240915797
+  b1: 1.3148948512750607
+  b2: -2.224459203523725
+  gamma: 0.13780393086050138
+  rho: 13.777236560584369
+  S0: 0.9684530541450636
+  I0: 0.031546945854936455
+  R0: 0.0
+  fractional: 0.0
+random_draw_index: 14
+search_name: random_structure_discovery
+candidate_budget_requested: 30
+candidate_budget_actual: 30
+candidate_universe_size: 44
+random_repeats: 1
+random_seed: 2258
+search_metadata:
+  search_name: random_structure_discovery
+  candidate_budget_requested: 30
+  candidate_budget_actual: 30
+  candidate_universe_size: 44
+  random_repeats: 1
+  random_seed: 2258

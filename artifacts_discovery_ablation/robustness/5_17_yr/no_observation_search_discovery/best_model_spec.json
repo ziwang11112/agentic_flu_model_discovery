@@ -1,0 +1,80 @@
+{
+  "age_prior_penalty": 0.0,
+  "complexity_penalty": 0.12,
+  "complexity_penalty_compartments": 0.06,
+  "complexity_penalty_delay": 0.0,
+  "complexity_penalty_fractional": 0.0,
+  "complexity_penalty_h_observation": 0.0,
+  "complexity_penalty_observation": 0.0,
+  "complexity_penalty_params": 0.06,
+  "complexity_penalty_recurrence": 0.0,
+  "delay_weeks": 0,
+  "fractional": false,
+  "multi_split_blocks": 3,
+  "multi_split_penalty": 0.028343939766024773,
+  "multi_split_val_mean_mae": 0.15947533541139355,
+  "multi_split_val_std_mae": 0.05668787953204955,
+  "num_compartments": 3,
+  "num_free_params": 6,
+  "observation_family": "infectious",
+  "observation_map": "I",
+  "params": {
+    "I0": 0.04407773078338093,
+    "R0": 0.0,
+    "S0": 0.955922269216619,
+    "b0": -0.7059187234867896,
+    "b1": 0.5015307459383307,
+    "b2": -0.1227678660754238,
+    "fractional": 0.0,
+    "gamma": 0.09734181437451098,
+    "rho": 3.790653124892038
+  },
+  "record_key": "SIR|fractional=0|obs=I",
+  "repeat": null,
+  "rolling_val_error_std": 0.07457962004561774,
+  "rolling_val_mean_mae": 0.16506523633634126,
+  "rolling_val_mean_rmse": 0.18117051357079114,
+  "rolling_val_metrics": {
+    "1": {
+      "mae": 0.1644572923415069,
+      "rmse": 0.17902301115053745,
+      "smape": 1.2333151448736506
+    },
+    "2": {
+      "mae": 0.16441023034755098,
+      "rmse": 0.17950543034420316,
+      "smape": 1.306273038181527
+    },
+    "4": {
+      "mae": 0.16632818631996593,
+      "rmse": 0.18498309921763284,
+      "smape": 1.4596492707687143
+    }
+  },
+  "round": 1,
+  "score": 0.3227351991865419,
+  "score_formula": "multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty",
+  "score_policy": "stability_aware",
+  "score_used_age_prior": true,
+  "score_used_complexity": true,
+  "score_used_multi_split": true,
+  "score_used_stability": true,
+  "score_used_val_mae": false,
+  "search_metadata": {
+    "candidate_budget_actual": 10,
+    "candidate_count": 10,
+    "candidate_universe_size": 44,
+    "observation_map_filter": "I",
+    "score_policy": "stability_aware",
+    "search_name": "no_observation_search_discovery"
+  },
+  "spec_key": "SIR|fractional=0|obs=I",
+  "stability_penalty": 0.01491592400912355,
+  "structure_name": "SIR",
+  "train_mae": 0.23174889315192332,
+  "train_objective": 0.1180687148416995,
+  "train_rmse": 0.29286262104365923,
+  "val_mae": 0.22274906458127064,
+  "val_rmse": 0.2297737234411582,
+  "val_smape": 1.3357030716292617
+}

@@ -1,0 +1,83 @@
+{
+  "baseline_metadata": {
+    "fallback_model": "rolling_mean_4wk",
+    "fallback_reason": "fit_failed:ModuleNotFoundError",
+    "fallback_used": true,
+    "lags": [
+      1,
+      2,
+      4
+    ],
+    "train_length": 41
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "fallback: fit_failed:ModuleNotFoundError",
+    "full_success": true,
+    "train_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "lagged_ridge",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 9.225,
+    "max_abs_test_prediction": 0.22499999999999998,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.09047619047619046,
+      "rmse": 0.1742330131092924,
+      "smape": 0.4888635261392376
+    },
+    "2": {
+      "mae": 0.1025,
+      "rmse": 0.18337120820892241,
+      "smape": 0.5497459883325941
+    },
+    "4": {
+      "mae": 0.13333333333333333,
+      "rmse": 0.19525624189766635,
+      "smape": 0.6695614288828889
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.10876984126984128,
+    "mean_rmse": 0.18428682107196037
+  },
+  "series_name": "50-64 yr",
+  "test_metrics": {
+    "mae": 0.14318181818181816,
+    "rmse": 0.14828565798362414,
+    "smape": 0.993006957480128
+  },
+  "train_metrics": {
+    "mae": 1.4241935483870967,
+    "rmse": 2.1160294528104493,
+    "smape": 0.47398978745441095
+  },
+  "validation_metrics": {
+    "mae": 0.6649999999999998,
+    "rmse": 0.6683000822983638,
+    "smape": 1.1318529831110171
+  }
+}

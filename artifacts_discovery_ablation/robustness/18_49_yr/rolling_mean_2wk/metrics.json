@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 3.8,
+    "max_abs_test_prediction": 0.05,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.03571428571428571,
+      "rmse": 0.056694670951384085,
+      "smape": 0.6947844886237055
+    },
+    "2": {
+      "mae": 0.0325,
+      "rmse": 0.05361902647381805,
+      "smape": 0.6295237230548897
+    },
+    "4": {
+      "mae": 0.041666666666666664,
+      "rmse": 0.06123724356957946,
+      "smape": 0.8846559577153149
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.036626984126984126,
+    "mean_rmse": 0.057183646998260534
+  },
+  "series_name": "18-49 yr",
+  "test_metrics": {
+    "mae": 0.05,
+    "rmse": 0.05000000000000001,
+    "smape": 1.8787875111111842
+  },
+  "train_metrics": {
+    "mae": 0.3645161290322581,
+    "rmse": 0.5547449283083811,
+    "smape": 0.30476968948184985
+  },
+  "validation_metrics": {
+    "mae": 0.16999999999999998,
+    "rmse": 0.1746424919657298,
+    "smape": 1.0857142501224502
+  }
+}

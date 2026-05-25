@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 4
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_4wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 6.975,
+    "max_abs_test_prediction": 0.2,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.07857142857142858,
+      "rmse": 0.13758114488755874,
+      "smape": 0.33632048474190424
+    },
+    "2": {
+      "mae": 0.0975,
+      "rmse": 0.1631716887208072,
+      "smape": 0.4176195991627575
+    },
+    "4": {
+      "mae": 0.13055555555555556,
+      "rmse": 0.19400744544704693,
+      "smape": 0.5756358080699943
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.10220899470899474,
+    "mean_rmse": 0.16492009301847096
+  },
+  "series_name": "Overall",
+  "test_metrics": {
+    "mae": 0.10909090909090909,
+    "rmse": 0.11281521496355326,
+    "smape": 0.7878787585858599
+  },
+  "train_metrics": {
+    "mae": 1.0836021505376343,
+    "rmse": 1.5723551212242555,
+    "smape": 0.44196666830730263
+  },
+  "validation_metrics": {
+    "mae": 0.6000000000000002,
+    "rmse": 0.6037383539249433,
+    "smape": 1.1018136544501693
+  }
+}

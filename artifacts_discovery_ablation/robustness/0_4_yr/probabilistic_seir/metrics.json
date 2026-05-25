@@ -1,0 +1,136 @@
+{
+  "best_full_params": {
+    "E0": 0.0010436347203216956,
+    "I0": 0.032666861218251526,
+    "R0": 0.0,
+    "S0": 0.9662895040614269,
+    "b0": -0.8220909328889935,
+    "b1": 2.999004624670093,
+    "b2": -0.5784378082683631,
+    "gamma": 0.11422599430242825,
+    "obs_scale": 0.27936133326144025,
+    "rho": 10.108991024610926,
+    "sigma": 0.9942198560798967
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 22.600978787361566,
+    "train": 20.046182884367305,
+    "train_plus_validation": 23.970821586210796
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "probabilistic_seir",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 7.487426985982202,
+    "max_abs_test_prediction": 0.24059392286198825,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": 0.32344274421081276,
+    "average_interval_width_80": 0.510139639389505,
+    "average_interval_width_95": 0.7503529268718928,
+    "coverage_50": 0.7272727272727273,
+    "coverage_80": 0.9090909090909091,
+    "coverage_95": 1.0,
+    "interval_calibration_method": "none",
+    "interval_calibration_scales": {
+      "50": 1.0,
+      "80": 1.0,
+      "95": 1.0
+    },
+    "interval_summary": {
+      "50": {
+        "average_interval_width": 0.32344274421081276,
+        "coverage_gap": 0.2272727272727273,
+        "empirical_coverage": 0.7272727272727273,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 0.510139639389505,
+        "coverage_gap": 0.10909090909090902,
+        "empirical_coverage": 0.9090909090909091,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 0.7503529268718928,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "negative_log_likelihood": -0.39841470451127425,
+    "raw_interval_summary": {
+      "50": {
+        "average_interval_width": 0.32344274421081276,
+        "coverage_gap": 0.2272727272727273,
+        "empirical_coverage": 0.7272727272727273,
+        "nominal_coverage": 0.5
+      },
+      "80": {
+        "average_interval_width": 0.510139639389505,
+        "coverage_gap": 0.10909090909090902,
+        "empirical_coverage": 0.9090909090909091,
+        "nominal_coverage": 0.8
+      },
+      "95": {
+        "average_interval_width": 0.7503529268718928,
+        "coverage_gap": 0.050000000000000044,
+        "empirical_coverage": 1.0,
+        "nominal_coverage": 0.95
+      }
+    },
+    "uncertainty_draws": 30,
+    "uncertainty_method": "bootstrap"
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.1993979335578042,
+      "rmse": 0.25396855137659624,
+      "smape": 1.0176667853740267
+    },
+    "2": {
+      "mae": 0.1917944597147459,
+      "rmse": 0.2461311010330184,
+      "smape": 1.0443012671041685
+    },
+    "4": {
+      "mae": 0.17426169227985777,
+      "rmse": 0.21724220948845324,
+      "smape": 1.0747167913054112
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.18848469518413594,
+    "mean_rmse": 0.2391139539660226
+  },
+  "series_name": "0-4 yr",
+  "test_metrics": {
+    "mae": 0.10501997013668732,
+    "rmse": 0.12149191055054655,
+    "smape": 1.1773064527913355
+  },
+  "train_metrics": {
+    "mae": 0.3444488968425955,
+    "rmse": 0.4993658447660923,
+    "smape": 0.1931640965251973
+  },
+  "validation_metrics": {
+    "mae": 0.36586893146272215,
+    "rmse": 0.3953424295183511,
+    "smape": 0.939862400640315
+  }
+}

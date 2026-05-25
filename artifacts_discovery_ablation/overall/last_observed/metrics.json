@@ -1,0 +1,77 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "last_observed",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 8.9,
+    "max_abs_test_prediction": 0.2,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.023809523809523808,
+      "rmse": 0.048795003647426664,
+      "smape": 0.17021918751572404
+    },
+    "2": {
+      "mae": 0.039999999999999994,
+      "rmse": 0.07071067811865475,
+      "smape": 0.24595236741357818
+    },
+    "4": {
+      "mae": 0.06666666666666668,
+      "rmse": 0.09428090415820634,
+      "smape": 0.39074072239351976
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.04349206349206349,
+    "mean_rmse": 0.07126219530809592
+  },
+  "series_name": "Overall",
+  "test_metrics": {
+    "mae": 0.10909090909090909,
+    "rmse": 0.11281521496355326,
+    "smape": 0.7878787585858599
+  },
+  "train_metrics": {
+    "mae": 0.5516129032258063,
+    "rmse": 0.8749193511220001,
+    "smape": 0.21300615836641215
+  },
+  "validation_metrics": {
+    "mae": 0.24999999999999994,
+    "rmse": 0.2588435821108957,
+    "smape": 0.6865079270390841
+  }
+}

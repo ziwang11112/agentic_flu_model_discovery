@@ -1,0 +1,73 @@
+round: 1
+repeat: null
+record_key: SIR|fractional=0|obs=I
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 6
+num_compartments: 3
+train_objective: 1.7556523038239353
+train_mae: 0.9020574773827917
+train_rmse: 1.273879678726616
+val_mae: 0.4532719864522652
+val_rmse: 0.5236932995312032
+val_smape: 0.46865952053586757
+rolling_val_mean_mae: 0.37136180161752846
+rolling_val_mean_rmse: 0.44869768930865045
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.3518819314823496
+multi_split_val_std_mae: 0.19066344656775558
+multi_split_penalty: 0.09533172328387779
+rolling_val_error_std: 0.2517214607641602
+rolling_val_metrics:
+  '1':
+    mae: 0.40932026353812806
+    rmse: 0.4872913061817325
+    smape: 0.4276129803766495
+  '2':
+    mae: 0.39364410726677856
+    rmse: 0.47928661425964175
+    smape: 0.4384675296553019
+  '4':
+    mae: 0.3111210340476788
+    rmse: 0.3795151474845771
+    smape: 0.40641858042963325
+stability_penalty: 0.05034429215283204
+complexity_penalty: 0.12
+complexity_penalty_params: 0.06
+complexity_penalty_compartments: 0.06
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: 0.005
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.6225579469190594
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: 1.6513522344414284
+  b1: 0.5132376006137164
+  b2: -2.98234221565264
+  gamma: 0.11855237430319326
+  rho: 27.550625656920776
+  S0: 0.9728317248164371
+  I0: 0.0271682751835629
+  R0: 0.0
+  fractional: 0.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 10
+  observation_map_filter: I
+  search_name: no_observation_search_discovery
+  score_policy: stability_aware
+  candidate_count: 10

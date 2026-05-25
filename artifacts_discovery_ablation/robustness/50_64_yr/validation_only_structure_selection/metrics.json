@@ -1,0 +1,183 @@
+{
+  "best_full_params": {
+    "E0": 0.015050884154099104,
+    "I0": 0.015234668715591454,
+    "R0": 0.0,
+    "S0": 0.9697144471303094,
+    "alpha": 0.9558870101615735,
+    "b0": -1.0130038790700429,
+    "b1": 3.7468277345242154,
+    "b2": 0.012409201966299011,
+    "fractional": 1.0,
+    "gamma": 0.3876072935618884,
+    "omega": 0.09785456174235702,
+    "rho": 23.378798227890503,
+    "sigma": 0.9589503666897581
+  },
+  "best_spec": {
+    "delay_weeks": 0,
+    "fractional": true,
+    "observation_map": "I",
+    "structure_name": "SEIRS"
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 10
+  },
+  "fit_objectives": {
+    "full_series": 0.30441678789331783,
+    "train": 0.36503598292994033,
+    "train_plus_validation": 0.33043847607425725
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "structure_discovery_ablation",
+  "model_name": "validation_only_structure_selection",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 10.447917025066792,
+    "max_abs_test_prediction": 0.100407787669058,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.07115564749107235,
+      "rmse": 0.0845585503674134,
+      "smape": 0.7130930948602968
+    },
+    "2": {
+      "mae": 0.09668559879935566,
+      "rmse": 0.10823744876734238,
+      "smape": 0.9932991985992363
+    },
+    "4": {
+      "mae": 0.08155881697843466,
+      "rmse": 0.1006484364545848,
+      "smape": 0.8697973184003196
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.08313335442295422,
+    "mean_rmse": 0.09781481186311353
+  },
+  "search_best_record": {
+    "age_prior_penalty": 0.015,
+    "complexity_penalty": 0.20500000000000002,
+    "complexity_penalty_compartments": 0.08,
+    "complexity_penalty_delay": 0.0,
+    "complexity_penalty_fractional": 0.015,
+    "complexity_penalty_h_observation": 0.0,
+    "complexity_penalty_observation": 0.0,
+    "complexity_penalty_params": 0.1,
+    "complexity_penalty_recurrence": 0.01,
+    "delay_weeks": 0,
+    "fractional": true,
+    "multi_split_blocks": 3,
+    "multi_split_penalty": 0.014684016488989399,
+    "multi_split_val_mean_mae": 0.12545412757273072,
+    "multi_split_val_std_mae": 0.029368032977978797,
+    "num_compartments": 4,
+    "num_free_params": 10,
+    "observation_family": "infectious",
+    "observation_map": "I",
+    "params": {
+      "E0": 0.007250484782359665,
+      "I0": 0.01533186566950224,
+      "R0": 0.0,
+      "S0": 0.9774176495481381,
+      "alpha": 0.8704824558949613,
+      "b0": -0.2493851010389096,
+      "b1": 3.849911403070236,
+      "b2": -0.20001904837139203,
+      "fractional": 1.0,
+      "gamma": 0.6474894774367643,
+      "omega": 0.09025344351451314,
+      "rho": 34.17788429472444,
+      "sigma": 0.9674808653641679
+    },
+    "record_key": "SEIRS|fractional=1|obs=I",
+    "repeat": null,
+    "rolling_val_error_std": 0.033792403089282615,
+    "rolling_val_mean_mae": 0.12437913326583683,
+    "rolling_val_mean_rmse": 0.12913648273482461,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.14102093159637583,
+        "rmse": 0.14449673819623107,
+        "smape": 0.7229295252294058
+      },
+      "2": {
+        "mae": 0.08823002062064329,
+        "rmse": 0.09475339613304856,
+        "smape": 0.4035248302461658
+      },
+      "4": {
+        "mae": 0.14388644758049135,
+        "rmse": 0.1481593138751942,
+        "smape": 0.8818303666290805
+      }
+    },
+    "round": 1,
+    "score": 0.0969743271762054,
+    "score_formula": "val_mae",
+    "score_policy": "validation_only",
+    "score_used_age_prior": false,
+    "score_used_complexity": false,
+    "score_used_multi_split": false,
+    "score_used_stability": false,
+    "score_used_val_mae": true,
+    "search_metadata": {
+      "allow_truncated_exhaustive": false,
+      "candidate_budget_actual": 44,
+      "candidate_count": 44,
+      "candidate_universe_size": 44,
+      "exhaustive_max_candidates": 200,
+      "score_policy": "validation_only",
+      "search_name": "validation_only_structure_selection",
+      "truncated": false
+    },
+    "spec_key": "SEIRS|fractional=1|obs=I",
+    "stability_penalty": 0.006758480617856524,
+    "structure_name": "SEIRS",
+    "train_mae": 0.2650094488107919,
+    "train_objective": 0.36111909159090494,
+    "train_rmse": 0.36906324466593843,
+    "val_mae": 0.0969743271762054,
+    "val_rmse": 0.11321000688374341,
+    "val_smape": 0.38449817715917606
+  },
+  "series_name": "50-64 yr",
+  "test_metrics": {
+    "mae": 0.03212085596758132,
+    "rmse": 0.03767725972705148,
+    "smape": 0.6099124468675018
+  },
+  "train_metrics": {
+    "mae": 0.286467662922722,
+    "rmse": 0.39507248393595845,
+    "smape": 0.15072154165448126
+  },
+  "validation_metrics": {
+    "mae": 0.1424278127376672,
+    "rmse": 0.14562529880308833,
+    "smape": 0.7441122794110498
+  }
+}

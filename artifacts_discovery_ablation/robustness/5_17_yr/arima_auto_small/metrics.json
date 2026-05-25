@@ -1,0 +1,99 @@
+{
+  "baseline_metadata": {
+    "candidate_orders": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "fallback_model": "last_observed",
+    "fallback_reason": "all_candidate_orders_failed",
+    "fallback_used": true
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "fallback: all_candidate_orders_failed",
+    "full_success": true,
+    "train_message": "fallback: all_candidate_orders_failed",
+    "train_plus_validation_message": "fallback: all_candidate_orders_failed",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "arima_auto_small",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.7,
+    "max_abs_test_prediction": 0.0,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.03333333333333334,
+      "rmse": 0.05773502691896258,
+      "smape": 0.5396824899470948
+    },
+    "2": {
+      "mae": 0.034999999999999996,
+      "rmse": 0.0670820393249937,
+      "smape": 0.4666666294444478
+    },
+    "4": {
+      "mae": 0.044444444444444446,
+      "rmse": 0.06666666666666668,
+      "smape": 0.7407406716049452
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.037592592592592594,
+    "mean_rmse": 0.06382791097020765
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.0,
+    "rmse": 0.0,
+    "smape": 0.0
+  },
+  "train_metrics": {
+    "mae": 0.2193548387096774,
+    "rmse": 0.31520602581435114,
+    "smape": 0.24513277316289425
+  },
+  "validation_metrics": {
+    "mae": 0.06,
+    "rmse": 0.07745966692414834,
+    "smape": 0.933333248888897
+  }
+}

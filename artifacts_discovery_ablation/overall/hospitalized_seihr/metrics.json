@@ -1,0 +1,91 @@
+{
+  "best_full_params": {
+    "E0": 0.010976352839905041,
+    "H0": 8.597317698072765e-27,
+    "I0": 0.00720361278086846,
+    "R0": 0.0,
+    "S0": 0.9818200343792265,
+    "b0": 19.56262218688583,
+    "b1": -5.708677539485094,
+    "b2": -17.036388678515298,
+    "eta": 1.0,
+    "gamma_h": 0.1208754079875525,
+    "gamma_i": 0.0522719500466422,
+    "rho": 10.734612682448327,
+    "sigma": 1.0
+  },
+  "complexity": {
+    "num_compartments": 5,
+    "num_free_params": 11
+  },
+  "fit_objectives": {
+    "full_series": 0.11366723549146023,
+    "train": 0.1841461053424806,
+    "train_plus_validation": 0.14367218567014198
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+    "train_plus_validation_message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+    "train_plus_validation_success": false,
+    "train_success": false
+  },
+  "model_family": "epidemic_model",
+  "model_name": "hospitalized_seihr",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 7.858982857608401,
+    "max_abs_test_prediction": 0.18557466095994835,
+    "numerical_failure_flag": true,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.0928528719263442,
+      "rmse": 0.1309711505582742,
+      "smape": 0.44324278238856685
+    },
+    "2": {
+      "mae": 0.09463323441159534,
+      "rmse": 0.13832769644937357,
+      "smape": 0.47081653468962836
+    },
+    "4": {
+      "mae": 0.06941298920916512,
+      "rmse": 0.09441610530256382,
+      "smape": 0.4491296392730657
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.08563303184903488,
+    "mean_rmse": 0.1212383174367372
+  },
+  "series_name": "Overall",
+  "test_metrics": {
+    "mae": 0.03611160727564747,
+    "rmse": 0.04298322199142862,
+    "smape": 0.46920823783605525
+  },
+  "train_metrics": {
+    "mae": 0.29799903101659325,
+    "rmse": 0.42909827631684266,
+    "smape": 0.20079068375114498
+  },
+  "validation_metrics": {
+    "mae": 0.18328175201458446,
+    "rmse": 0.20723940574294544,
+    "smape": 0.5030672802780032
+  }
+}

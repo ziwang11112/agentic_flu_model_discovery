@@ -1,0 +1,72 @@
+{
+  "age_prior_penalty": -0.01,
+  "complexity_penalty": 0.12,
+  "complexity_penalty_compartments": 0.06,
+  "complexity_penalty_delay": 0.0,
+  "complexity_penalty_fractional": 0.0,
+  "complexity_penalty_h_observation": 0.0,
+  "complexity_penalty_observation": 0.0,
+  "complexity_penalty_params": 0.06,
+  "complexity_penalty_recurrence": 0.0,
+  "delay_weeks": 0,
+  "fractional": false,
+  "multi_split_blocks": 3,
+  "multi_split_penalty": 0.027224036124243386,
+  "multi_split_val_mean_mae": 0.06977846191783323,
+  "multi_split_val_std_mae": 0.05444807224848677,
+  "num_compartments": 3,
+  "num_free_params": 6,
+  "observation_family": "infectious",
+  "observation_map": "I",
+  "params": {
+    "I0": 0.03154709220488348,
+    "R0": 0.0,
+    "S0": 0.9684529077951166,
+    "b0": 0.6474318218038019,
+    "b1": 1.3149021441498066,
+    "b2": -2.2244544209373327,
+    "fractional": 0.0,
+    "gamma": 0.1378037968755819,
+    "rho": 13.777228179179541
+  },
+  "record_key": "SIR|fractional=0|obs=I",
+  "repeat": null,
+  "rolling_val_error_std": 0.07605539685328867,
+  "rolling_val_mean_mae": 0.07405495712485481,
+  "rolling_val_mean_rmse": 0.10695447059991425,
+  "rolling_val_metrics": {
+    "1": {
+      "mae": 0.09801473229859574,
+      "rmse": 0.14685512904320538,
+      "smape": 0.2928910605419629
+    },
+    "2": {
+      "mae": 0.07625428572411375,
+      "rmse": 0.11843351291482232,
+      "smape": 0.2529538400547915
+    },
+    "4": {
+      "mae": 0.047895853351854936,
+      "rmse": 0.05557476984171508,
+      "smape": 0.18951246755375253
+    }
+  },
+  "round": 1,
+  "score": 0.22221357741273434,
+  "score_formula": "multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty",
+  "score_policy": "stability_aware",
+  "score_used_age_prior": true,
+  "score_used_complexity": true,
+  "score_used_multi_split": true,
+  "score_used_stability": true,
+  "score_used_val_mae": false,
+  "spec_key": "SIR|fractional=0|obs=I",
+  "stability_penalty": 0.015211079370657736,
+  "structure_name": "SIR",
+  "train_mae": 0.42061255318395174,
+  "train_objective": 0.3845279200317265,
+  "train_rmse": 0.545631880683223,
+  "val_mae": 0.10180768335589337,
+  "val_rmse": 0.14970303042356592,
+  "val_smape": 0.2985840112498136
+}

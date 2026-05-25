@@ -1,0 +1,89 @@
+{
+  "best_full_params": {
+    "E0": 0.05884469557278316,
+    "I0": 0.013551805190847466,
+    "R0": 0.0,
+    "S0": 0.9276034992363694,
+    "alpha": 0.9999999611149439,
+    "b0": 2.3727870378705975,
+    "b1": 2.968012404393918,
+    "b2": -1.645275793265465,
+    "gamma": 0.1655895969388067,
+    "rho": 5.848952176599541,
+    "sigma": 0.1666452166054677
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 9
+  },
+  "fit_objectives": {
+    "full_series": 0.04610593367623065,
+    "train": 0.06992864235845311,
+    "train_plus_validation": 0.05790023790551432
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+    "train_plus_validation_message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "fractional_seir",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.1523388033323667,
+    "max_abs_test_prediction": 0.08120419468485324,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.08555617531022956,
+      "rmse": 0.10637170127155984,
+      "smape": 1.6019496795870605
+    },
+    "2": {
+      "mae": 0.08174575845223839,
+      "rmse": 0.10252037609553145,
+      "smape": 1.6538152962121724
+    },
+    "4": {
+      "mae": 0.07513020258023743,
+      "rmse": 0.09691617245399323,
+      "smape": 1.759484028666585
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.08081071211423513,
+    "mean_rmse": 0.10193608327369486
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.04231198045612031,
+    "rmse": 0.046858806938437664,
+    "smape": 1.9999994027134802
+  },
+  "train_metrics": {
+    "mae": 0.19817083593917018,
+    "rmse": 0.264413200719983,
+    "smape": 0.257681586006077
+  },
+  "validation_metrics": {
+    "mae": 0.15038749411749736,
+    "rmse": 0.1605990299779024,
+    "smape": 1.204858331116032
+  }
+}

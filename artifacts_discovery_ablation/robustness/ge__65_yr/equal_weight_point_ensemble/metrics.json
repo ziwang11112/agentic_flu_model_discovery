@@ -1,0 +1,132 @@
+{
+  "baseline_metadata": {
+    "ensemble_members_configured": [
+      "last_observed",
+      "rolling_mean_2wk",
+      "rolling_mean_4wk",
+      "arima_auto_small",
+      "lagged_ridge",
+      "lagged_gradient_boosting",
+      "deterministic_seir",
+      "probabilistic_seir",
+      "hospitalized_seihr",
+      "delayed_observation_seir",
+      "fractional_seir",
+      "constrained_structure_discovery"
+    ],
+    "excluded_members": [
+      {
+        "model_name": "constrained_structure_discovery",
+        "reason": "numerical_failure_flag"
+      },
+      {
+        "model_name": "exhaustive_structure_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "hospitalized_seihr",
+        "reason": "numerical_failure_flag"
+      },
+      {
+        "model_name": "no_observation_search_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "no_stability_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "random_structure_discovery",
+        "reason": "not_in_ensemble_members"
+      },
+      {
+        "model_name": "validation_only_structure_selection",
+        "reason": "not_in_ensemble_members"
+      }
+    ],
+    "fallback_model": null,
+    "fallback_used": false,
+    "valid_members": [
+      "arima_auto_small",
+      "delayed_observation_seir",
+      "deterministic_seir",
+      "fractional_seir",
+      "lagged_gradient_boosting",
+      "lagged_ridge",
+      "last_observed",
+      "probabilistic_seir",
+      "rolling_mean_2wk",
+      "rolling_mean_4wk"
+    ]
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ensemble member artifacts loaded",
+    "full_success": true,
+    "train_message": "ensemble member artifacts loaded",
+    "train_plus_validation_message": "ensemble member artifacts loaded",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "point_ensemble",
+  "model_name": "equal_weight_point_ensemble",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 19.36561453757126,
+    "max_abs_test_prediction": 0.5444761829129321,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.23717341274435388,
+      "rmse": 0.3278298966142106,
+      "smape": 0.4420146327432183
+    },
+    "2": {
+      "mae": 0.2697016815556983,
+      "rmse": 0.4033484353573311,
+      "smape": 0.47712745568931714
+    },
+    "4": {
+      "mae": 0.2642844875713509,
+      "rmse": 0.37498417934263745,
+      "smape": 0.5302113884076088
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.2570531939571344,
+    "mean_rmse": 0.36872083710472636
+  },
+  "series_name": ">= 65 yr",
+  "test_metrics": {
+    "mae": 0.18638859589092913,
+    "rmse": 0.21717507728820193,
+    "smape": 0.591232485331619
+  },
+  "train_metrics": {
+    "mae": 1.5233673182317145,
+    "rmse": 2.42212259393295,
+    "smape": 0.22502419664237633
+  },
+  "validation_metrics": {
+    "mae": 0.3284364761868714,
+    "rmse": 0.4033905472905689,
+    "smape": 0.3606436425953524
+  }
+}

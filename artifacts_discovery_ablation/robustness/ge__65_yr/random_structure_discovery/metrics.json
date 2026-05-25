@@ -1,0 +1,188 @@
+{
+  "best_full_params": {
+    "E0": 0.009831358342610588,
+    "I0": 0.014725293335480224,
+    "R0": 0.0,
+    "S0": 0.9754433483219094,
+    "alpha": 0.9035388989690606,
+    "b0": -1.1166586447392495,
+    "b1": 4.6739087629111635,
+    "b2": 0.4135303332867329,
+    "fractional": 1.0,
+    "gamma": 0.4991756817659008,
+    "omega": 0.1253711041371752,
+    "rho": 56.210050025691196,
+    "sigma": 0.9791145806487126
+  },
+  "best_spec": {
+    "delay_weeks": 1,
+    "fractional": true,
+    "observation_map": "delayed_I",
+    "structure_name": "SEIRS"
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 10
+  },
+  "fit_objectives": {
+    "full_series": 0.5383385390030933,
+    "train": 0.6827933031342708,
+    "train_plus_validation": 0.6022690269553147
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "structure_discovery_ablation",
+  "model_name": "random_structure_discovery",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 24.104163725474695,
+    "max_abs_test_prediction": 0.20087712972974614,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.19667691929586312,
+      "rmse": 0.23366822008170562,
+      "smape": 0.6336071774203679
+    },
+    "2": {
+      "mae": 0.1928381931245576,
+      "rmse": 0.23094824195189248,
+      "smape": 0.6560694054668993
+    },
+    "4": {
+      "mae": 0.20006078269079364,
+      "rmse": 0.23707273954645613,
+      "smape": 0.7156841727535707
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.19652529837040478,
+    "mean_rmse": 0.23389640052668473
+  },
+  "search_best_record": {
+    "age_prior_penalty": -0.0075,
+    "candidate_budget_actual": 30,
+    "candidate_budget_requested": 30,
+    "candidate_universe_size": 44,
+    "complexity_penalty": 0.21000000000000002,
+    "complexity_penalty_compartments": 0.08,
+    "complexity_penalty_delay": 0.005,
+    "complexity_penalty_fractional": 0.015,
+    "complexity_penalty_h_observation": 0.0,
+    "complexity_penalty_observation": 0.0,
+    "complexity_penalty_params": 0.1,
+    "complexity_penalty_recurrence": 0.01,
+    "delay_weeks": 1,
+    "fractional": true,
+    "multi_split_blocks": 3,
+    "multi_split_penalty": 0.01703107915198121,
+    "multi_split_val_mean_mae": 0.25717288892525675,
+    "multi_split_val_std_mae": 0.03406215830396242,
+    "num_compartments": 4,
+    "num_free_params": 10,
+    "observation_family": "delayed",
+    "observation_map": "delayed_I",
+    "params": {
+      "E0": 0.010844045800115523,
+      "I0": 0.014577115814968832,
+      "R0": 0.0,
+      "S0": 0.9745788383849158,
+      "alpha": 0.9107789345707092,
+      "b0": -1.2501671957210336,
+      "b1": 4.786493289099779,
+      "b2": 0.47133507057919594,
+      "fractional": 1.0,
+      "gamma": 0.4950523372071167,
+      "omega": 0.1316945580911187,
+      "rho": 55.54095117018683,
+      "sigma": 0.9836600448308868
+    },
+    "random_draw_index": 1,
+    "random_repeats": 1,
+    "random_seed": 2259,
+    "record_key": "0:SEIRS|fractional=1|obs=delayed_I|delay=1",
+    "repeat": 0,
+    "rolling_val_error_std": 0.14674512701989317,
+    "rolling_val_mean_mae": 0.2539303969510677,
+    "rolling_val_mean_rmse": 0.2933719296452561,
+    "rolling_val_metrics": {
+      "1": {
+        "mae": 0.24248029411101274,
+        "rmse": 0.2820416149365284,
+        "smape": 0.4530156934288548
+      },
+      "2": {
+        "mae": 0.24442011454324788,
+        "rmse": 0.2863036617376731,
+        "smape": 0.4870133442359113
+      },
+      "4": {
+        "mae": 0.2748907821989425,
+        "rmse": 0.31177051226156693,
+        "smape": 0.5831737599366196
+      }
+    },
+    "round": 1,
+    "score": 0.5060529934812167,
+    "score_formula": "multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty",
+    "score_policy": "stability_aware",
+    "score_used_age_prior": true,
+    "score_used_complexity": true,
+    "score_used_multi_split": true,
+    "score_used_stability": true,
+    "score_used_val_mae": false,
+    "search_metadata": {
+      "candidate_budget_actual": 30,
+      "candidate_budget_requested": 30,
+      "candidate_universe_size": 44,
+      "random_repeats": 1,
+      "random_seed": 2259,
+      "search_name": "random_structure_discovery"
+    },
+    "search_name": "random_structure_discovery",
+    "spec_key": "SEIRS|fractional=1|obs=delayed_I|delay=1",
+    "stability_penalty": 0.029349025403978636,
+    "structure_name": "SEIRS",
+    "train_mae": 0.4789544599238463,
+    "train_objective": 0.6827932989020759,
+    "train_rmse": 0.6396381022048342,
+    "val_mae": 0.2626845637821951,
+    "val_rmse": 0.2995643290356281,
+    "val_smape": 0.5001949748874603
+  },
+  "series_name": ">= 65 yr",
+  "test_metrics": {
+    "mae": 0.15184539270477482,
+    "rmse": 0.17332135978211954,
+    "smape": 0.7976275759835275
+  },
+  "train_metrics": {
+    "mae": 0.4789539555612954,
+    "rmse": 0.6396341576496025,
+    "smape": 0.12541403759123682
+  },
+  "validation_metrics": {
+    "mae": 0.2626493987319512,
+    "rmse": 0.2995346773656185,
+    "smape": 0.5001171893746352
+  }
+}

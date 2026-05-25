@@ -1,0 +1,88 @@
+{
+  "best_full_params": {
+    "E0": 2.700798066297357e-07,
+    "I0": 0.03510429876653629,
+    "R0": 0.0,
+    "S0": 0.9648954311536571,
+    "b0": 1.1239377581111145,
+    "b1": 1.950972392273732,
+    "b2": -2.3864212959054525,
+    "gamma": 0.10886278832539867,
+    "rho": 9.77081253686497,
+    "sigma": 0.9888461334359979
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 8
+  },
+  "fit_objectives": {
+    "full_series": 0.18279271334866068,
+    "train": 0.2551674006936584,
+    "train_plus_validation": 0.22699507281640793
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "deterministic_seir",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 7.56705864900585,
+    "max_abs_test_prediction": 0.2738700835045169,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.22561924961485824,
+      "rmse": 0.28029294625547296,
+      "smape": 1.04555263168145
+    },
+    "2": {
+      "mae": 0.21716428127465415,
+      "rmse": 0.273156343780384,
+      "smape": 1.069460488756743
+    },
+    "4": {
+      "mae": 0.19766427815281695,
+      "rmse": 0.24458274751143677,
+      "smape": 1.0915699896357978
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.2134826030141098,
+    "mean_rmse": 0.26601067918243126
+  },
+  "series_name": "0-4 yr",
+  "test_metrics": {
+    "mae": 0.11785092053390413,
+    "rmse": 0.1356582376117325,
+    "smape": 1.1734914372850815
+  },
+  "train_metrics": {
+    "mae": 0.34729121286445125,
+    "rmse": 0.504953912764389,
+    "smape": 0.19444634107278097
+  },
+  "validation_metrics": {
+    "mae": 0.3935174139677201,
+    "rmse": 0.42203116900617427,
+    "smape": 0.9740036554996164
+  }
+}

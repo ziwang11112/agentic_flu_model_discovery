@@ -1,0 +1,74 @@
+round: 1
+repeat: null
+record_key: SIR|fractional=0|obs=I
+spec_key: SIR|fractional=0|obs=I
+structure_name: SIR
+fractional: false
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 6
+num_compartments: 3
+train_objective: 0.1182356148750796
+train_mae: 0.17088581432475883
+train_rmse: 0.24508275842483096
+val_mae: 0.149637689363268
+val_rmse: 0.16427740733351376
+val_smape: 1.037553081694672
+rolling_val_mean_mae: 0.11752396056787678
+rolling_val_mean_rmse: 0.13285050913004268
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.1137699642982598
+multi_split_val_std_mae: 0.04891430382335041
+multi_split_penalty: 0.024457151911675204
+rolling_val_error_std: 0.06187588725415579
+rolling_val_metrics:
+  '1':
+    mae: 0.1314723719460123
+    rmse: 0.15056906638540124
+    smape: 0.9731699356507182
+  '2':
+    mae: 0.11952332430647915
+    rmse: 0.13496397793025597
+    smape: 0.9646041861420122
+  '4':
+    mae: 0.10157618545113888
+    rmse: 0.11301848307447088
+    smape: 0.976124235849072
+stability_penalty: 0.012375177450831158
+complexity_penalty: 0.12
+complexity_penalty_params: 0.06
+complexity_penalty_compartments: 0.06
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.0
+age_prior_penalty: -0.01
+score_policy: no_stability
+score_formula: multi_split_mean_mae + multi_split_penalty + complexity_penalty + age_prior_penalty
+score: 0.24822711620993498
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: false
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: 0.060145524286492474
+  b1: 1.327677797677238
+  b2: -1.4158449299666223
+  gamma: 0.11225599482207868
+  rho: 4.779038527454929
+  S0: 0.9679790906851192
+  I0: 0.03202090931488073
+  R0: 0.0
+  fractional: 0.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 44
+  exhaustive_max_candidates: 200
+  allow_truncated_exhaustive: false
+  truncated: false
+  search_name: no_stability_discovery
+  score_policy: no_stability
+  candidate_count: 44

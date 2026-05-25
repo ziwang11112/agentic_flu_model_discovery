@@ -1,0 +1,83 @@
+{
+  "baseline_metadata": {
+    "fallback_model": "rolling_mean_4wk",
+    "fallback_reason": "fit_failed:ModuleNotFoundError",
+    "fallback_used": true,
+    "lags": [
+      1,
+      2,
+      4
+    ],
+    "train_length": 41
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "fallback: fit_failed:ModuleNotFoundError",
+    "full_success": true,
+    "train_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "lagged_ridge",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 3.275,
+    "max_abs_test_prediction": 0.05,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.04642857142857143,
+      "rmse": 0.07886848607167564,
+      "smape": 0.8581336084483903
+    },
+    "2": {
+      "mae": 0.05125,
+      "rmse": 0.08234834546000303,
+      "smape": 0.9867545620680905
+    },
+    "4": {
+      "mae": 0.0625,
+      "rmse": 0.09147707666708395,
+      "smape": 1.2692334359329998
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.05339285714285714,
+    "mean_rmse": 0.08423130273292086
+  },
+  "series_name": "18-49 yr",
+  "test_metrics": {
+    "mae": 0.05,
+    "rmse": 0.05000000000000001,
+    "smape": 1.8787875111111842
+  },
+  "train_metrics": {
+    "mae": 0.5249999999999999,
+    "rmse": 0.7451591083615589,
+    "smape": 0.4476823965314057
+  },
+  "validation_metrics": {
+    "mae": 0.29500000000000004,
+    "rmse": 0.29769951293208397,
+    "smape": 1.3263157593056332
+  }
+}

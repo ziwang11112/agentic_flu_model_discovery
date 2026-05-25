@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 22.3,
+    "max_abs_test_prediction": 0.55,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.1952380952380952,
+      "rmse": 0.24832774042918898,
+      "smape": 0.41885489950782134
+    },
+    "2": {
+      "mae": 0.2125,
+      "rmse": 0.30434355587066403,
+      "smape": 0.44185666028281584
+    },
+    "4": {
+      "mae": 0.2805555555555556,
+      "rmse": 0.37950991789119,
+      "smape": 0.5622299326242494
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.22943121693121693,
+    "mean_rmse": 0.31072707139701433
+  },
+  "series_name": ">= 65 yr",
+  "test_metrics": {
+    "mae": 0.2772727272727273,
+    "rmse": 0.29962097268503635,
+    "smape": 0.7363917714702083
+  },
+  "train_metrics": {
+    "mae": 2.1209677419354835,
+    "rmse": 3.3706632830560124,
+    "smape": 0.3124230409184441
+  },
+  "validation_metrics": {
+    "mae": 1.0299999999999998,
+    "rmse": 1.0623088063270492,
+    "smape": 0.8636167568172481
+  }
+}

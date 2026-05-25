@@ -1,0 +1,78 @@
+round: 1
+repeat: null
+record_key: SEIRS|fractional=1|obs=delayed_I|delay=1
+spec_key: SEIRS|fractional=1|obs=delayed_I|delay=1
+structure_name: SEIRS
+fractional: true
+observation_map: delayed_I
+delay_weeks: 1
+observation_family: delayed
+num_free_params: 10
+num_compartments: 4
+train_objective: 0.3600150632959981
+train_mae: 0.31445957684646153
+train_rmse: 0.4261224678626526
+val_mae: 0.12713929229580517
+val_rmse: 0.15517492854178583
+val_smape: 0.6808295998397751
+rolling_val_mean_mae: 0.12744472234836987
+rolling_val_mean_rmse: 0.16319079979634987
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.12431342986260975
+multi_split_val_std_mae: 0.058630710385011914
+multi_split_penalty: 0.029315355192505957
+rolling_val_error_std: 0.10095966987011036
+rolling_val_metrics:
+  '1':
+    mae: 0.1674508762499451
+    rmse: 0.2294342718610151
+    smape: 0.6759488176023122
+  '2':
+    mae: 0.12217848880726818
+    rmse: 0.15223747136464236
+    smape: 0.6663172339248415
+  '4':
+    mae: 0.09270480198789635
+    rmse: 0.1079006561633922
+    smape: 0.6513884768782551
+stability_penalty: 0.020191933974022074
+complexity_penalty: 0.21000000000000002
+complexity_penalty_params: 0.1
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.015
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.005
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: -0.0075
+score_policy: validation_only
+score_formula: val_mae
+score: 0.12713929229580517
+score_used_val_mae: true
+score_used_multi_split: false
+score_used_stability: false
+score_used_complexity: false
+score_used_age_prior: false
+params:
+  b0: -0.7933248791103837
+  b1: 3.144445477857762
+  b2: 0.7688491715005012
+  sigma: 0.9615157249041842
+  gamma: 0.5275985202353191
+  omega: 0.22765405849748807
+  rho: 21.230066773500962
+  alpha: 0.9407597170775497
+  S0: 0.9720275488781053
+  E0: 0.015437226354176553
+  I0: 0.012535224767718298
+  R0: 0.0
+  fractional: 1.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 44
+  exhaustive_max_candidates: 200
+  allow_truncated_exhaustive: false
+  truncated: false
+  search_name: validation_only_structure_selection
+  score_policy: validation_only
+  candidate_count: 44

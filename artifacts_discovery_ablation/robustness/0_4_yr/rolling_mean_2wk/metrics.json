@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 7.300000000000001,
+    "max_abs_test_prediction": 0.15000000000000002,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.130952380952381,
+      "rmse": 0.17078251276599332,
+      "smape": 0.9581070480291315
+    },
+    "2": {
+      "mae": 0.10750000000000001,
+      "rmse": 0.17066048165876016,
+      "smape": 0.8186332478963212
+    },
+    "4": {
+      "mae": 0.1638888888888889,
+      "rmse": 0.23833916076791825,
+      "smape": 1.086884341559494
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.13411375661375663,
+    "mean_rmse": 0.19326071839755724
+  },
+  "series_name": "0-4 yr",
+  "test_metrics": {
+    "mae": 0.09545454545454547,
+    "rmse": 0.10766108438479102,
+    "smape": 1.0857142192306783
+  },
+  "train_metrics": {
+    "mae": 0.8016129032258065,
+    "rmse": 1.0955555373799502,
+    "smape": 0.3370939350840781
+  },
+  "validation_metrics": {
+    "mae": 0.6100000000000001,
+    "rmse": 0.6328506932918697,
+    "smape": 1.1849942915433052
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "best_full_params": {
+    "E0": 0.0053671796909443995,
+    "H0": 0.01416578435328092,
+    "I0": 0.002435816517066239,
+    "R0": 0.0,
+    "S0": 0.9780312194387085,
+    "b0": 13.381462656964036,
+    "b1": -3.788926132337402,
+    "b2": -9.581294465636779,
+    "eta": 0.8980965093118843,
+    "gamma_h": 0.1220214687843224,
+    "gamma_i": 0.4747065844935319,
+    "rho": 7.536597809745344,
+    "sigma": 1.0
+  },
+  "complexity": {
+    "num_compartments": 5,
+    "num_free_params": 11
+  },
+  "fit_objectives": {
+    "full_series": 0.03561873551234371,
+    "train": 0.05322429791988413,
+    "train_plus_validation": 0.044557187449158105
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+    "train_plus_validation_success": false,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "hospitalized_seihr",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 3.722823925141193,
+    "max_abs_test_prediction": 0.08697487705049992,
+    "numerical_failure_flag": true,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.0842014885746928,
+      "rmse": 0.10788886693964456,
+      "smape": 1.4131043287851854
+    },
+    "2": {
+      "mae": 0.07440172766785716,
+      "rmse": 0.09315393408070224,
+      "smape": 1.4326237033203153
+    },
+    "4": {
+      "mae": 0.06529367478359906,
+      "rmse": 0.07791905930505133,
+      "smape": 1.496580652842844
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.07463229700871633,
+    "mean_rmse": 0.09298728677513272
+  },
+  "series_name": "18-49 yr",
+  "test_metrics": {
+    "mae": 0.04465548135688557,
+    "rmse": 0.048593049045009676,
+    "smape": 1.8424805023162707
+  },
+  "train_metrics": {
+    "mae": 0.1564227568275151,
+    "rmse": 0.23070387031604458,
+    "smape": 0.14910238924155214
+  },
+  "validation_metrics": {
+    "mae": 0.13526169000903385,
+    "rmse": 0.15036631421720026,
+    "smape": 0.9930538027539837
+  }
+}

@@ -1,0 +1,83 @@
+round: 2
+repeat: 0
+record_key: 0:SEIRS|fractional=0|obs=delayed_I|delay=2
+spec_key: SEIRS|fractional=0|obs=delayed_I|delay=2
+structure_name: SEIRS
+fractional: false
+observation_map: delayed_I
+delay_weeks: 2
+observation_family: delayed
+num_free_params: 9
+num_compartments: 4
+train_objective: 0.12638427450452344
+train_mae: 0.18162506055771444
+train_rmse: 0.23197201829114156
+val_mae: 0.040385726438836735
+val_rmse: 0.04710856802463909
+val_smape: 1.0823631322080032
+rolling_val_mean_mae: 0.05165589843189681
+rolling_val_mean_rmse: 0.06684929046604147
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.04946977908418357
+multi_split_val_std_mae: 0.023708932681773234
+multi_split_penalty: 0.011854466340886617
+rolling_val_error_std: 0.04110024489447322
+rolling_val_metrics:
+  '1':
+    mae: 0.06650827342546226
+    rmse: 0.09883655278243204
+    smape: 1.115910829087448
+  '2':
+    mae: 0.042416683519105894
+    rmse: 0.04907909400709631
+    smape: 1.1504146299414773
+  '4':
+    mae: 0.04604273835112228
+    rmse: 0.052632224608596054
+    smape: 1.4452961319646327
+stability_penalty: 0.008220048978894645
+complexity_penalty: 0.19
+complexity_penalty_params: 0.09
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.01
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: -0.01
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.2495442944039648
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: -0.7714866457131776
+  b1: 1.567787938386199
+  b2: 1.1636316852689492
+  sigma: 0.8241157233315431
+  gamma: 0.37845569814237934
+  omega: 0.7727210642819085
+  rho: 5.020258049460042
+  S0: 0.9006189024966769
+  E0: 0.05942668268403286
+  I0: 0.03995441481929018
+  R0: 0.0
+  fractional: 0.0
+random_draw_index: 2
+search_name: random_structure_discovery
+candidate_budget_requested: 30
+candidate_budget_actual: 30
+candidate_universe_size: 44
+random_repeats: 1
+random_seed: 2256
+search_metadata:
+  search_name: random_structure_discovery
+  candidate_budget_requested: 30
+  candidate_budget_actual: 30
+  candidate_universe_size: 44
+  random_repeats: 1
+  random_seed: 2256

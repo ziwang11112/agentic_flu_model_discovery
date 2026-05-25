@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 4
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_4wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.1,
+    "max_abs_test_prediction": 0.025,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.02857142857142857,
+      "rmse": 0.04818120558297157,
+      "smape": 0.6503125195621822
+    },
+    "2": {
+      "mae": 0.0375,
+      "rmse": 0.058630196997792865,
+      "smape": 0.7898411173255158
+    },
+    "4": {
+      "mae": 0.05555555555555555,
+      "rmse": 0.08457409637576849,
+      "smape": 1.0796855575413442
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.04054232804232804,
+    "mean_rmse": 0.06379516631884431
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.025,
+    "rmse": 0.025000000000000005,
+    "smape": 1.9999992000003202
+  },
+  "train_metrics": {
+    "mae": 0.3451612903225807,
+    "rmse": 0.47028646040334793,
+    "smape": 0.42028527325062776
+  },
+  "validation_metrics": {
+    "mae": 0.16999999999999998,
+    "rmse": 0.18574175621006708,
+    "smape": 1.1873015445180157
+  }
+}

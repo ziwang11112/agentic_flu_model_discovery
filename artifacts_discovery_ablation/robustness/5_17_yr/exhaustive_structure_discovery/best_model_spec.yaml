@@ -1,0 +1,79 @@
+round: 1
+repeat: null
+record_key: SEIRS|fractional=1|obs=I
+spec_key: SEIRS|fractional=1|obs=I
+structure_name: SEIRS
+fractional: true
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 10
+num_compartments: 4
+train_objective: 0.14122630857309323
+train_mae: 0.17779505199922122
+train_rmse: 0.23098444552148992
+val_mae: 0.03962346824088381
+val_rmse: 0.048049665049485046
+val_smape: 1.1407556962852898
+rolling_val_mean_mae: 0.04964187422837846
+rolling_val_mean_rmse: 0.06282102809951902
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.049003071036919414
+multi_split_val_std_mae: 0.022341786051821397
+multi_split_penalty: 0.011170893025910698
+rolling_val_error_std: 0.03700803491688249
+rolling_val_metrics:
+  '1':
+    mae: 0.04052662335266781
+    rmse: 0.04711136594690284
+    smape: 1.0857825119536024
+  '2':
+    mae: 0.06246242194978483
+    rmse: 0.0908025979706958
+    smape: 1.2437868917265718
+  '4':
+    mae: 0.04593657738268271
+    rmse: 0.05054912038095845
+    smape: 1.5220337206038965
+stability_penalty: 0.007401606983376498
+complexity_penalty: 0.20500000000000002
+complexity_penalty_params: 0.1
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.015
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: -0.0125
+score_policy: stability_aware
+score_formula: multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty
+  + age_prior_penalty
+score: 0.2600755710462066
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: true
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: -0.7548351111042869
+  b1: 2.2168302808036686
+  b2: 0.5471623967859471
+  sigma: 0.8827873463876539
+  gamma: 0.4654970819675959
+  omega: 0.7345378185769876
+  rho: 5.559307682223663
+  alpha: 0.9780812743892519
+  S0: 0.9113960752179925
+  E0: 0.04626655353244947
+  I0: 0.04233737124955804
+  R0: 0.0
+  fractional: 1.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 44
+  exhaustive_max_candidates: 200
+  allow_truncated_exhaustive: false
+  truncated: false
+  search_name: exhaustive_structure_discovery
+  score_policy: stability_aware
+  candidate_count: 44

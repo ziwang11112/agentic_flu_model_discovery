@@ -1,0 +1,90 @@
+{
+  "best_full_params": {
+    "E0": 0.10160842861409873,
+    "I0": 0.013911691487550363,
+    "R0": 0.0,
+    "S0": 0.8844798798983508,
+    "b0": -0.21257633020737243,
+    "b1": 5.055234535325152,
+    "b2": 0.5243443567367279,
+    "delay": 1,
+    "gamma": 0.16575897261417372,
+    "rho": 5.840371627637763,
+    "sigma": 0.16666373057708983
+  },
+  "complexity": {
+    "num_compartments": 4,
+    "num_free_params": 8
+  },
+  "fit_objectives": {
+    "full_series": 0.04604690527842727,
+    "train": 0.06985072357313238,
+    "train_plus_validation": 0.05782777959879579
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "delayed_observation_seir",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.1529237086120885,
+    "max_abs_test_prediction": 0.08104613422566337,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.08531185890914947,
+      "rmse": 0.1062002546602819,
+      "smape": 1.6016448853956202
+    },
+    "2": {
+      "mae": 0.08158394208530975,
+      "rmse": 0.10284619697453211,
+      "smape": 1.6529808006838587
+    },
+    "4": {
+      "mae": 0.07486493070074045,
+      "rmse": 0.0961174503310903,
+      "smape": 1.7596427812337636
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.08058691056506656,
+    "mean_rmse": 0.10172130065530144
+  },
+  "selected_delay": 1,
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.04221273732215547,
+    "rmse": 0.04675495132456734,
+    "smape": 1.999999401107472
+  },
+  "train_metrics": {
+    "mae": 0.19852873736057577,
+    "rmse": 0.2642622218805856,
+    "smape": 0.2611383283616431
+  },
+  "validation_metrics": {
+    "mae": 0.150233623993903,
+    "rmse": 0.16044957844258562,
+    "smape": 1.2045119466337457
+  }
+}

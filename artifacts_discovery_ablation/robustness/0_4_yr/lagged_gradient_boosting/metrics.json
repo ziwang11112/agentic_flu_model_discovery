@@ -1,0 +1,83 @@
+{
+  "baseline_metadata": {
+    "fallback_model": "rolling_mean_4wk",
+    "fallback_reason": "fit_failed:ModuleNotFoundError",
+    "fallback_used": true,
+    "lags": [
+      1,
+      2,
+      4
+    ],
+    "train_length": 41
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "fallback: fit_failed:ModuleNotFoundError",
+    "full_success": true,
+    "train_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_message": "fallback: fit_failed:ModuleNotFoundError",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "lagged_gradient_boosting",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 6.7250000000000005,
+    "max_abs_test_prediction": 0.17500000000000002,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.15595238095238098,
+      "rmse": 0.2264503519643145,
+      "smape": 0.9229834093863428
+    },
+    "2": {
+      "mae": 0.17125000000000004,
+      "rmse": 0.2587832104291158,
+      "smape": 0.9742801977421587
+    },
+    "4": {
+      "mae": 0.21111111111111114,
+      "rmse": 0.3230711995830022,
+      "smape": 1.1026149048932072
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.17943783068783073,
+    "mean_rmse": 0.26943492065881086
+  },
+  "series_name": "0-4 yr",
+  "test_metrics": {
+    "mae": 0.10227272727272728,
+    "rmse": 0.12316839913490209,
+    "smape": 1.0567492544474766
+  },
+  "train_metrics": {
+    "mae": 1.0758064516129031,
+    "rmse": 1.4892084929531764,
+    "smape": 0.4392402020095311
+  },
+  "validation_metrics": {
+    "mae": 0.8600000000000001,
+    "rmse": 0.8763560920082658,
+    "smape": 1.330160515366842
+  }
+}

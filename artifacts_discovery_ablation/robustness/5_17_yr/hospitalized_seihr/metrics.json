@@ -1,0 +1,91 @@
+{
+  "best_full_params": {
+    "E0": 0.2000787027630038,
+    "H0": 0.0010668319298391719,
+    "I0": 0.005876092035176204,
+    "R0": 0.0,
+    "S0": 0.7929783732719808,
+    "b0": -0.4589795265198901,
+    "b1": 8.063949845202872,
+    "b2": -0.2585771540585401,
+    "eta": 0.019836892251549658,
+    "gamma_h": 0.21456412651074813,
+    "gamma_i": 0.1932501754710369,
+    "rho": 79.65502606544642,
+    "sigma": 0.2147704585682019
+  },
+  "complexity": {
+    "num_compartments": 5,
+    "num_free_params": 11
+  },
+  "fit_objectives": {
+    "full_series": 0.043780469792319296,
+    "train": 0.0695605364492765,
+    "train_plus_validation": 0.055301032947619864
+  },
+  "fit_status": {
+    "full_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "full_success": true,
+    "train_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "epidemic_model",
+  "model_name": "hospitalized_seihr",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 2.0981199301715074,
+    "max_abs_test_prediction": 0.05449924440041841,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.057776990375934985,
+      "rmse": 0.07745535777164655,
+      "smape": 1.5508531138796755
+    },
+    "2": {
+      "mae": 0.05466207121904125,
+      "rmse": 0.07453915568226463,
+      "smape": 1.6044294453462147
+    },
+    "4": {
+      "mae": 0.04922724882431501,
+      "rmse": 0.07031505341215485,
+      "smape": 1.7189829886789574
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.05388877013976375,
+    "mean_rmse": 0.07410318895535535
+  },
+  "series_name": "5-17 yr",
+  "test_metrics": {
+    "mae": 0.025244073354354704,
+    "rmse": 0.029159508060551995,
+    "smape": 1.999998873894812
+  },
+  "train_metrics": {
+    "mae": 0.19018118647498714,
+    "rmse": 0.2637426769461161,
+    "smape": 0.24116673651871784
+  },
+  "validation_metrics": {
+    "mae": 0.10174623629227689,
+    "rmse": 0.11503960216236214,
+    "smape": 1.0773272791848498
+  }
+}

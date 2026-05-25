@@ -1,0 +1,78 @@
+round: 1
+repeat: null
+record_key: SEIRS|fractional=1|obs=I
+spec_key: SEIRS|fractional=1|obs=I
+structure_name: SEIRS
+fractional: true
+observation_map: I
+delay_weeks: 0
+observation_family: infectious
+num_free_params: 10
+num_compartments: 4
+train_objective: 0.36111909159090494
+train_mae: 0.2650094488107919
+train_rmse: 0.36906324466593843
+val_mae: 0.0969743271762054
+val_rmse: 0.11321000688374341
+val_smape: 0.38449817715917606
+rolling_val_mean_mae: 0.12437913326583683
+rolling_val_mean_rmse: 0.12913648273482461
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.12545412757273072
+multi_split_val_std_mae: 0.029368032977978797
+multi_split_penalty: 0.014684016488989399
+rolling_val_error_std: 0.033792403089282615
+rolling_val_metrics:
+  '1':
+    mae: 0.14102093159637583
+    rmse: 0.14449673819623107
+    smape: 0.7229295252294058
+  '2':
+    mae: 0.08823002062064329
+    rmse: 0.09475339613304856
+    smape: 0.4035248302461658
+  '4':
+    mae: 0.14388644758049135
+    rmse: 0.1481593138751942
+    smape: 0.8818303666290805
+stability_penalty: 0.006758480617856524
+complexity_penalty: 0.20500000000000002
+complexity_penalty_params: 0.1
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.015
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.0
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: 0.015
+score_policy: validation_only
+score_formula: val_mae
+score: 0.0969743271762054
+score_used_val_mae: true
+score_used_multi_split: false
+score_used_stability: false
+score_used_complexity: false
+score_used_age_prior: false
+params:
+  b0: -0.2493851010389096
+  b1: 3.849911403070236
+  b2: -0.20001904837139203
+  sigma: 0.9674808653641679
+  gamma: 0.6474894774367643
+  omega: 0.09025344351451314
+  rho: 34.17788429472444
+  alpha: 0.8704824558949613
+  S0: 0.9774176495481381
+  E0: 0.007250484782359665
+  I0: 0.01533186566950224
+  R0: 0.0
+  fractional: 1.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 44
+  exhaustive_max_candidates: 200
+  allow_truncated_exhaustive: false
+  truncated: false
+  search_name: validation_only_structure_selection
+  score_policy: validation_only
+  candidate_count: 44

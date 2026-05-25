@@ -1,0 +1,78 @@
+{
+  "baseline_metadata": {
+    "fallback_model": null,
+    "fallback_used": false,
+    "train_length": 41,
+    "window": 2
+  },
+  "complexity": {
+    "num_compartments": 0,
+    "num_free_params": 0
+  },
+  "fit_objectives": {},
+  "fit_status": {
+    "full_message": "ok",
+    "full_success": true,
+    "train_message": "ok",
+    "train_plus_validation_message": "ok",
+    "train_plus_validation_success": true,
+    "train_success": true
+  },
+  "model_family": "forecast_baseline",
+  "model_name": "rolling_mean_2wk",
+  "numerical_diagnostics": {
+    "has_negative_prediction": false,
+    "has_nonfinite_prediction": false,
+    "max_abs_full_prediction": 10.350000000000001,
+    "max_abs_test_prediction": 0.2,
+    "numerical_failure_flag": false,
+    "test_prediction_exceeds_100x_observed_max": false
+  },
+  "probabilistic_metrics": {
+    "average_interval_width_50": null,
+    "average_interval_width_80": null,
+    "average_interval_width_95": null,
+    "coverage_50": null,
+    "coverage_80": null,
+    "coverage_95": null,
+    "interval_summary": {},
+    "negative_log_likelihood": null
+  },
+  "rolling_origin_metrics": {
+    "1": {
+      "mae": 0.06190476190476192,
+      "rmse": 0.08864052604279185,
+      "smape": 0.4369207860295627
+    },
+    "2": {
+      "mae": 0.06500000000000002,
+      "rmse": 0.10124228365658296,
+      "smape": 0.4763636067839633
+    },
+    "4": {
+      "mae": 0.07777777777777778,
+      "rmse": 0.10137937550497032,
+      "smape": 0.569236964511053
+    }
+  },
+  "rolling_origin_summary": {
+    "mean_mae": 0.06822751322751323,
+    "mean_rmse": 0.09708739506811505
+  },
+  "series_name": "50-64 yr",
+  "test_metrics": {
+    "mae": 0.11818181818181818,
+    "rmse": 0.12431631210161223,
+    "smape": 0.9090908727272743
+  },
+  "train_metrics": {
+    "mae": 1.0048387096774196,
+    "rmse": 1.5815723087301243,
+    "smape": 0.339205916705548
+  },
+  "validation_metrics": {
+    "mae": 0.29000000000000004,
+    "rmse": 0.29748949561287036,
+    "smape": 0.7335397223593484
+  }
+}

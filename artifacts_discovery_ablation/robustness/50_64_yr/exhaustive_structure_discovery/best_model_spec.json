@@ -1,0 +1,82 @@
+{
+  "age_prior_penalty": -0.01,
+  "complexity_penalty": 0.12,
+  "complexity_penalty_compartments": 0.06,
+  "complexity_penalty_delay": 0.0,
+  "complexity_penalty_fractional": 0.0,
+  "complexity_penalty_h_observation": 0.0,
+  "complexity_penalty_observation": 0.0,
+  "complexity_penalty_params": 0.06,
+  "complexity_penalty_recurrence": 0.0,
+  "delay_weeks": 0,
+  "fractional": false,
+  "multi_split_blocks": 3,
+  "multi_split_penalty": 0.027223709451751447,
+  "multi_split_val_mean_mae": 0.06977591356746712,
+  "multi_split_val_std_mae": 0.054447418903502895,
+  "num_compartments": 3,
+  "num_free_params": 6,
+  "observation_family": "infectious",
+  "observation_map": "I",
+  "params": {
+    "I0": 0.03154704734449657,
+    "R0": 0.0,
+    "S0": 0.9684529526555035,
+    "b0": 0.6474397200817161,
+    "b1": 1.314897278380992,
+    "b2": -2.2244602045775115,
+    "fractional": 0.0,
+    "gamma": 0.1378038977894675,
+    "rho": 13.777229167796781
+  },
+  "record_key": "SIR|fractional=0|obs=I",
+  "repeat": null,
+  "rolling_val_error_std": 0.07605354243939559,
+  "rolling_val_mean_mae": 0.07405247857796844,
+  "rolling_val_mean_rmse": 0.10695132631425457,
+  "rolling_val_metrics": {
+    "1": {
+      "mae": 0.09801304176089572,
+      "rmse": 0.14685178830676457,
+      "smape": 0.2928879148123074
+    },
+    "2": {
+      "mae": 0.0762529092127513,
+      "rmse": 0.11843225263690033,
+      "smape": 0.25295034198580624
+    },
+    "4": {
+      "mae": 0.04789148476025835,
+      "rmse": 0.05556993799909884,
+      "smape": 0.18948704217876663
+    }
+  },
+  "round": 1,
+  "score": 0.22221033150709768,
+  "score_formula": "multi_split_mean_mae + multi_split_penalty + stability_penalty + complexity_penalty + age_prior_penalty",
+  "score_policy": "stability_aware",
+  "score_used_age_prior": true,
+  "score_used_complexity": true,
+  "score_used_multi_split": true,
+  "score_used_stability": true,
+  "score_used_val_mae": false,
+  "search_metadata": {
+    "allow_truncated_exhaustive": false,
+    "candidate_budget_actual": 44,
+    "candidate_count": 44,
+    "candidate_universe_size": 44,
+    "exhaustive_max_candidates": 200,
+    "score_policy": "stability_aware",
+    "search_name": "exhaustive_structure_discovery",
+    "truncated": false
+  },
+  "spec_key": "SIR|fractional=0|obs=I",
+  "stability_penalty": 0.015210708487879119,
+  "structure_name": "SIR",
+  "train_mae": 0.4206128353558694,
+  "train_objective": 0.38452792003445246,
+  "train_rmse": 0.5456316267912956,
+  "val_mae": 0.1018071304830104,
+  "val_rmse": 0.1497023162907975,
+  "val_smape": 0.298583164299399
+}

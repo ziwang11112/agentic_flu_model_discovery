@@ -1,0 +1,77 @@
+round: 1
+repeat: null
+record_key: SEIRS|fractional=0|obs=delayed_I|delay=2
+spec_key: SEIRS|fractional=0|obs=delayed_I|delay=2
+structure_name: SEIRS
+fractional: false
+observation_map: delayed_I
+delay_weeks: 2
+observation_family: delayed
+num_free_params: 9
+num_compartments: 4
+train_objective: 0.3512163016149338
+train_mae: 0.317683954893149
+train_rmse: 0.43549887648645863
+val_mae: 0.14996652128509227
+val_rmse: 0.17956416382031296
+val_smape: 1.0360307832216145
+rolling_val_mean_mae: 0.1388575324625991
+rolling_val_mean_rmse: 0.16416703594686044
+multi_split_blocks: 3
+multi_split_val_mean_mae: 0.14040898075380964
+multi_split_val_std_mae: 0.02122884365372567
+multi_split_penalty: 0.010614421826862836
+rolling_val_error_std: 0.08749948147357967
+rolling_val_metrics:
+  '1':
+    mae: 0.14683446418188523
+    rmse: 0.17158104457495496
+    smape: 0.9485717004765238
+  '2':
+    mae: 0.1460572428697483
+    rmse: 0.1759996206518246
+    smape: 1.02052388315238
+  '4':
+    mae: 0.12368089033616382
+    rmse: 0.14492044261380174
+    smape: 1.1031991672891965
+stability_penalty: 0.017499896294715933
+complexity_penalty: 0.19
+complexity_penalty_params: 0.09
+complexity_penalty_compartments: 0.08
+complexity_penalty_fractional: 0.0
+complexity_penalty_observation: 0.0
+complexity_penalty_h_observation: 0.0
+complexity_penalty_delay: 0.01
+complexity_penalty_recurrence: 0.01
+age_prior_penalty: -0.01
+score_policy: no_stability
+score_formula: multi_split_mean_mae + multi_split_penalty + complexity_penalty + age_prior_penalty
+score: 0.3310234025806725
+score_used_val_mae: false
+score_used_multi_split: true
+score_used_stability: false
+score_used_complexity: true
+score_used_age_prior: true
+params:
+  b0: -1.0176021639241843
+  b1: 2.574788034159084
+  b2: 1.3804035958750458
+  sigma: 0.9348044094288313
+  gamma: 0.38102672018450195
+  omega: 0.25533295835784053
+  rho: 16.619534413237986
+  S0: 0.9721210233705421
+  E0: 0.013533726919082768
+  I0: 0.014345249710375102
+  R0: 0.0
+  fractional: 0.0
+search_metadata:
+  candidate_universe_size: 44
+  candidate_budget_actual: 44
+  exhaustive_max_candidates: 200
+  allow_truncated_exhaustive: false
+  truncated: false
+  search_name: no_stability_discovery
+  score_policy: no_stability
+  candidate_count: 44
